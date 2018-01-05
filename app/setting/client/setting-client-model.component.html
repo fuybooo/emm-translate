@@ -1,0 +1,11 @@
+<div>
+  <app-custom-form [options]="modelForm"></app-custom-form>
+  <div nz-row>
+    <div nz-col [nzSpan]="16" [nzOffset]="6" class="content-tags-all min-h100i" appCustomScrollbar>
+      <nz-tag [nzClosable]="true" *ngFor="let tag of models.list"
+              (nzBeforeClose)="delete($event, tag)">
+        {{tag.model}}
+      </nz-tag>
+    </div>
+  </div>
+</div>

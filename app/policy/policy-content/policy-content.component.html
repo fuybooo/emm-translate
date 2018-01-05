@@ -1,0 +1,179 @@
+<div class="content-wrap-wrapper">
+  <!--解决谷歌浏览器自动填充表单的问题-->
+  <input class="dn" type="text" name="fakeUsername"/>
+  <input class="dn" type="password" name="fakePassword"/>
+  <!--解决谷歌浏览器自动填充表单的问题 end-->
+  <div class="search-wrap p10 common-gray-bg">
+    <div nz-row>
+      <div nz-col [nzSpan]="6" class="search-col pl10i">
+        <nz-input [nzPlaceHolder]="'search_placeholder' | translate" [nzSize]="'default'" [(ngModel)]="searchWord"
+                  (ngModelChange)="changeSearchWord()" (keyup.enter)="doSearch()">
+          <ng-template #addOnAfter><i class="anticon anticon-search" (click)="doSearch()"></i></ng-template>
+        </nz-input>
+        <i class="anticon anticon-close-circle clearSearch" (click)="searchWord='';doSearch()"
+           [class.dni]="searchWord==''"></i>
+      </div>
+      <div nz-col [nzSpan]="14">
+        <button nz-button [nzType]="'default'" class="ml20" (click)="operatePolicy('add')" appPermission >
+          <span><i class="icon-allicon-20 mr5"></i>添加
+            {{system}}{{contentName}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div nz-row class="common-gray-bg">
+    <div class="common-title pl20i common-gray-bg" nz-col [nzSpan]="6">{{system}}{{contentName}}
+      列表</div>
+    <div class="common-title common-border-left pl20i" nz-col [nzSpan]="18">{{contentName}}
+      详情</div>
+  </div>
+  <div nz-row class="common-gray-bg policy-table-none-border">
+    <!--左侧列表-->
+    <div nz-col [nzSpan]="6">
+      <!--todo 该列表的高度应该和右侧内容高度保持一致 参照设备中的做法-->
+      <div class="max-h1000i">
+        <nz-table class="content-table common-gray-bg"
+                  #nzTable
+                  [nzAjaxData]="data"
+                  [nzIsPagination]="false">
+          <tbody nz-tbody>
+          <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"
+              class="tr-order"
+              [class.active]="data.isActive" (click)="onClickPolicyName(data)">
+            <td nz-td width="10%"><span class="td-order ml10">{{i + 1}}</span></td>
+            <!--后台硬编码 不要翻译 start-->
+            <td nz-td><span class="text-primary">{{data.policyName === '默认策略' ? ('policy_default' | translate) : data.policyName}}</span></td>
+          </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+    <!--右侧内容-->
+    <div nz-col [nzSpan]="18" class="policy-device-content-box common-border-left">
+      <div nz-row>
+        <div nz-col [nzSpan]="12" class="pb30i">
+          <!--后台硬编码 不要翻译 start-->
+          <span class="f18 text-primary-static">{{currentPolicy?.policyName === '默认策略' ? ('policy_default' | translate) : currentPolicy?.policyName}}</span>
+        </div>
+        <div nz-col [nzSpan]="12" class="tar">
+          <!--后台硬编码 不要翻译 start-->
+          <ng-container *ngIf="currentPolicy?.policyName !== '默认策略'">
+            <!--后台硬编码 不要翻译 end-->
+            <nz-dropdown class="ml10">
+              <button nz-button nz-dropdown appPermission><span>{{currentPolicy?.policyEnable ?
+                '使用'
+                :
+                '禁用'
+                }}</span> <i class="anticon anticon-down" appPermission></i></button>
+              <ul nz-menu>
+                <li nz-menu-item>
+                  <a href="javascript:void(0);" (click)="switchPolicyStatus()">{{currentPolicy?.policyEnable ?
+                    '禁用'
+                    :
+                    '使用'
+                    }}</a>
+                </li>
+              </ul>
+            </nz-dropdown>
+          </ng-container>
+          <button nz-button [nzType]="'default'" class="ml10" (click)="operatePolicy('edit')" appPermission>
+            <span><i class="icon-allicon-18 mr5 edit-hover-skyblue"></i>编辑</span>
+          </button>
+          <!--后台硬编码 不要翻译 start-->
+          <button nz-button [nzType]="'default'"  (click)="delPolicy()" appPermission
+                  *ngIf="currentPolicy?.policyName !== '默认策略' || !currentPolicy?.policyEnable">
+            <!--后台硬编码 不要翻译 end-->
+            <span><i class="icon-allicon-30 mr5"></i>删除</span>
+          </button>
+        </div>
+      </div>
+      <div nz-row class="mb10">
+        <div nz-col [nzSpan]="5">
+          {{contentName}}描述
+        </div>
+        <div nz-col [nzSpan]="19">
+          {{currentPolicy?.policyDescribe === '默认策略' ? ('policy_default' | translate) : currentPolicy?.policyDescribe}}
+        </div>
+      </div>
+      <!--后台硬编码 不要翻译 start-->
+      <ng-container *ngIf="isShowAll">
+        <!--后台硬编码 不要翻译 end-->
+        <div nz-row class="mb10">
+          <div nz-col [nzSpan]="5">
+            策略分配对象
+          </div>
+          <div nz-col [nzSpan]="19">
+            <app-policy-object *ngIf="currentPolicy?.policyObject" [policyObjectJson]="currentPolicy?.policyObject" [type]="1"></app-policy-object>
+          </div>
+        </div>
+        <div nz-row class="mb10">
+          <div nz-col [nzSpan]="5">
+            策略例外对象
+          </div>
+          <div nz-col [nzSpan]="19">
+            <app-policy-object *ngIf="currentPolicy?.policyExceptionObject" [policyObjectJson]="currentPolicy?.policyExceptionObject" [type]="2"></app-policy-object>
+          </div>
+        </div>
+        <div nz-row class="mb10">
+          <div nz-col [nzSpan]="5">
+            策略优先级
+          </div>
+          <div nz-col [nzSpan]="19">
+            {{currentPolicy?.policyLevel}}
+          </div>
+        </div>
+      </ng-container>
+      <div class="common-hr"></div>
+      <div class="policy-device-content-container">
+        <p class="header">策略详情</p>
+        <nz-collapseset class="common-collapseset">
+          <ng-container *ngFor="let item of policyItem">
+            <nz-collapse [nzTitle]="item.label" [nzActive]="true">
+              <div nz-row>
+                <div nz-col [nzSpan]="24">
+                  <ng-container [ngSwitch]="item.name">
+                    <app-policy-item-data-report *ngSwitchCase="'dataReport'" [system]="system" [config]="configData?.dataReport"></app-policy-item-data-report>
+                    <app-policy-item-position *ngSwitchCase="'position'" [system]="system" [config]="configData?.position"></app-policy-item-position>
+                    <app-policy-item-version *ngSwitchCase="'version'" [system]="system" [config]="configData?.version"></app-policy-item-version>
+                    <app-policy-item-function *ngSwitchCase="'function'" [system]="system" [config]="configData?.function"></app-policy-item-function>
+                    <app-policy-item-application *ngSwitchCase="'appBlackWhiteList'" [system]="system" [config]="configData?.appBlackWhiteList" [mode]="2" [applicationConfig]="configData?.function"></app-policy-item-application>
+                    <app-policy-item-application *ngSwitchCase="'requiredApp'" [system]="system" [config]="configData?.requiredApp" [mode]="1"></app-policy-item-application>
+                    <app-policy-item-network *ngSwitchCase="'network'" [system]="system" [config]="configData?.network"></app-policy-item-network>
+                    <app-policy-item-launcher *ngSwitchCase="'securityDesk'" [system]="system" [config]="configData?.securityDesk" [policyType]="policyType"></app-policy-item-launcher>
+                    <app-policy-item-enclosure *ngSwitchCase="'fencing'" [system]="system" [config]="configData?.fencing" [policyType]="policyType"></app-policy-item-enclosure>
+                    <app-policy-item-simple-app *ngSwitchCase="'simpleDesk'" [config]="configData?.simpleDesk" [policyType]="policyType" [system]="system"></app-policy-item-simple-app>
+                    <!--iOS设备配置项 start-->
+                    <app-policy-item-password *ngSwitchCase="'passwordConfig'" [system]="system" [config]="configData?.passwordConfig"></app-policy-item-password>
+                    <app-policy-item-wifi *ngSwitchCase="'wifi'" [system]="system" [config]="configData?.wifi"></app-policy-item-wifi>
+                    <app-policy-item-vpn *ngSwitchCase="'vpn'" [system]="system" [config]="configData?.vpn"></app-policy-item-vpn>
+                    <app-policy-item-air-print *ngSwitchCase="'AirPrint'" [system]="system" [config]="configData?.AirPrint"></app-policy-item-air-print>
+                    <app-policy-item-air-play *ngSwitchCase="'AirPlay'" [system]="system" [config]="configData?.AirPlay"></app-policy-item-air-play>
+                    <app-policy-item-calendar-configuration *ngSwitchCase="'CalendarConfiguration'" [system]="system" [config]="configData?.CalendarConfiguration"></app-policy-item-calendar-configuration>
+                    <app-policy-item-calendar-subscription *ngSwitchCase="'CalendarSubscription'" [system]="system" [config]="configData?.CalendarSubscription"></app-policy-item-calendar-subscription>
+                    <app-policy-item-address-book-synchronization *ngSwitchCase="'AddressBookSynchronization'" [system]="system" [config]="configData?.AddressBookSynchronization"></app-policy-item-address-book-synchronization>
+                    <app-policy-item-font-configuration *ngSwitchCase="'FontConfiguration'" [system]="system" [config]="configData?.FontConfiguration"></app-policy-item-font-configuration>
+                    <app-policy-item-web-clip *ngSwitchCase="'WebClip'" [system]="system" [config]="configData?.WebClip"></app-policy-item-web-clip>
+                    <app-policy-item-http-global-agent *ngSwitchCase="'HTTPGlobalAgent'" [system]="system" [config]="configData?.HTTPGlobalAgent"></app-policy-item-http-global-agent>
+                    <app-policy-item-application-access-restriction *ngSwitchCase="'ApplicationAccessRestriction'" [system]="system" [config]="configData?.ApplicationAccessRestriction"></app-policy-item-application-access-restriction>
+                    <app-policy-item-lock-screen-configuration *ngSwitchCase="'LockScreenConfiguration'" [system]="system" [config]="configData?.LockScreenConfiguration"></app-policy-item-lock-screen-configuration>
+                    <app-policy-item-google-account-configuration *ngSwitchCase="'GoogleAccountConfiguration'" [system]="system" [config]="configData?.GoogleAccountConfiguration"></app-policy-item-google-account-configuration>
+                    <app-policy-item-email-configuration *ngSwitchCase="'EmailConfiguration'" [system]="system" [config]="configData?.EmailConfiguration"></app-policy-item-email-configuration>
+                    <app-policy-item-exchange-email *ngSwitchCase="'ExchangeEmail'" [system]="system" [config]="configData?.ExchangeEmail"></app-policy-item-exchange-email>
+                    <app-policy-item-notification-configuration *ngSwitchCase="'NotificationConfiguration'" [system]="system" [config]="configData?.NotificationConfiguration"></app-policy-item-notification-configuration>
+                    <app-policy-item-sso-configuration *ngSwitchCase="'SSOConfiguration'" [system]="system" [config]="configData?.SSOConfiguration"></app-policy-item-sso-configuration>
+                    <app-policy-item-field-configuration *ngSwitchCase="'FieldConfiguration'" [system]="system" [config]="configData?.FieldConfiguration"></app-policy-item-field-configuration>
+                    <app-policy-item-mac-os-server-configuration *ngSwitchCase="'MacOsServerConfiguration'" [system]="system" [config]="configData?.MacOsServerConfiguration"></app-policy-item-mac-os-server-configuration>
+                    <app-policy-item-ldap-configuration *ngSwitchCase="'LDAPConfiguration'" [system]="system" [config]="configData?.LDAPConfiguration"></app-policy-item-ldap-configuration>
+                    <app-policy-item-web-content-filtering *ngSwitchCase="'WebContentFiltering'" [system]="system" [config]="configData?.WebContentFiltering"></app-policy-item-web-content-filtering>
+                    <!--<app-policy-item-main-screen *ngSwitchCase="'MainScreen'" [system]="system" [config]="configData?.MainScreen"></app-policy-item-main-screen>-->
+                    <!--iOS设备配置项 end-->
+                  </ng-container>
+                </div>
+              </div>
+            </nz-collapse>
+          </ng-container>
+        </nz-collapseset>
+      </div>
+    </div>
+  </div>
+</div>

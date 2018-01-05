@@ -1,0 +1,33 @@
+<!-- top -->
+<div nz-row [nzGutter]="0" class="search-wrap content-search-wrap common-border-left">
+  <div *ngIf="!files.contentDistribute" nz-col [nzSpan]="18">
+    <button nz-button [nzType]="'default'" (click)="newFolder()" appPermission>
+      <span><i class="icon-allicon-20 mr5 f12"></i>新建文件夹</span>
+    </button>
+    <button nz-button [nzType]="'default'" (click)="uploadFile()" appPermission>
+      <span><i class="icon-allicon-55 mr5 f12"></i>上传</span>
+    </button>
+    <nz-button-group>
+      <button nz-button (click)="documentPermissions()" class="ml5" appPermission><i class="icon-allicon-50 mr5 f12"></i>文档权限</button>
+      <button nz-button (click)="deleteRemote()" appPermission><i class="icon-allicon-51 mr5 f12"></i>远程删除</button>
+      <button nz-button (click)="move()" appPermission><i class="icon-allicon-26 mr5 f12"></i>移动</button>
+      <button nz-button (click)="copy()" appPermission><i class="icon-allicon-52 mr5 f12"></i>复制</button>
+    </nz-button-group>
+  </div>
+  <div *ngIf="files.contentDistribute" nz-col [nzSpan]="16">
+    <button nz-button [nzType]="'default'" (click)="visibleRange()" appPermission>
+        <i class="icon-allicon-57">
+          <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span><span class="path14"></span><span class="path15"></span><span class="path16"></span><span class="path17"></span>
+        </i>
+        <span>文档可见范围</span>
+    </button>
+    <button nz-button [nzType]="'default'" (click)="downloadPermissions()" appPermission>
+      <span><i class="icon-allicon-59 mr5 f12"></i>下载权限</span>
+    </button>
+  </div>
+  <div nz-col [nzSpan]="6" class="search-col">
+    <app-custom-search (searchChange)="searchChange($event)" (doSearch)="doSearch($event)"></app-custom-search>
+  </div>
+</div>
+<!-- table -->
+<app-content-all-files-table (distribute)="distribute($event)"></app-content-all-files-table>

@@ -1,0 +1,48 @@
+<!-- breadcrumb -->
+<nz-breadcrumb [nzSeparator]="' > '" class="content-breadcrumb common-border-left">
+  <nz-breadcrumb-item>全部文件</nz-breadcrumb-item>
+  <!--<nz-breadcrumb-item *ngFor="let b of files?.breadcrumb;">{{b}}</nz-breadcrumb-item>-->
+</nz-breadcrumb>
+<!-- table -->
+<div  class="content-table-thead content-content-table-thead">
+  <div>
+    <label class="mr10 pl14i" nz-checkbox [(ngModel)]="files.allChecked" (ngModelChange)="files.checkedAll($event)"
+           [nzIndeterminate]="files.indeterminate"></label>名称
+  </div>
+  <div>大小</div>
+  <div>类型</div>
+  <div>删除时间</div>
+  <div>有效时间</div>
+</div>
+<div class="cb"></div>
+<div class="content-table-wrap-short common-white-bg common-border-left" appCustomScrollbar [options]="options">
+  <nz-table class="content-table table-td-height44"
+            #nzTable
+            [nzAjaxData]="files.list"
+            [nzLoading]="files.isLoading"
+            [nzIsPagination]="false">
+    <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+        <td nz-td width="3%" [nzCheckbox]="true">
+          <label nz-checkbox [(ngModel)]="data.checked"
+                 (ngModelChange)="files.checked($event,data)">
+          </label>
+        </td>
+        <td nz-td width="50%"><a>{{data.name}}</a></td>
+        <td nz-td width="7%">{{data.flag}}</td>
+        <td nz-td width="10%">{{data.size}}</td>
+        <td nz-td width="15%">{{data.deleteTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+        <td nz-td width="15%">{{data.remainTime}}天</td>
+      </tr>
+      <!--loading-->
+      <tr nz-tbody-tr *ngIf="files.list.length < files.param.total">
+        <td nz-td [attr.colspan]="6">
+          <nz-spin [nzTip]="'正在读取数据...'">
+            <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+            </nz-alert>
+          </nz-spin>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

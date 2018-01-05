@@ -1,0 +1,275 @@
+<div>
+  <div nz-row [nzGutter]="20">
+    <div nz-col [nzSpan]="12">
+      <div class="dashboard-box">
+        <div nz-row>
+          <div nz-col [nzSpan]="24">
+            <div class="h30">总设备数</div>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col [nzSpan]="12">
+            <div class="f52">{{deviceNumber}}</div>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <div>
+              <img class="dashboard-img common-blue-bg" [src]="deviceImgUrl" alt="设备">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div nz-col [nzSpan]="12">
+      <div class="dashboard-box">
+        <div nz-row>
+          <div nz-col [nzSpan]="24">
+            <div class="h30">总用户数</div>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col [nzSpan]="12">
+            <div class="f52">{{userNumber}}</div>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <div>
+              <img class="dashboard-img common-green-bg" [src]="userImgUrl" alt="用户">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-box mt20">
+    <div nz-row>
+      <div nz-col [nzSpan]="24">
+        <div class="h30">违规设备</div>
+      </div>
+    </div>
+    <div id="dashboard-device-chart" class="dashboard-device-chart"></div>
+  </div>
+  <div nz-row [nzGutter]="42" class="mt20">
+    <div nz-col [nzSpan]="6">
+      <div class="dashboard-box-np">
+        <ul>
+          <li class="dashboard-list-item title">
+            <i class="icon-allicon-05 mr5"></i>部门
+          </li>
+          <li class="dashboard-list-item" *ngFor="let item of illegalDeptSummary;let i = index"
+              [class.dashboard-list-item-x-1]="illegalDeptSummary.length === 1"
+              [class.dashboard-list-item-x-2]="illegalDeptSummary.length === 2"
+              [class.dashboard-list-item-x-3]="illegalDeptSummary.length === 3"
+              [class.active]="item.isActive"
+              (click)="onClickSummary('queryDept', item)"
+              >
+            <div nz-row>
+              <div nz-col [nzSpan]="18" class="text-aux">
+                {{i===3 ? '其他' : item.name}}
+              </div>
+              <div nz-col [nzSpan]="6" class="tar">
+                {{item.count}}
+              </div>
+            </div>
+          </li>
+          <li class="dashboard-list-item dashboard-list-item-x-1 no-data" *ngIf="illegalDeptSummary.length === 0">
+            <div nz-row>
+              <div nz-col [nzSpan]="24" class="text-aux tac">
+                暂无数据
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div nz-col [nzSpan]="6">
+      <div class="dashboard-box-np">
+        <ul>
+          <li class="dashboard-list-item title">
+            <i class="icon-allicon-92 mr5 text-aux"></i>人员
+          </li>
+          <li class="dashboard-list-item" *ngFor="let item of illegalUserSummary;let i = index"
+              [class.dashboard-list-item-x-1]="illegalUserSummary.length === 1"
+              [class.dashboard-list-item-x-2]="illegalUserSummary.length === 2"
+              [class.dashboard-list-item-x-3]="illegalUserSummary.length === 3"
+              [class.active]="item.isActive"
+              (click)="onClickSummary('queryOwner', item)">
+            <div nz-row>
+              <div nz-col [nzSpan]="18" class="text-aux">
+                {{i===3 ? '其他' : item.name}}
+              </div>
+              <div nz-col [nzSpan]="6" class="tar">
+                {{item.count}}
+              </div>
+            </div>
+          </li>
+          <li class="dashboard-list-item dashboard-list-item-x-1 no-data" *ngIf="illegalUserSummary.length === 0">
+            <div nz-row>
+              <div nz-col [nzSpan]="24" class="text-aux tac">
+                暂无数据
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div nz-col [nzSpan]="6">
+      <div class="dashboard-box-np">
+        <ul>
+          <li class="dashboard-list-item title">
+            <i class="icon-allicon-77 mr5"></i>级别
+          </li>
+          <li class="dashboard-list-item dashboard-list-item-x-3" *ngFor="let item of illegalLevelSummary;let i = index;"
+              [class.active]="item.isActive"
+              (click)="onClickSummary('queryLevel', item)">
+            <div nz-row>
+              <div nz-col [nzSpan]="18" class="text-aux">
+                <span class="badge-block level-bg-{{i + 1}} va-3 mr5"></span>
+                {{item.name === '1' ?
+                '一级'
+                : (item.name === '2' ?
+                '二级'
+                :
+                '三级'
+                )}}
+              </div>
+              <div nz-col [nzSpan]="6" class="tar">
+                {{item.count}}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div nz-col [nzSpan]="6">
+      <!--np代表no padding-->
+      <div class="dashboard-box-np">
+        <ul>
+          <li class="dashboard-list-item title">
+            <i class="icon-allicon-43 mr5 dashboard-device"></i>设备
+          </li>
+          <li class="dashboard-list-item" *ngFor="let item of illegalDeviceSummary;let i = index"
+              [class.dashboard-list-item-x-1]="illegalDeviceSummary.length === 1"
+              [class.dashboard-list-item-x-2]="illegalDeviceSummary.length === 2"
+              [class.dashboard-list-item-x-3]="illegalDeviceSummary.length === 3"
+              [class.active]="item.isActive"
+              (click)="onClickSummary('queryDevice', item)">
+            <div nz-row>
+              <div nz-col [nzSpan]="18" class="text-aux">
+                {{i===3 ? '其他' : item.name}}
+              </div>
+              <div nz-col [nzSpan]="6" class="tar">
+                {{item.count}}
+              </div>
+            </div>
+          </li>
+          <li class="dashboard-list-item dashboard-list-item-x-1 no-data" *ngIf="illegalDeviceSummary.length === 0">
+            <div nz-row>
+              <div nz-col [nzSpan]="24" class="text-aux tac">
+                暂无数据
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!--经典品字结构-->
+  <div class="content-wrap mt20">
+    <div nz-row [nzGutter]="10" class="search-wrap common-box common-reset-margin">
+      <div nz-col [nzSpan]="11" class="w500i p0i">
+        <nz-radio-group [(ngModel)]="dateType" class="btn-group-bg">
+          <label nz-radio-button [nzValue]="1" (click)="changeDate(1)"><span>今天</span></label>
+          <label nz-radio-button [nzValue]="2" (click)="changeDate(2)"><span>近7天</span></label>
+          <label nz-radio-button [nzValue]="3" (click)="changeDate(3)"><span>近30天</span></label>
+        </nz-radio-group>
+        <nz-datepicker
+          class="ml7 w130"
+          (ngModelChange)="startDate=$event;startValueChange()"
+          [ngModel]="startDate"
+          [nzDisabledDate]="disabledStartDate"
+          [nzFormat]="'YYYY-MM-DD'"
+          [nzPlaceHolder]="'开始日期'"></nz-datepicker>
+        <nz-datepicker
+          class="ml7 w130"
+          (ngModelChange)="endDate=$event;endValueChange()"
+          [ngModel]="endDate"
+          [nzDisabledDate]="disabledEndDate"
+          [nzFormat]="'YYYY-MM-DD'"
+          [nzPlaceHolder]="'结束日期'"></nz-datepicker>
+      </div>
+      <div nz-col [nzSpan]="6" class="search-col">
+        <nz-input [nzPlaceHolder]="'search_placeholder' | translate" [nzSize]="'default'" [(ngModel)]="searchWord"
+                  (keyup.enter)="doSearch()"
+                  (ngModelChange)="changeSearchWord($event)">
+          <ng-template #addOnAfter><i class="anticon anticon-search" (click)="doSearch()"></i></ng-template>
+        </nz-input>
+        <i class="anticon anticon-close-circle clearSearch" (click)="searchWord='';doSearch()"
+           [class.dni]="searchWord===''"></i>
+      </div>
+      <!--<div nz-col [nzSpan]="2">-->
+        <!--<button nz-button [nzType]="'default'">-->
+          <!--<span>清空</span>-->
+        <!--</button>-->
+      <!--</div>-->
+      <div nz-col [nzSpan]="4" class="tar fri p0i">
+        <button nz-button [nzType]="'default'" (click)="exportData()" appButtonClick>
+          <span><i class="icon-allicon-23 mr5"></i>导出数据</span>
+        </button>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="0" class="push-content-wrap">
+      <div nz-col [nzSpan]="4" class="content-sider list-wrap common-border-right">
+        <ul>
+          <li (click)="changeType(1)"><a href="javascript:void(0);" [class.active]="type === 1">敏感词</a></li>
+          <li (click)="changeType(2)"><a href="javascript:void(0);" [class.active]="type === 2">违规网址</a></li>
+          <li (click)="changeType(3)"><a href="javascript:void(0);" [class.active]="type === 3">违规设备</a></li>
+        </ul>
+      </div>
+      <div nz-col [nzSpan]="20" class="dashboard-table-content common-border-left">
+        <div class="content-table-thead dashboard-table-tr">
+          <div class="common-none-border-left ti12">设备型号&持有人</div>
+          <div>部门</div>
+          <div>手机号</div>
+          <div>{{type === 1 ?
+            '敏感词'
+            : (type === 2 ?
+            '违规网址'
+            :
+            '违规类型'
+            )}}</div>
+          <div>级别</div>
+          <div>发生时间</div>
+        </div>
+        <div class="cb"></div>
+        <div class="content-table-wrap table-td-height" appCustomScrollbar [options]="options">
+          <nz-table class="content-table"
+                    #nzTable
+                    [nzAjaxData]="data"
+                    [nzIsPagination]="false"
+                    [nzLoading]="isLoading">
+
+            <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of nzTable.data" class="dashboard-table-tr"
+            >
+              <td nz-td>
+                <a>{{data.devicename}}</a>
+                <p>{{data.owner}}</p>
+              </td>
+              <td nz-td>{{data.deptName}}</td>
+              <td nz-td>{{data.phone}}</td>
+              <td nz-td>{{type === 1 ? data.sensitiveWord : (type === 2 ? data.ilegalURL : data.illegalType)}}</td>
+              <td nz-td class="level-{{data.alarmLevel}}">{{data.alarmLevel == 1 ?
+                '一级'
+                : (data.alarmLevel == 2 ?
+                '二级'
+                :
+                '三级'
+                )}}</td>
+              <td nz-td>{{data.updateTime}}</td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

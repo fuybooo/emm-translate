@@ -1,0 +1,230 @@
+<div>
+  <div class="content-wrap-wrapper mt30">
+    <div class="operate-box-title common-gray-bg">
+      <div nz-row>
+        <div nz-col [nzSpan]="18">
+          {{operate === 'add' ?
+          '添加'
+          :
+          '编辑'
+          }}{{system}}{{contentName}}
+        </div>
+        <div nz-col [nzSpan]="6" *ngIf="step === 2" class="tar pri40i">
+          <button nz-button [nzType]="'primary'" [nzSize]="'large'" class="w90"
+                  (click)="submit($event)">
+            保存
+          </button>
+          <button nz-button [nzSize]="'large'" (click)="handleCancel($event)" class="w90">取消</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="step===1" class="operate-box-body">
+      <form nz-form [formGroup]="policyForm">
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col [nzSpan]="3">
+            <label nz-form-item-required>{{contentName}}名称</label>
+          </div>
+          <div nz-col [nzOffset]="1" [nzSpan]="20" nz-form-control [nzValidateStatus]="getFormControl('policyName')" nzHasFeedback>
+            <input class="" formControlName="policyName" nz-input [placeholder]="'请输入' + contentName + '名称，最多不超过20个字'" [nzSize]="'large'">
+            <div nz-form-explain *ngIf="getFormControl('policyName').dirty&&getFormControl('policyName').hasError('required')">
+              请输入{{contentName}}名称！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('policyName').dirty&&getFormControl('policyName').hasError('maxlength')">
+              {{contentName}}
+              名称不能超过20个字！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('policyName').dirty&&getFormControl('policyName').hasError('duplicated')">
+              {{contentName}}
+              名称是重复的！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('policyName').dirty&&getFormControl('policyName').hasError('specialCharacter')">
+              {{contentName}}
+              名称只能包含数字，字母，-，_，@，#！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('policyName').dirty&&getFormControl('policyName').pending">
+              验证中...
+            </div>
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-col [nzSpan]="3" nz-form-label>
+            <label nz-form-item-required>{{contentName}}描述</label>
+          </div>
+          <div nz-col [nzOffset]="1" [nzSpan]="20" nz-form-control [nzValidateStatus]="getFormControl('policyDesc')" nzHasFeedback>
+            <nz-input [nzSize]="'large'" [nzType]="'textarea'" formControlName="policyDesc" [nzPlaceHolder]="
+            '请输入'
+             + contentName +
+             '描述，最多不超过200个字'
+            "></nz-input>
+            <div nz-form-explain *ngIf="getFormControl('policyDesc').dirty&&getFormControl('policyDesc').hasError('maxlength')">
+              {{contentName}}
+              描述不能超过200个字
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="isShowAll">
+          <div nz-form-item nz-row>
+            <div nz-col [nzSpan]="3" nz-form-label>
+              <label nz-form-item-required>{{contentName}}对象</label>
+            </div>
+            <div nz-col [nzOffset]="1" [nzSpan]="20" nz-form-control>
+              <div class="common-border">
+                <div nz-row>
+                  <div nz-col [nzSpan]="22" class="pl10i">
+                    <app-policy-object [policyObjectJson]="policyObject" [type]="1"></app-policy-object>
+                  </div>
+                  <div nz-col [nzSpan]="2" class="tar pri20i">
+                    <i class="icon-allicon-66 anticon-click" (click)="popupSelectObject(1)"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-col [nzSpan]="3" nz-form-label>
+              <label>{{contentName}}例外对象</label>
+              <p class="text-aux">此{{contentName}}外的人不启用</p>
+            </div>
+            <div nz-col [nzOffset]="1" [nzSpan]="20" nz-form-control>
+              <div class="common-border">
+                <div nz-row>
+                  <div nz-col [nzSpan]="22" class="pl10i">
+                    <app-policy-object [policyObjectJson]="policyExceptionObject" [type]="2"></app-policy-object>
+                  </div>
+                  <div nz-col [nzSpan]="2" class="tar pri20i">
+                    <i class="icon-allicon-66 anticon-click" (click)="popupSelectObject(2)"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-col [nzSpan]="3" nz-form-label>
+              <label nz-form-item-required>{{contentName}}优先级</label>
+            </div>
+            <div nz-col [nzOffset]="1" [nzSpan]="20" nz-form-control [nzValidateStatus]="getFormControl('policyPriority')">
+              <nz-select [nzSize]="'large'" class="w240i" formControlName="policyPriority">
+                <nz-option
+                  *ngFor="let option of levelOptions"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+    <div *ngIf="step===2" class="operate-box-content">
+      <div nz-row class="common-gray-bg">
+        <div nz-col [nzSpan]="5" class="operate-box-content-side common-gray-bg">
+          <ul class="sider">
+            <li class="pr" *ngFor="let item of policyItem" [class.active]="item.isActive" (click)="changeActive(item);">
+              <!--<label nz-checkbox [ngModel]="item.isChecked">-->
+              <!--</label>-->
+              <!--<div class="checkbox-mask"></div>-->
+              <span class="text-primary">{{item.label}}</span>
+              <p class="text-aux">{{item.isChecked ?
+                '已配置'
+                :
+                '未配置'
+                }}</p>
+              <i class="icon-allicon-17 fr" [hidden]="!item.isChecked"></i>
+            </li>
+          </ul>
+        </div>
+        <div class="operate-box-content-main common-white-bg common-border-left-content min-h496i" [class.min-h1400i]="system==='iOS' && policyType === 'devConfig'"  nz-col [nzSpan]="19">
+          <div nz-row>
+            <div nz-col [nzSpan]="24">
+              <div class="p20 text-primary-static">
+                {{currentPolicyItem.label}}
+              </div>
+            </div>
+          </div>
+          <div nz-row>
+            <div nz-col [nzSpan]="24" class="pl40i pri20i pb30i">
+              <div>
+                <ng-container *ngIf="policyType === 'devPolicy'">
+                  <app-policy-item-data-report [hidden]="currentPolicyItem.name !== 'dataReport'" [type]="operate" [system]="system" [config]="configData?.dataReport"></app-policy-item-data-report>
+                  <app-policy-item-position [hidden]="currentPolicyItem.name !== 'position'" [type]="operate" [system]="system" [config]="configData?.position"></app-policy-item-position>
+                  <app-policy-item-version [hidden]="currentPolicyItem.name !== 'version'" [type]="operate" [system]="system" [config]="configData?.version"></app-policy-item-version>
+                  <app-policy-item-function [hidden]="currentPolicyItem.name !== 'function'" [type]="operate" [system]="system" [config]="configData?.function"></app-policy-item-function>
+                  <app-policy-item-application [hidden]="currentPolicyItem.name !== 'appBlackWhiteList'" [type]="operate" [system]="system" [config]="configData?.appBlackWhiteList" [mode]="2" [applicationConfig]="configData?.function" [policyType]="policyType"></app-policy-item-application>
+                  <app-policy-item-application [hidden]="currentPolicyItem.name !== 'requiredApp'" [type]="operate" [system]="system" [config]="configData?.requiredApp" [mode]="1" [policyType]="policyType"></app-policy-item-application>
+                  <app-policy-item-network [hidden]="currentPolicyItem.name !== 'network'" [type]="operate" [system]="system" [config]="configData?.network"></app-policy-item-network>
+                  <ng-container *ngIf="system === 'iOS'">
+                    <app-policy-item-simple-app [hidden]="currentPolicyItem.name !== 'simpleDesk'" [type]="operate" [system]="system" [config]="configData?.simpleDesk" [policyType]="policyType"></app-policy-item-simple-app>
+                  </ng-container>
+                  <ng-container *ngIf="system === 'Android'">
+                    <app-policy-item-launcher [hidden]="currentPolicyItem.name !== 'securityDesk'" [type]="operate" [system]="system" [config]="configData?.securityDesk" [policyType]="policyType"></app-policy-item-launcher>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="policyType === 'devConfig'">
+                  <ng-container *ngIf="system === 'iOS'">
+                    <app-policy-item-password [hidden]="currentPolicyItem.name !== 'passwordConfig'" [type]="operate" [system]="system" [config]="configData?.passwordConfig"></app-policy-item-password>
+                    <app-policy-item-wifi [hidden]="currentPolicyItem.name !== 'wifi'" [type]="operate" [system]="system" [config]="configData?.wifi"></app-policy-item-wifi>
+                    <app-policy-item-vpn [hidden]="currentPolicyItem.name !== 'vpn'" [type]="operate" [system]="system" [config]="configData?.vpn"></app-policy-item-vpn>
+                    <app-policy-item-air-print [hidden]="currentPolicyItem.name !== 'AirPrint'" [type]="operate" [system]="system" [config]="configData?.AirPrint"></app-policy-item-air-print>
+                    <app-policy-item-air-play [hidden]="currentPolicyItem.name !== 'AirPlay'" [type]="operate" [system]="system" [config]="configData?.AirPlay"></app-policy-item-air-play>
+                    <app-policy-item-calendar-configuration [hidden]="currentPolicyItem.name !== 'CalendarConfiguration'" [type]="operate" [system]="system" [config]="configData?.CalendarConfiguration"></app-policy-item-calendar-configuration>
+                    <app-policy-item-calendar-subscription [hidden]="currentPolicyItem.name !== 'CalendarSubscription'" [type]="operate" [system]="system" [config]="configData?.CalendarSubscription"></app-policy-item-calendar-subscription>
+                    <app-policy-item-address-book-synchronization [hidden]="currentPolicyItem.name !== 'AddressBookSynchronization'" [type]="operate" [system]="system" [config]="configData?.AddressBookSynchronization"></app-policy-item-address-book-synchronization>
+                    <app-policy-item-font-configuration [hidden]="currentPolicyItem.name !== 'FontConfiguration'" [type]="operate" [system]="system" [config]="configData?.FontConfiguration"></app-policy-item-font-configuration>
+                    <app-policy-item-web-clip [hidden]="currentPolicyItem.name !== 'WebClip'" [type]="operate" [system]="system" [config]="configData?.WebClip"></app-policy-item-web-clip>
+                    <app-policy-item-http-global-agent [hidden]="currentPolicyItem.name !== 'HTTPGlobalAgent'" [type]="operate" [system]="system" [config]="configData?.HTTPGlobalAgent"></app-policy-item-http-global-agent>
+                    <app-policy-item-application-access-restriction [hidden]="currentPolicyItem.name !== 'ApplicationAccessRestriction'" [type]="operate" [system]="system" [config]="configData?.ApplicationAccessRestriction"></app-policy-item-application-access-restriction>
+                    <app-policy-item-lock-screen-configuration [hidden]="currentPolicyItem.name !== 'LockScreenConfiguration'" [type]="operate" [system]="system" [config]="configData?.LockScreenConfiguration"></app-policy-item-lock-screen-configuration>
+                    <app-policy-item-google-account-configuration [hidden]="currentPolicyItem.name !== 'GoogleAccountConfiguration'" [type]="operate" [system]="system" [config]="configData?.GoogleAccountConfiguration"></app-policy-item-google-account-configuration>
+                    <app-policy-item-email-configuration [hidden]="currentPolicyItem.name !== 'EmailConfiguration'" [type]="operate" [system]="system" [config]="configData?.EmailConfiguration"></app-policy-item-email-configuration>
+                    <app-policy-item-exchange-email [hidden]="currentPolicyItem.name !== 'ExchangeEmail'" [type]="operate" [system]="system" [config]="configData?.ExchangeEmail"></app-policy-item-exchange-email>
+                    <app-policy-item-notification-configuration [hidden]="currentPolicyItem.name !== 'NotificationConfiguration'" [type]="operate" [system]="system" [config]="configData?.NotificationConfiguration"></app-policy-item-notification-configuration>
+                    <app-policy-item-sso-configuration [hidden]="currentPolicyItem.name !== 'SSOConfiguration'" [type]="operate" [system]="system" [config]="configData?.SSOConfiguration"></app-policy-item-sso-configuration>
+                    <app-policy-item-field-configuration [hidden]="currentPolicyItem.name !== 'FieldConfiguration'" [type]="operate" [system]="system" [config]="configData?.FieldConfiguration"></app-policy-item-field-configuration>
+                    <app-policy-item-mac-os-server-configuration [hidden]="currentPolicyItem.name !== 'MacOsServerConfiguration'" [type]="operate" [system]="system" [config]="configData?.MacOsServerConfiguration"></app-policy-item-mac-os-server-configuration>
+                    <app-policy-item-ldap-configuration [hidden]="currentPolicyItem.name !== 'LDAPConfiguration'" [type]="operate" [system]="system" [config]="configData?.LDAPConfiguration"></app-policy-item-ldap-configuration>
+                    <app-policy-item-web-content-filtering [hidden]="currentPolicyItem.name !== 'WebContentFiltering'" [type]="operate" [system]="system" [config]="configData?.WebContentFiltering"></app-policy-item-web-content-filtering>
+                    <!--<app-policy-item-main-screen [hidden]="currentPolicyItem.name !== 'MainScreen'" [type]="operate" [system]="system" [config]="configData?.MainScreen"></app-policy-item-main-screen>-->
+                  </ng-container>
+                  <ng-container *ngIf="system === 'Android'">
+                    <app-policy-item-password [hidden]="currentPolicyItem.name !== 'passwordConfig'" [type]="operate" [system]="system" [config]="configData?.passwordConfig"></app-policy-item-password>
+                    <app-policy-item-wifi [hidden]="currentPolicyItem.name !== 'wifi'" [type]="operate" [system]="system" [config]="configData?.wifi"></app-policy-item-wifi>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="policyType === 'fencing'">
+                  <app-policy-item-enclosure [hidden]="currentPolicyItem.name !== 'fencing'" [type]="operate" [system]="system" [config]="configData?.fencing" [policyType]="policyType"></app-policy-item-enclosure>
+                  <ng-container *ngIf="system === 'iOS'">
+                    <app-policy-item-simple-app [hidden]="currentPolicyItem.name !== 'simpleDesk'" [type]="operate" [config]="configData?.simpleDesk" [policyType]="policyType" [system]="system"></app-policy-item-simple-app>
+                    </ng-container>
+                  <ng-container *ngIf="system === 'Android'">
+                    <app-policy-item-launcher [hidden]="currentPolicyItem.name !== 'securityDesk'" [type]="operate" [system]="system" [config]="configData?.securityDesk" [policyType]="policyType"></app-policy-item-launcher>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="policyType === 'securityDesk'">
+                  <app-policy-item-launcher [hidden]="currentPolicyItem.name !== 'securityDesk'" [type]="operate" [system]="system" [config]="configData?.securityDesk" [policyType]="policyType"></app-policy-item-launcher>
+                </ng-container>
+                <ng-container *ngIf="policyType === 'simpleDesk'">
+                  <app-policy-item-simple-app [hidden]="currentPolicyItem.name !== 'simpleDesk'" [type]="operate" [config]="configData?.simpleDesk" [policyType]="policyType" [system]="system"></app-policy-item-simple-app>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="operate-box-footer common-gray-bg">
+      <button nz-button [nzType]="'primary'" [nzSize]="'large'" *ngIf="step === 2"
+              (click)="step = 1;">
+        上一步
+      </button>
+      <button nz-button [nzType]="'primary'" [nzSize]="'large'"
+              (click)="submit()">
+        {{step === 2 ?
+        '保存'
+        :
+        '下一步'
+        }}
+      </button>
+      <button nz-button [nzSize]="'large'" (click)="handleCancel()">取消</button>
+    </div>
+  </div>
+</div>

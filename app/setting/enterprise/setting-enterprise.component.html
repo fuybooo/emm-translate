@@ -1,0 +1,126 @@
+<div nz-row [nzGutter]="20" class="h260i">
+  <div nz-col [nzSpan]="12">
+    <div class="h252i push-new common-gray-bg br4">
+      <div class="common-box ant-row" nz-row>
+        <div nz-col [nzSpan]="20">
+          LOGO
+        </div>
+        <div nz-col [nzSpan]="4" class="tar fr">
+          <button nz-button [nzType]="'default'" class="fr" (click)="upLoadLogo()" appPermission="1">
+            <span><i class="icon-allicon-55 mr5 f12"></i>上传LOGO</span>
+          </button>
+        </div>
+      </div>
+      <div class="p10i">
+        <div nz-row class="p20">
+          <div nz-col [nzSpan]="7">
+            LOGO
+            <p class="text-tip">logo的尺寸为200×50px</p>
+            <p class="text-tip"> 文件大小不能超过100KB</p>
+          </div>
+
+          <div nz-col [nzSpan]="14" class="mt10">
+            <img #img alt="example" width="200px" height="50px" src="{{'http://192.168.7.108' + logoImg}}"
+                 (error)="img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIUAAAAjCAYAAAC6n8nPAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE0RUVGMzRGQzc0QTExRTY4ODcxOTIwNEU1MzY5QzcwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE0RUVGMzUwQzc0QTExRTY4ODcxOTIwNEU1MzY5QzcwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTRFRUYzNERDNzRBMTFFNjg4NzE5MjA0RTUzNjlDNzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTRFRUYzNEVDNzRBMTFFNjg4NzE5MjA0RTUzNjlDNzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5Q6ndbAAAJ90lEQVR42uyc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'">
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div nz-col [nzSpan]="12">
+    <div class="h252i push-new br4">
+      <div class="common-box ant-row" nz-row>
+        序列号版本信息
+      </div>
+      <div class="container-wrap p10i lh30">
+        <div nz-row [nzGutter]="40" class="common-row">
+          <div nz-col [nzSpan]="7" class="tar lh50">
+            已有EMM序列号总数
+          </div>
+          <div nz-col [nzSpan]="16" class="lh50">
+            {{total}}
+          </div>
+        </div>
+        <div nz-row [nzGutter]="40" class="common-row">
+          <div nz-col [nzSpan]="7" class="tar lh50">
+            已使用个数
+          </div>
+          <div nz-col [nzSpan]="16" class="lh50">
+            {{useTotal}}
+          </div>
+        </div>
+        <div nz-row [nzGutter]="40" class="common-row">
+          <div nz-col [nzSpan]="7" class="tar lh50">
+            剩余可使用个数
+          </div>
+          <div nz-col [nzSpan]="16" class="lh50">
+            {{freeTotal}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div nz-row [nzGutter]="20">
+  <div nz-col [nzSpan]="12">
+    <div nz-row>
+      <div class="mt20 br4 push-new">
+        <div class="common-box ant-row" nz-row>
+          <div nz-col [nzSpan]="20">
+            用户协议
+          </div>
+          <div nz-col [nzSpan]="4" class="tar">
+            <button nz-button [nzType]="'default'" (click)="upLoadUserAgreement()" appPermission="1">
+              <span><i class="icon-allicon-55 mr5 f12"></i>上传文件</span>
+            </button>
+          </div>
+        </div>
+        <div class="p10i h400 bgc-f" appCustomScrollbar>
+          <div nz-row class="common-row">
+            <div nz-row [nzGutter]="40" class="common-row">
+              <div nz-col [nzSpan]="5" class="tar lh30">
+                文件名称
+              </div>
+              <div nz-col [nzSpan]="18" class="lh30">
+                EMM用户协议
+              </div>
+            </div>
+            <div nz-row [nzGutter]="40" class="common-row">
+              <div nz-col [nzSpan]="5" class="tar lh30">
+                用户协议内容
+              </div>
+              <div nz-col [nzSpan]="18" [innerHTML]="UserAgreementContent" class="lh30"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div nz-col [nzSpan]="12">
+    <div nz-row>
+      <div class="mt20 br4 push-new">
+        <div class="common-box ant-row" nz-row>
+          <div nz-col [nzSpan]="20">
+            下载
+          </div>
+        </div>
+        <div class="p10i h400 bgc-f">
+          <div nz-row class="common-row">
+            <div nz-row class="p20">
+              <div nz-col [nzSpan]="6">
+                ThunderEMM客户端
+              </div>
+              <div nz-col [nzSpan]="15" class="pr">
+                <img class="pa" #img alt="客户端二维码" width="350px" height="350px" src="{{environment.path + '/get_qrcode?platform=1'}}"
+                     (error)="img.src = ''">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

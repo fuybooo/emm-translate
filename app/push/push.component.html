@@ -1,0 +1,319 @@
+<div class="push-arrow">
+  <div class="content-wrap hi">
+    <div nz-row [nzGutter]="0" class="search-wrap common-box">
+      <div nz-col [nzSpan]="4">
+        <button nz-button [nzType]="'default'" (click)="newPush()" appPermission>
+          <span><i class="icon-allicon-20 mr5"></i>新建推送</span>
+        </button>
+      </div>
+      <div nz-col [nzOffset]="12" [nzSpan]="8" class="search-col">
+        <app-custom-search (searchChange)="searchChange($event)" (doSearch)="doSearch($event)"></app-custom-search>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="0" class="push-content-wrap">
+      <div nz-col [nzSpan]="4" class="content-sider list-wrap">
+        <ul>
+          <li>
+            <a href="javascript:void(0);" (click)="changeType('all')" [class.active]="activeType ==='all'">
+              所有推送
+              <span class="fr">{{allNumber}}</span>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0);" (click)="changeType('already')" [class.active]="activeType ==='already'">
+              待推送
+              <span class="fr">{{alreadyPush.number}}</span>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0);" (click)="changeType('not')" [class.active]="activeType ==='not'">
+              已推送
+              <span class="fr">{{notPush.number}}</span>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0);" (click)="changeType('drafts')" [class.active]="activeType ==='drafts'">
+              草稿箱
+              <span class="fr">{{drafts.number}}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div nz-col [nzSpan]="9" class="push-table-content common-border-left">
+        <div class="content-table-thead push-table-thead">
+          <div class="common-none-border-left pl20i">主题（描述）</div>
+          <div>发送时间</div>
+        </div>
+        <div class="cb"></div>
+        <div class="content-table-wrap-long" appCustomScrollbar>
+          <nz-collapseset>
+            <!-- 所有推送 -->
+            <ng-template [ngIf]="activeType ==='all'">
+              <nz-collapse [nzActive]="alreadyPush.nzActive" [nzDisabled]="false">
+                <div collapse-title>
+                  待推送
+                  <button class="nb fri" (click)="deleteAlreadyPush(null, $event)" appPermission>
+                    <i class="icon-allicon-30 anticon-click f14 mr20 delect-hover-red" appPermission></i>
+                  </button>
+                </div>
+                <div *ngIf="alreadyPush.service?.list.length < 8">
+                  <nz-table class="content-table table-td-height"
+                            #nzTableAlreadyPush
+                            [nzAjaxData]="alreadyPush.service.list"
+                            [nzIsPagination]="false">
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTableAlreadyPush.data" class="cp icon-hover-show"
+                        [class.active]="alreadyPush.service?.itemIsActive?.id === data.id"
+                        (click)="alreadyPush.service.active(data)">
+                      <td nz-td width="5%">
+                        <i class="icon-allicon-62 mr5 fl"></i>
+                      </td>
+                      <td nz-td width="55%">
+                       <span class="title-blue-color">
+                          <span>{{data.title}}</span><br>{{data.content}}
+                        </span>
+                        <button class="nb fri lh0i" (click)="deleteAlreadyPush(data, $event)" appPermission>
+                          <i class="icon-allicon-30 anticon-click mt-7 f14 icon-hover delect-hover-red" appPermission></i>
+                        </button>
+                      </td>
+                      <td nz-td width="40%" class="title-blue-color">
+                        {{data?.sendDate | date:'yyyy-MM-dd HH:mm:ss'}}
+                      </td>
+                    </tr>
+                    <!--loading-->
+                    <tr nz-tbody-tr *ngIf="alreadyPush.service.list.length < alreadyPush.service.param.total">
+                      <td nz-td [attr.colspan]="6">
+                        <nz-spin [nzTip]="'正在读取数据...'">
+                          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                          </nz-alert>
+                        </nz-spin>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+                <div *ngIf="alreadyPush.service?.list.length > 7" class="h400" appCustomScrollbar [options]="alreadyPush.options">
+                  <nz-table class="content-table table-td-height"
+                            #nzTableAlreadyPush
+                            [nzAjaxData]="alreadyPush.service.list"
+                            [nzIsPagination]="false">
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTableAlreadyPush.data" class="cp icon-hover-show"
+                        [class.active]="alreadyPush.service?.itemIsActive?.id === data.id"
+                        (click)="alreadyPush.service.active(data)">
+                      <td nz-td width="5%">
+                        <i class="icon-allicon-62 mr5 fl"></i>
+                      </td>
+                      <td nz-td width="55%">
+                       <span class="title-blue-color">
+                          <span>{{data.title}}</span><br>{{data.content}}
+                        </span>
+                        <button class="nb fri lh0i" (click)="deleteAlreadyPush(data, $event)" appPermission>
+                          <i class="icon-allicon-30 anticon-click mt-7 f14 icon-hover delect-hover-red" appPermission></i>
+                        </button>
+                      </td>
+                      <td nz-td width="40%" class="title-blue-color">
+                        {{data?.sendDate | date:'yyyy-MM-dd HH:mm:ss'}}
+                      </td>
+                    </tr>
+                    <!--loading-->
+                    <tr nz-tbody-tr *ngIf="alreadyPush.service.list.length < alreadyPush.service.param.total">
+                      <td nz-td [attr.colspan]="6">
+                        <nz-spin [nzTip]="'正在读取数据...'">
+                          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                          </nz-alert>
+                        </nz-spin>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+              </nz-collapse>
+              <nz-collapse [nzTitle]="'已推送'" [nzActive]="notPush.nzActive" [nzDisabled]="false" class="b_t_1">
+                <div class="h600" appCustomScrollbar [options]="notPush.options">
+                  <nz-table class="content-table table-td-height b_t_1"
+                            #nzTableotPush
+                            [nzAjaxData]="notPush.service.list"
+                            [nzIsPagination]="false">
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTableotPush.data"
+                        [class.active]="notPush.service?.itemIsActive?.id === data.id"
+                        (click)="notPush.service.active(data)">
+                      <td nz-td width="5%">
+                        <i class="icon-allicon-64 mr5 fl"></i>
+                      </td>
+                      <td nz-td width="55%">
+                        <span class="title-blue-color">
+                          <span>{{data.title}}</span><br>{{data.content}}
+                        </span>
+                      </td>
+                      <td nz-td width="40%" class="title-blue-color">
+                        {{data?.sendDate | date:'yyyy-MM-dd HH:mm:ss'}}
+                      </td>
+                    </tr>
+                    <!--loading-->
+                    <tr nz-tbody-tr *ngIf="notPush.service.list.length < notPush.service.param.total">
+                      <td nz-td [attr.colspan]="6">
+                        <nz-spin [nzTip]="'正在读取数据...'">
+                          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                          </nz-alert>
+                        </nz-spin>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+              </nz-collapse>
+            </ng-template>
+            <!-- 待推送 -->
+            <ng-template [ngIf]="activeType ==='already'">
+              <nz-collapse [nzActive]="alreadyPush.nzActive"
+                           [nzDisabled]="false">
+                <div collapse-title>
+                  待推送
+                  <button class="nb fri" (click)="deleteAlreadyPush(null, $event)" appPermission>
+                    <i class="icon-allicon-30 anticon-click f14 mr20 lh26 delect-hover-red" appPermission></i>
+                  </button>
+                </div>
+                <div class="content-table-wrap" appCustomScrollbar [options]="alreadyPush.options">
+                  <nz-table class="content-table table-td-height"
+                            #nzTable
+                            [nzAjaxData]="alreadyPush.service.list"
+                            [nzIsPagination]="false">
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTable.data" class="cp icon-hover-show"
+                        [class.active]="alreadyPush.service?.itemIsActive?.id === data.id"
+                        (click)="alreadyPush.service.active(data)">
+                      <td nz-td width="5%">
+                        <i class="icon-allicon-62 mr5 fl"></i>
+                      </td>
+                      <td nz-td width="55%">
+                        <span class="title-blue-color">
+                          <span>{{data.title}}</span><br>{{data.content}}
+                        </span>
+                        <button class="nb fri mt-10" (click)="deleteAlreadyPush(data, $event)" appPermission>
+                          <i class="icon-allicon-30 anticon-click f14 icon-hover delect-hover-red" appPermission></i>
+                        </button>
+                      </td>
+                      <td nz-td width="40%" class="title-blue-color">
+                        {{data?.sendDate | date:'yyyy-MM-dd HH:mm:ss'}}
+                      </td>
+                    </tr>
+                    <!--loading-->
+                    <tr nz-tbody-tr *ngIf="alreadyPush.service.list.length < alreadyPush.service.param.total">
+                      <td nz-td [attr.colspan]="6">
+                        <nz-spin [nzTip]="'正在读取数据...'">
+                          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                          </nz-alert>
+                        </nz-spin>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+              </nz-collapse>
+            </ng-template>
+            <!-- 已推送 -->
+            <ng-template [ngIf]="activeType ==='not'">
+              <nz-collapse [nzTitle]="'已推送'" [nzActive]="notPush.nzActive" [nzDisabled]="false">
+                <div class="content-table-wrap" appCustomScrollbar [options]="notPush.options">
+                  <nz-table class="content-table table-td-height"
+                            #nzTable
+                            [nzAjaxData]="notPush.service.list"
+                            [nzIsPagination]="false">
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTable.data"
+                        [class.active]="notPush.service?.itemIsActive?.id === data.id"
+                        (click)="notPush.service.active(data)">
+                      <td nz-td width="5%">
+                        <i class="icon-allicon-64 mr5 fl"></i>
+                      </td>
+                      <td nz-td width="55%">
+                        <span class="title-blue-color">
+                          <span>{{data.title}}</span><br>{{data.content}}
+                        </span>
+                      </td>
+                      <td nz-td width="40%" class="title-blue-color">
+                        {{data?.sendDate | date:'yyyy-MM-dd HH:mm:ss'}}
+                      </td>
+                    </tr>
+                    <!--loading-->
+                    <tr nz-tbody-tr *ngIf="notPush.service.list.length < notPush.service.param.total">
+                      <td nz-td [attr.colspan]="6">
+                        <nz-spin [nzTip]="'正在读取数据...'">
+                          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                          </nz-alert>
+                        </nz-spin>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+              </nz-collapse>
+            </ng-template>
+            <!-- 草稿箱 -->
+            <ng-template [ngIf]="activeType ==='drafts'">
+              <nz-collapse [nzActive]="drafts.nzActive" [nzDisabled]="false">
+                <div collapse-title>
+                  草稿箱
+                  <button class="nb fri" (click)="deleteDrafts(null, $event)" appPermission>
+                    <i class="icon-allicon-30 anticon-click f14 mr20 lh26 delect-hover-red mt-7" appPermission></i>
+                  </button>
+                </div>
+                <div class="content-table-wrap" appCustomScrollbar [options]="drafts.options">
+                  <nz-table class="content-table table-td-height"
+                            #nzTable
+                            [nzAjaxData]="drafts.service.list"
+                            [nzIsPagination]="false">
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTable.data" class="icon-hover-show"
+                        [class.active]="drafts.service?.itemIsActive?.id === data.id"
+                        (click)="drafts.service.active(data)">
+                      <td nz-td width="60%">
+                        <!--<i class="icon-allicon-62 mr5 f20 fl"></i>-->
+                        <span class="title-blue-color">
+                          <span>{{data.title}}</span><br>{{data.content}}
+                        </span>
+                        <button class="nb fri mt-10" (click)="deleteDrafts(data, $event)" appPermission>
+                          <i class="icon-allicon-30 anticon-click icon-hover delect-hover-red" appPermission></i>
+                        </button>
+                      </td>
+                      <td nz-td width="40%" class="title-blue-color">
+                        {{data?.sendDate | date:'yyyy-MM-dd HH:mm:ss'}}
+                      </td>
+                    </tr>
+                    <!--loading-->
+                    <tr nz-tbody-tr *ngIf="drafts.service.list.length < drafts.service.param.total">
+                      <td nz-td [attr.colspan]="6">
+                        <nz-spin [nzTip]="'正在读取数据...'">
+                          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                          </nz-alert>
+                        </nz-spin>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+              </nz-collapse>
+            </ng-template>
+          </nz-collapseset>
+        </div>
+      </div>
+      <div nz-col [nzSpan]="11">
+        <div nz-row class="h40 p10 pl20i common-gray-bg common-border-buttom">
+          <div nz-col [nzSpan]="20">{{pushDetailTitle ? pushDetailTitle :
+            '详情'
+            }}</div>
+          <div *ngIf="pushDetailTitle && activeType !=='not'" nz-col [nzSpan]="4" class="tar">
+            <i class="icon-allicon-18 anticon-click mr5 fr edit-hover-skyblue" (click)="editPush()" appPermission></i>
+          </div>
+        </div>
+        <div class="cb"></div>
+        <div class="p10" appCustomScrollbar>
+          <img *ngIf="!pushDetailTitle" class="db m150_a" [src]="blankImgSrc" alt="没有信息">
+          <app-custom-form *ngIf="pushDetailTitle" [options]="pushFormById"></app-custom-form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

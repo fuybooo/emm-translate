@@ -1,0 +1,25 @@
+<div nz-col [nzSpan]="18" class="content-box-wrap policy-device-content-box common-border-left">
+  <div class="text-primary-static">{{currentViolation?.label}}</div>
+  <div class="policy-version-box">
+    Android4.4+
+  </div>
+  <div appCustomScrollbar class="content-box">
+    <div *ngFor="let item of this.itemData" class="mb10">
+      <label nz-checkbox [nzDisabled]="isView || item.isDisabled" [(ngModel)]="item.value">
+        <span>{{item.label}}</span>
+      </label>
+      <ng-container *ngIf="item.field === 'lockDevice' && item.value">
+        <span *ngIf="!showPassword" class="nz-input-w180i"><nz-input [nzPlaceHolder]="'锁定设备后请设置设备密码'" [(ngModel)]="devicePassword" (ngModelChange)="changePassword($event);" [nzType]="'password'" [nzDisabled]="isView"></nz-input></span>
+        <span *ngIf="showPassword" class="nz-input-w180i"><nz-input [nzPlaceHolder]="'锁定设备后请设置设备密码'"  [(ngModel)]="devicePassword"  [nzType]="'text'" [nzDisabled]="isView" ></nz-input></span>
+        <i class="cp" [class.icon-allicon-89]="!showPassword" [class.icon-allicon-88]="showPassword" (mousedown)="showPassword = true;" (mouseup)="showPassword=false;"></i>
+        <span class="text-warning">{{errorMsg}}</span>
+      </ng-container>
+    </div>
+    <div class="mb10 pl20" [class.text-diseditable]="isView">启用功能限制</div>
+    <div *ngFor="let item of this.itemFunctionData" class="mb10 pl20">
+      <label nz-checkbox [nzDisabled]="isView" [(ngModel)]="item.value">
+        <span>{{item.label}}</span>
+      </label>
+    </div>
+  </div>
+</div>

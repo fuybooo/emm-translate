@@ -1,0 +1,30 @@
+<div *ngIf="type===''">
+  <div class="content-section-title" appCustomScrollbar>详情</div>
+  <div class="table-wrap pt32">
+    <!--<nz-spin [nzTip]="'正在读取数据...'">-->
+      <!--<nz-alert [nzType]="'info'" [nzMessage]="'请选择用户/用户组'"-->
+                <!--[nzDescription]="'当您选择：用户/用户组 后，此处将显示对应的用户/用户组的详细信息'">-->
+      <!--</nz-alert>-->
+    <!--</nz-spin>-->
+    <img *ngIf="!pushDetailTitle" class="db m150_a" [src]="blankImgSrc" alt="没有信息">
+  </div>
+</div>
+<div *ngIf="type==='userGroup'">
+  <div class="content-section-title">用户组详情</div>
+  <div class="table-wrap pt32">
+    <app-custom-form [options]="userGroupForm"></app-custom-form>
+  </div>
+</div>
+<div *ngIf="type==='dept'">
+  <div class="content-section-title">部门详情</div>
+  <div class="table-wrap pt32">
+    <app-custom-form [options]="deptForm"></app-custom-form>
+  </div>
+</div>
+<div *ngIf="type==='user'">
+  <div class="content-section-title">用户详情</div>
+  <div class="table-wrap pt32" appCustomScrollbar>
+    <app-custom-form [options]="userForm"></app-custom-form>
+  </div>
+</div>
+

@@ -1,0 +1,94 @@
+<div class="page-wrap">
+  <div class="content-wrap hi comm">
+    <div nz-row [nzGutter]="0" class="hi">
+      <div nz-col [nzSpan]="4" class="content-left-wrap common-gray-bg">
+        <ul>
+          <li><a [class.active]="adminType === 'allAdministrator'"
+                 (click)="adminTypeCheck('allAdministrator')" href="javascript:void(0);">全部管理员</a></li>
+          <li><a [class.active]="adminType === 'superAdministrator'"
+                 (click)="adminTypeCheck('superAdministrator')" href="javascript:void(0);">超级管理员</a></li>
+          <li><a [class.active]="adminType === 'departmentAdministrator'"
+                 (click)="adminTypeCheck('departmentAdministrator')" href="javascript:void(0);">部门管理员</a></li>
+          <li><a [class.active]="adminType === 'superReadOnlyAdministrator'"
+                 (click)="adminTypeCheck('superReadOnlyAdministrator')" href="javascript:void(0);">全局只读管理员</a></li>
+          <li><a [class.active]="adminType === 'departmentReadOnlyAdministrator'"
+                 (click)="adminTypeCheck('departmentReadOnlyAdministrator')" href="javascript:void(0);">部门只读管理员</a></li>
+        </ul>
+      </div>
+      <div nz-col [nzSpan]="20" class="">
+        <!-- top -->
+        <div nz-row [nzGutter]="0" class="search-wrap content-search-wrap common-border-left pl10">
+          <div nz-col [nzSpan]="16">
+            <button nz-button [nzType]="'default'" (click)="add()" appPermission="1">
+              <span><i class="icon-allicon-20 mr5"></i>添加管理员</span>
+            </button>
+            <button nz-button [nzType]="'default'" (click)="delete(null)" appPermission="1">
+              <span><i class="icon-allicon-29 mr5 "></i>批量撤销</span>
+            </button>
+          </div>
+          <div nz-col [nzSpan]="8" class="search-col">
+            <app-custom-search (searchChange)="searchChange($event)" (doSearch)="doSearch($event)"></app-custom-search>
+          </div>
+        </div>
+        <!-- table -->
+        <div class="content-table-thead setting-admin-table-tr">
+          <div class="ti7">
+            <!--<label nz-checkbox [(ngModel)]="allIsChecked" (ngModelChange)="refreshStatus($event)"></label>-->
+            <label nz-checkbox [(ngModel)]="adminService.allChecked" (ngModelChange)="adminService.checkedAll($event)"
+                   [nzIndeterminate]="adminService.indeterminate"></label>
+          </div>
+          <div class="ti6 table-td-sort {{adminService.param.sortName === 'adminname' ? adminService.param.sortOrder : ''}}">
+            用户名
+            <span>
+              <i class="anticon anticon-caret-up" (click)="adminService.sort('adminname', 'asc')"></i>
+              <i class="anticon anticon-caret-down" (click)="adminService.sort('adminname', 'desc')"></i>
+            </span>
+          </div>
+          <div>姓名</div>
+          <div>管理员角色</div>
+          <div>更多操作</div>
+        </div>
+        <div class="cb"></div>
+        <div class="content-table-wrap common-border-left" appCustomScrollbar [options]="options">
+          <nz-table class="content-table table-td-height44"
+                    #nzTable
+                    [nzAjaxData]="adminService.list"
+                    [nzLoading]="adminService.isLoading"
+                    [nzIsPagination]="false">
+            <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of nzTable.data" class="setting-admin-table-tr">
+              <td nz-td [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="data.checked"
+                       (ngModelChange)="adminService.checked($event,data)">
+                </label>
+              </td>
+              <td nz-td>
+                <a>{{data.userName}}</a>
+              </td>
+              <td nz-td><a class="text-aux">{{data.displayName}}</a></td>
+              <td nz-td><a class="text-aux">{{data.role | settingAdminType}}</a></td>
+              <td nz-td class="setting-hover-admin">
+                <button class="nb" (click)="edit(data)" appPermission="1">
+                  <i class="icon-allicon-18 anticon-click ml3 mr2 edit-hover-skyblue" title="编辑管理员权限" appPermission="1"></i>
+                </button>
+                <button class="nb" (click)="delete(data)" appPermission="1">
+                  <i class="icon-allicon-30 anticon-click ml3 mr2 delect-hover-red" title="撤销管理员权限" appPermission="1"></i>
+                </button>
+              </td>
+            </tr>
+            <!--loading-->
+            <tr nz-tbody-tr *ngIf="false">
+              <td nz-td [attr.colspan]="6">
+                <nz-spin [nzTip]="'正在读取数据...'">
+                  <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                  </nz-alert>
+                </nz-spin>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

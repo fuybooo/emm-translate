@@ -1,0 +1,587 @@
+<!-- 参数说明： -->
+<form nz-form [nzLayout]="options.layout" [formGroup]="options.formGroup">
+  <!-- item -->
+  <div *ngFor="let item of options.items" [ngSwitch]="item.type || 'string'">
+    <!-- item.hide -->
+    <div *ngIf="!item.hide" nz-form-item nz-row [nzGutter]="item.gutter || options.gutter">
+      <!-- label -->
+      <ng-template [ngIf]="item.label">
+        <div nz-form-label [class.tali]="options.labelLeft" nz-col [nzSm]="item.labelSm || options.labelSm"
+             [nzXs]="item.labelXs || options.labelXs">
+          <label *ngIf="!item.required || (item.readonly || options.readonly)">
+            {{item.label}}
+            <nz-tooltip *ngIf="item.labelCue" [nzTitle]="item.labelCue">
+              <i nz-tooltip class="anticon anticon-question-circle-o"></i>
+            </nz-tooltip>
+          </label>
+          <label *ngIf="item.required && !(item.readonly || options.readonly)" nz-form-item-required>
+            {{item.label}}
+            <nz-tooltip *ngIf="item.labelCue" [nzTitle]="item.labelCue">
+              <i nz-tooltip class="anticon anticon-question-circle-o"></i>
+            </nz-tooltip>
+          </label>
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="!item.label">
+        <div nz-col [nzSm]="item.labelSm || options.labelSm"></div>
+      </ng-template>
+
+      <!-- loading -->
+      <div *ngIf="item.loading ? true : options.loading" class="p8">
+        <nz-spin></nz-spin>
+      </div>
+      <!-- !loading -->
+      <ng-template [ngIf]="!(item.loading ? true : options.loading)">
+        <!-- 简单输入框 || 默认类型 -->
+        <div *ngSwitchCase="'string'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))"
+             [nzValidateStatus]="options.getFormControl(item.key)" nzHasFeedback>
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span [innerHTML]="options.getFormControl(item.key).value | customFormItemValuePipe: item.pipe"></span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <nz-input formControlName={{item.key}} [nzPlaceHolder]="item.placeHolder"
+                      [nzSize]="item.size || options.inputSize" (keyup.enter)="item.enter && item.enter.emit()">
+            </nz-input>
+            <div *ngFor="let explain of item.explains">
+              <div nz-form-explain *ngIf="explain.validate(options.getFormControl(item.key))">
+                {{explain.desc}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- time -->
+        <div *ngSwitchCase="'time'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))"
+             [nzValidateStatus]="options.getFormControl(item.key)" nzHasFeedback>
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            {{options.getFormControl(item.key).value | date:'yyyy-MM-dd HH:mm:ss'}}
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <nz-input formControlName={{item.key}} [nzPlaceHolder]="item.placeHolder"
+                      [nzSize]="item.size || options.inputSize" (keyup.enter)="item.enter && item.enter.emit()">
+            </nz-input>
+            <div *ngFor="let explain of item.explains">
+              <div nz-form-explain *ngIf="explain.validate(options.getFormControl(item.key))">
+                {{explain.desc}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- text -->
+        <div *ngSwitchCase="'text'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))"
+             [nzValidateStatus]="options.getFormControl(item.key)" nzHasFeedback>
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            {{options.getFormControl(item.key).value}}
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <nz-input formControlName={{item.key}} [nzRows]="4" [nzType]="'textarea'"
+                      [nzPlaceHolder]="item.placeHolder" [nzSize]="item.size || options.inputSize">
+            </nz-input>
+            <div *ngFor="let explain of item.explains">
+              <div nz-form-explain *ngIf="explain.validate(options.getFormControl(item.key))">
+                {{explain.desc}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- select：回显 [].join(',')  编辑: nz-select: select_multiple -->
+        <div *ngSwitchCase="'select'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))"
+             [nzValidateStatus]="options.getFormControl(item.key)">
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span *ngFor="let v of item.value; last as isLast">
+              {{v}}<span *ngIf="!isLast">、</span>
+            </span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <ng-template [ngIf]="item.nzSearchChange">
+              <nz-select nzKeepUnListOptions [nzFilter]="false" [nzMode]="'multiple'"
+                         [nzPlaceHolder]="item.placeHolder ||
+                         '请输入关键字搜索'
+                         " (nzSearchChange)="item.nzSearchChange($event)"
+                         formControlName={{item.key}} [nzSize]="item.size || options.inputSize"
+                         [nzNotFoundContent]="'无法找到'">
+                <nz-option
+                  *ngFor="let option of item.options"
+                  [nzDisabled]="option.disabled"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </ng-template>
+            <ng-template [ngIf]="!item.nzSearchChange">
+              <nz-select [nzMode]="'multiple'" [nzPlaceHolder]="item.placeHolder ||
+              '请选择'"
+                         formControlName={{item.key}} [nzSize]="item.size || options.inputSize">
+                <nz-option
+                  *ngFor="let option of item.options"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </ng-template>
+            <div *ngFor="let explain of item.explains">
+              <div nz-form-explain *ngIf="explain.validate(options.getFormControl(item.key))">
+                {{explain.desc}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- radio -->
+        <div *ngSwitchCase="'radio'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <nz-radio-group formControlName={{item.key}} (ngModelChange)="item?.change($event)">
+              <label [class.dbi]="item?.row" *ngFor="let option of item.options" nz-radio [nzValue]="option.value">
+                <span>{{option.label}}</span>
+              </label>
+            </nz-radio-group>
+          </div>
+        </div>
+        <!-- radio-push -->
+        <div *ngSwitchCase="'radio-push'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span *ngIf="item.sendTypeShow === 1">立即</span>
+            <span *ngIf="item.sendTypeShow === 2">定时</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>{{options.getFormControl(item.key).value | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <nz-radio-group formControlName={{item.key}}>
+              <label *ngFor="let option of item.options" nz-radio [nzValue]="option.value">
+                <span>{{option.label}}</span>
+              </label>
+            </nz-radio-group>
+            <nz-datepicker [nzDisabled]="options.getFormControl(item.key).value !== '1'" formControlName="date" [nzSize]="'large'">
+            </nz-datepicker>
+            <nz-timepicker [nzDisabled]="options.getFormControl(item.key).value !== '1'" formControlName="time" [nzSize]="'large'">
+            </nz-timepicker>
+          </div>
+        </div>
+        <!-- checkbox -->
+        <div *ngSwitchCase="'checkbox'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <!--todo: type: checkbox  查看的效果-->
+            <ng-template [ngIf="options.getFormControl(item.key).value"]>
+              已启用
+              &nbsp;：&nbsp;&nbsp;{{item.placeHolder}}
+            </ng-template>
+            <ng-template [ngIf="!options.getFormControl(item.key).value"]>
+              未启用
+              &nbsp;：&nbsp;&nbsp;{{item.placeHolder}}
+            </ng-template>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <label nz-checkbox formControlName={{item.key}}>
+              <span class="dib" *ngIf="item.placeHolder">{{item.placeHolder}}</span>
+              <span class="dib ml5 f12 text-aux">{{item.describe}}</span>
+            </label>
+          </div>
+        </div>
+        <!-- switch -->
+        <div *ngSwitchCase="'switch'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))"
+             [nzValidateStatus]="options.getFormControl(item.key)" nzHasFeedback>
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <nz-switch formControlName={{item.key}}></nz-switch>
+            <span class="ml10">{{item.placeHolder}}</span>
+          </div>
+        </div>
+        <!-- tree：回显 -->
+        <div *ngSwitchCase="'tree'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))"
+             [nzValidateStatus]="options.getFormControl(item.key)" nzHasFeedback>
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span *ngFor="let v of item.value; last as isLast">
+              {{v}}<span class="c-555" *ngIf="!isLast">&nbsp;<span>、</span>&nbsp;</span>
+            </span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+
+          </div>
+        </div>
+        <!-- file -->
+        <div *ngSwitchCase="'file'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))"
+             [nzValidateStatus]="options.getFormControl(item.key)" nzHasFeedback>
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span *ngFor="let v of item.value; last as isLast">
+              {{v}}<span class="c-555" *ngIf="!isLast">&nbsp;<span>、</span>&nbsp;</span>
+            </span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <!-- ng2FileSelect 文件上传 多选 -->
+            <div *ngIf="item.multiple" >
+              <button type="button" nz-button [nzType]="'primary'" class="btn-secondary" (click)="file.click();" appPermission>
+                <span>请选择文件</span>
+              </button>
+              <input #file type="file" ng2FileSelect [uploader]="item.uploader" multiple/>
+              <span class="text-tip ml10">{{item.uploadDesc ? item.uploadDesc :
+                '支持所有文件格式'
+                }}</span>
+            </div>
+            <!-- ng2FileSelect 文件上传 单选 -->
+            <div *ngIf="!item.multiple" >
+              <button type="button" nz-button [nzType]="'primary'" class="btn-secondary" (click)="file.click();" appPermission>
+                <span>请选择文件</span>
+              </button>
+              <input #file type="file" ng2FileSelect [uploader]="item.uploader"/>
+              <span class="text-tip ml10 content-updata">{{item.uploadDesc ? item.uploadDesc :
+                '支持所有文件格式'
+                }}</span>
+            </div>
+            <div class="max-h100i" appCustomScrollbar>
+              <div nz-row [nzGutter]="20" *ngFor="let item of item.uploader.queue">
+                <div nz-col [nzSpan]="1">
+                  <i *ngIf="!item.icon" class="anticon anticon-question-circle-o"></i>
+                  <div *ngIf="item.icon" class="icon-file small vam {{item.icon}}"></div>
+                </div>
+                <div nz-col [nzSpan]="15" class="wba">{{item?.file?.name}}</div>
+                <div nz-col [nzSpan]="4">{{item?.file?.size | fileSize}}</div>
+                <div nz-col [nzSpan]="3" title="上传进度">
+                  {{item?.progress}}%
+                  <!--<i class="anticon anticon-close-circle"></i>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- file-app-img -->
+        <div *ngSwitchCase="'file-app-img'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span *ngFor="let v of item.value; last as isLast">
+              {{v}}<span class="c-555" *ngIf="!isLast">&nbsp;<span>、</span>&nbsp;</span>
+            </span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <!-- ng2FileSelect 文件上传 多选 -->
+            <div *ngIf="item.multiple" >
+              <button type="button" nz-button [nzType]="'primary'"
+                      [disabled]="options.getFormControl(item.key).value.queue.length > 3 || options.getFormControl(item.key).value.remoteAddrImgs"
+                      class="btn-secondary" (click)="file.click();" appPermission>
+                <span>请选择文件</span>
+              </button>
+              <input #file type="file" ng2FileSelect [uploader]="item.value" multiple/>
+              <span class="text-tip ml10 f12i">{{item.uploadDesc ? item.uploadDesc :
+                '支持所有文件格式'
+                }}</span>
+            </div>
+            <div *ngIf="item.value.remoteAddrImgs" class="file-app-img-cp-re">
+              <div *ngFor="let img of item.value.remoteAddrImgs">
+                <img alt="应用截图...(加载失败)" width="75px" height="120px" class="dbi" src="{{img}}">
+              </div>
+              <div class="hover" (click)="item.value.remoteAddrImgs = null;">
+                删除
+              </div>
+            </div>
+            <div *ngIf="!item.value.remoteAddrImgs" class="file-app-img-cp">
+              <div *ngFor="let file of item.value.queue; let i = index; last as isLast" [class.mr10]="!isLast">
+                <div class="app-img">
+                  <img [src]="file?.src_file" [class.big]="item.big === i" (click)="item.big = -1;">
+                  <div class="icon-71-85">
+                    <i class="cp icon-allicon-71 f16" (click)="file.remove();"></i>
+                    <i class="cp icon-allicon-85 f16" (click)="item.big = i"></i>
+                  </div>
+                </div>
+                <div class="app-upload" *ngIf="file.progress !== 100">
+                  <nz-progress [ngModel]="file.progress" [ngModelOptions]="{standalone: true}"
+                               [nzType]="'circle'" [nzWidth]="40"></nz-progress>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- file-app -->
+        <div *ngSwitchCase="'file-app'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))"
+             [nzValidateStatus]="options.getFormControl(item.key)" nzHasFeedback>
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <!-- ng2FileSelect 文件上传 -->
+            <div>
+              <button type="button" nz-button [nzType]="'primary'" class="btn-secondary" (click)="file.click();" appPermission>
+                <span>请选择文件</span>
+              </button>
+              <input #file type="file" ng2FileSelect [uploader]="item.uploader"/>
+              <span class="text-tip ml10 f12i ">{{item.uploadDesc ? item.uploadDesc :
+                '支持所有文件格式'
+                }}</span>
+            </div>
+            <div class="max-h100i" appCustomScrollbar>
+              <div nz-row [nzGutter]="20" *ngFor="let item of item.uploader.queue">
+                <div nz-col [nzSpan]="1">
+                  <i class="anticon anticon-question-circle-o"></i>
+                </div>
+                <div nz-col [nzSpan]="15" class="wba">{{item?.file?.name}}</div>
+                <div nz-col [nzSpan]="4">{{item?.file?.size | fileSize}}</div>
+                <div nz-col [nzSpan]="3" title="上传进度">
+                  {{item?.progress}}%
+                  <!--<i class="anticon anticon-close-circle"></i>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 二项穿梭框 -->
+        <div *ngSwitchCase="'transfer'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span *ngFor="let v of item.value; last as isLast">
+              {{v}}<span class="c-555" *ngIf="!isLast">&nbsp;<span>、</span>&nbsp;</span>
+            </span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <nz-transfer class="transfer-custom-form"
+              [nzDataSource]="item.value" [nzTitles]="item.nzTitles"
+              [nzListStyle]="{'width.px': 200, 'height.px': 300}"
+              (nzChange)="transfer_change(item, $event)">
+              <ng-template #render let-item>
+                <i class="anticon anticon-{{item.icon}}"></i> {{item.title}}
+              </ng-template>
+            </nz-transfer>
+          </div>
+        </div>
+        <!-- select-group -->
+        <div *ngSwitchCase="'select-group'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span *ngFor="let v of item.value; last as isLast">
+              {{v}}<span class="c-555" *ngIf="!isLast">&nbsp;<span>、</span>&nbsp;</span>
+            </span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <app-custom-select-group class="h600"
+                                     [selectLabel]="item?.selectLabel"
+                                     [formItem]="options.getFormControl(item.key)"
+                                     [resultLabel]="item?.resultLabel"
+                                     [result]="options.getFormControl(item.key).value"
+                                     [labels]="item.labels"
+                                     (resultChange)="setFormControl($event, item.key)"></app-custom-select-group>
+          </div>
+        </div>
+        <!-- select-group-box -->
+        <div *ngSwitchCase="'select-group-box'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          <!--[nzValidateStatus]="options.getFormControl(item.key)" nzHasFeedback>-->
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style">
+            <div class="">
+              <div nz-row>
+                <div nz-col [nzSpan]="22">
+                  <div class="policy-object-wrap">
+                    <ul *ngIf="options.getFormControl(item.key)?.value?.users.length > 0">
+                      <li *ngFor="let item of options.getFormControl(item.key)?.value?.users">
+                        <i class="icon-allicon-04 mr5"></i><a>{{item.name}}</a>
+                      </li>
+                    </ul>
+                    <ul *ngIf="options.getFormControl(item.key)?.value?.groups.length > 0">
+                      <li *ngFor="let item of options.getFormControl(item.key)?.value?.groups">
+                        <i class="icon-allicon-43 mr5"></i><a>{{item.name}}</a>
+                      </li>
+                    </ul>
+                    <ul *ngIf="options.getFormControl(item.key)?.value?.depts.length > 0">
+                      <li *ngFor="let item of options.getFormControl(item.key)?.value?.depts">
+                        <i class="icon-allicon-01 mr5"></i><a>{{item.name}}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <div class="common-border">
+              <div nz-row>
+                <div nz-col [nzSpan]="22">
+                  <div *ngIf="options.getFormControl(item.key).value" class="policy-object-wrap p10">
+                    <ul *ngIf="options.getFormControl(item.key)?.value?.users?.length > 0">
+                      <li *ngFor="let item of options.getFormControl(item.key).value.users">
+                        <i class="icon-allicon-04 mr5"></i><a>{{item.name}}</a>
+                      </li>
+                    </ul>
+                    <ul *ngIf="options.getFormControl(item.key)?.value?.groups?.length > 0">
+                      <li *ngFor="let item of options.getFormControl(item.key).value.groups">
+                        <i class="icon-allicon-43 mr5"></i><a>{{item.name}}</a>
+                      </li>
+                    </ul>
+                    <ul *ngIf="options.getFormControl(item.key)?.value?.depts?.length > 0">
+                      <li *ngFor="let item of options.getFormControl(item.key).value.depts">
+                        <i class="icon-allicon-01 mr5"></i><a>{{item.name}}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="2" class="tar pri20i">
+                  <i class="icon-allicon-20 anticon-click" (click)="popupSelectGroup(item.key)"></i>
+                </div>
+              </div>
+            </div>
+            <!--<div *ngFor="let explain of item.explains">-->
+            <!--<div nz-form-explain *ngIf="explain.validate(options.getFormControl(item.key))">-->
+            <!--{{explain.desc}}-->
+            <!--</div>-->
+            <!--</div>-->
+          </div>
+        </div>
+        <!-- application-publishingType -->
+        <div *ngSwitchCase="'application-publishingType'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span *ngFor="let v of item.value; last as isLast">
+              {{v}}<span class="c-555" *ngIf="!isLast">&nbsp;<span>、</span>&nbsp;</span>
+            </span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <nz-radio-group formControlName={{item.key}}>
+              <label *ngFor="let option of item.options" nz-radio [nzValue]="option.value" class="w">
+                <span>{{option.label}}</span><span class="ml10i text-aux f12i">{{option.placeHolder}}</span>
+              </label>
+            </nz-radio-group>
+            <div class="p010 b_1_e" *ngIf="options.getFormControl(item.key).value ==='2' ">
+              <p [class.text-warning]="options.getFormControl('publishObject').hasError('isHave')">
+                请选择可见范围
+              </p>
+              <app-custom-select-group class="h600"
+                                       [selectLabel]="'请选择用户组/设备组/部门'"
+                                       [resultLabel]="'分发对象'"
+                                       [formItem]="options.getFormControl('publishObject')"
+                                       [result]="options.getFormControl('publishObject').value"
+                                       [labels]="['group', 'deviceGroup', 'dept']"
+                                       (resultChange)="setFormControl($event, 'publishingObj')"></app-custom-select-group>
+              <span>灰度发布时效</span>
+
+              <nz-input-number class="w50i ml10i" formControlName="duration" [nzSize]="'small'" [nzStep]="1" [nzMax]="24" [nzMin]="1"></nz-input-number>月
+              <span class="ml20 text-aux">此时效一过将自动下架</span>
+            </div>
+          </div>
+        </div>
+        <!-- application-publishObject -->
+        <div *ngSwitchCase="'application-publishObject'" nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          <!-- 只读状态 -->
+          <div class="wba pri20i" *ngIf="item.readonly ? true : options.readonly" [ngStyle]="item.style" nz-form-text>
+            <span *ngFor="let v of item.value; last as isLast">
+              {{v}}<span class="c-555" *ngIf="!isLast">&nbsp;<span>、</span>&nbsp;</span>
+            </span>
+          </div>
+          <!-- 编辑状态 -->
+          <div *ngIf="!(item.readonly ? true : options.readonly)">
+            <p>请选择可见范围</p>
+            <app-custom-select-group class="h600"
+                                     [selectLabel]="item?.selectLabel"
+                                     [formItem]="options.getFormControl(item.key)"
+                                     [resultLabel]="item?.resultLabel"
+                                     [result]="options.getFormControl(item.key).value"
+                                     [labels]="item.labels"
+                                     (resultChange)="setFormControl($event, item.key)"></app-custom-select-group>
+            <span>灰度发布时效</span>
+            <nz-input-number class="w50i ml10i" formControlName="duration" [nzSize]="'small'" [nzStep]="1" [nzMax]="24" [nzMin]="1"></nz-input-number>月
+            <span class="ml20 text-aux">此时效一过将自动下架</span>
+          </div>
+        </div>
+        <!-- 其他类型 -->
+        <div *ngSwitchDefault nz-form-control nz-col [nzSm]="(22 - (item.labelSm || options.labelSm))">
+          {{item.string}}
+        </div>
+        <!-- 移除此项 -->
+        <div *ngIf="item.removeItemsExtendShow && !options.readonly" nz-col [nzSm]="2">
+          <i class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="options.removeItemsExtend(item)"></i>
+          <!--<hr style="width: 370px; position: relative; left: 150px; top: 5px;">-->
+        </div>
+        <!-- 添加更多 -->
+        <div *ngIf="item.add && !options.readonly" nz-col [nzSm]="2">
+          <button type="button" nz-button [nzType]="'default'" (click)="item?.addEvent()" appPermission>
+            <span><i class="icon-allicon-20"></i></span>
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <!-- button -->
+  <ng-template [ngIf]="options.showButton">
+    <!-- 编辑 -->
+    <div *ngIf="options.readonly" class="mb20" nz-form-item nz-row>
+      <div *ngIf="options.readonly" nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+        <button nz-button [nzSize]="options.inputSize" [nzType]="'default'"
+                (click)="options.toEdit()" appPermission>{{options.editLabel}}
+        </button>
+      </div>
+    </div>
+    <!-- 添加扩展属性 -->
+    <div *ngIf="!options.readonly && options.itemsExtend &&  options.itemsExtend.length > 0">
+      <div class="mb20" nz-form-item nz-row [nzGutter]="options.gutter">
+        <div nz-form-label nz-col [nzSpan]="5" [nzOffset]="1">
+          <!--<label>-->
+            <nz-select class="dibi" formControlName="itemsExtendKey" [nzSize]="options.inputSize">
+              <nz-option *ngFor="let option of options.itemsExtend" [nzLabel]="option.label"
+                         [nzValue]="option.key" [nzDisabled]="option.disabled"></nz-option>
+            </nz-select>
+          <!--</label>-->
+        </div>
+        <div nz-form-control nz-col [nzSpan]="(22 - options.labelSm )">
+          <nz-input formControlName="itemsExtendValue" [nzPlaceHolder]="" [nzSize]="options.inputSize"></nz-input>
+          <div nz-form-explain
+               *ngIf="options.getFormControl('itemsExtendValue').dirty &&
+                options.getFormControl('itemsExtendValue').hasError('maxlength')">
+            最多不超过255个字!
+          </div>
+        </div>
+      </div>
+      <div class="mb20" nz-form-item nz-row [nzGutter]="options.gutter">
+        <div nz-form-control nz-col [nzSpan]="10" [nzOffset]="options.labelSm">
+          <button nz-button [nzType]="'dashed'" [nzSize]="options.inputSize" (click)="options.addItemsExtend()"
+                  [disabled]="options.getFormControl('itemsExtendValue').dirty &&
+                options.getFormControl('itemsExtendValue').hasError('maxlength')" appPermission>
+            <i class="anticon anticon-plus"></i>
+            <span> 添加属性</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- 保存组 -->
+    <div *ngIf="!options.popUp && (!options.readonly && options.showSubmitButton)" class="mb20" nz-form-item nz-row>
+      <div *ngIf="!options.readonly && options.addItem" nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+        <button nz-button [nzSize]="options.inputSize" [nzType]="'primary'"
+                (click)="options.submitButton()" appButtonClick disableTime="20000"
+                [disabled]="!options.formGroup.valid" appPermission>{{options.submitLabel}}
+        </button>
+        <button *ngIf="options.showCancelButton" class="ml20" nz-button [nzSize]="options.inputSize" (click)="options.handleCancel($event)" appPermission>取消</button>
+      </div>
+    </div>
+    <div *ngIf="options.popUp && (!options.readonly && options.showSubmitButton)" class="mb0i" nz-form-item nz-row>
+      <div class="mb0i" nz-row nz-form-item>
+        <div class="tar" nz-col [nzOffset]="12" [nzSpan]="12" nz-form-control>
+          <button nz-button [nzType]="'primary'" [nzSize]="options.inputSize"
+                  [disabled]="!options.formGroup.valid" appButtonClick disableTime="20000"
+                  (click)="options.submitButton()" appPermission>{{options.submitLabel}}
+          </button>
+          <button class="ml20" nz-button [nzSize]="'large'" (click)="options.handleCancel($event)" appPermission>取消</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</form>

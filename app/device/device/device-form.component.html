@@ -1,0 +1,131 @@
+<div>
+  <form nz-form [formGroup]="deviceForm">
+    <div nz-form-item nz-row>
+      <div nz-form-label nz-col [nzSpan]="6">
+        <label nz-form-item-required>设备唯一标识</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('uid')" nzHasFeedback>
+        <nz-input-group [nzSize]="'large'" [nzCompact]="true">
+          <nz-select formControlName="uidType" class="w_30i" [nzSize]="'large'" (nzOpenChange)="changeUidType($event)"
+          [nzDisabled]="isDisabled">
+            <nz-option *ngFor="let option of uidTypeOptions" [nzLabel]="option.label"
+                       [nzValue]="option.value"></nz-option>
+          </nz-select>
+          <input class="w_70i" formControlName="uid" nz-input placeholder="请输入设备唯一标识，最多不超过32个字" [nzSize]="'large'" [nzDisabled]="isDisabled">
+        </nz-input-group>
+        <div nz-form-explain *ngIf="getFormControl('uid').dirty&&getFormControl('uid').hasError('required')">
+          请输入设备唯一标识！
+        </div>
+        <div nz-form-explain *ngIf="getFormControl('uid').dirty&&getFormControl('uid').hasError('maxlength')">
+          设备唯一标识不能超过32个字！
+        </div>
+        <div nz-form-explain *ngIf="getFormControl('uid').dirty&&getFormControl('uid').hasError('duplicated')">
+          设备唯一标识是重复的！
+        </div>
+        <div nz-form-explain *ngIf="getFormControl('uid').dirty&&getFormControl('uid').hasError('specialCharacter')">
+          设备唯一标识只能包含数字，字母，-，_，@，#！
+        </div>
+        <div nz-form-explain *ngIf="getFormControl('uid').dirty&&getFormControl('uid').pending">
+          验证中...
+        </div>
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="6" nz-form-label>
+        <label>设备型号</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('model')" nzHasFeedback>
+        <nz-input [nzSize]="'large'" formControlName="model" [nzPlaceHolder]="'请输入设备型号，最多不超过30个字'" [nzDisabled]="isDisabled"></nz-input>
+        <div nz-form-explain *ngIf="getFormControl('model').dirty&&getFormControl('model').hasError('maxlength')">
+          设备型号不能超过30个字
+        </div>
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="6" nz-form-label>
+        <label>操作系统</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('system')">
+        <nz-select formControlName="system" [nzSize]="'large'"
+                   (nzOpenChange)="changeSystem($event)" [nzDisabled]="isDisabled">
+          <nz-option [nzLabel]="'Android'" [nzValue]="'Android'"></nz-option>
+          <nz-option [nzLabel]="'iOS'" [nzValue]="'iOS'"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="6" nz-form-label>
+        <label>资产编号</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('assetId')" nzHasFeedback>
+        <nz-input [nzSize]="'large'" formControlName="assetId" [nzPlaceHolder]="'请输入资产编号，最多不超过30个字'"></nz-input>
+        <div nz-form-explain *ngIf="getFormControl('assetId').dirty&&getFormControl('assetId').hasError('maxlength')">
+          资产编号不能超过30个字
+        </div>
+        <div nz-form-explain *ngIf="getFormControl('assetId').dirty&&getFormControl('assetId').hasError('duplicated')">
+          资产编号是重复的！
+        </div>
+        <div nz-form-explain
+             *ngIf="getFormControl('assetId').dirty&&getFormControl('assetId').errors&&getFormControl('assetId').errors.pattern">
+          资产编号只能包含数字，字母，-，_！
+        </div>
+        <!--<div nz-form-explain *ngIf="getFormControl('assetId').dirty&&getFormControl('assetId').hasError('specialCharacter')">-->
+          <!--资产编号只能包含数字，字母，-，_！-->
+        <!--</div>-->
+        <div nz-form-explain *ngIf="getFormControl('assetId').dirty&&getFormControl('assetId').pending">
+          验证中...
+        </div>
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="6" nz-form-label>
+        <label>持有人</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('owner')">
+        <nz-select
+          nzKeepUnListOptions
+          [nzFilter]="false"
+          [nzMode]="'multiple'"
+          [nzPlaceHolder]="'请输入关键字'"
+          (nzSearchChange)="searchOwnerChange($event)"
+          formControlName="owner"
+          [nzNotFoundContent]="'无法找到'">
+          <nz-option
+            *ngFor="let option of searchOwnerOptions"
+            [nzLabel]="option.displayName"
+            [nzValue]="option.userName">
+          </nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="6" nz-form-label>
+        <label>设备组</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('deviceGroup')">
+        <nz-select
+          nzAllowClear
+          [nzFilter]="false"
+          [nzShowSearch]="true"
+          [nzPlaceHolder]="'请输入关键字'"
+          (nzSearchChange)="searchGroupChange($event)"
+          formControlName="deviceGroup"
+          [nzNotFoundContent]="'无法找到'">
+          <nz-option
+            *ngFor="let option of searchGroupOptions"
+            [nzLabel]="option.name"
+            [nzValue]="option.id">
+          </nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <div class="mb0i" nz-form-item nz-row>
+      <div class="tar" nz-col [nzOffset]="12" [nzSpan]="12" nz-form-control>
+        <button nz-button [nzType]="'primary'" [nzSize]="'large'" [disabled]="!deviceForm.valid"
+                (click)="submit()" appPermission="1">保存
+        </button>
+        <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel()" appPermission="1">取消</button>
+      </div>
+    </div>
+  </form>
+</div>

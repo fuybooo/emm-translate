@@ -1,0 +1,123 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+  </div>
+  <div>密码</div>
+  <div class="list-widget">
+    <nz-table #nzTable
+              [nzAjaxData]="data"
+              [nzIsPagination]="false">
+      <tbody nz-tbody>
+      <tr nz-tbody-tr>
+        <td nz-td width="60%"><span>设备名称</span></td>
+        <td nz-td><span>密码</span></td>
+      </tr>
+      <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"
+          class="stripe-table"
+          [class.application-item]="data.DeviceName"
+          [class.active]="data.isActive"
+          [class.view]="type === 'view'"
+          (click)="changeActive('password', data);">
+        <td nz-td width="60%"><span>{{data.DeviceName}}</span></td>
+        <td nz-td><span>{{data.Password}}</span></td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div *ngIf="type !=='view'" class="mt10">
+    <button nz-button [nzType]="'dashed'" (click)="add(title,content,footer)">
+      <span>+</span>
+    </button>
+    <button nz-button [nzType]="'dashed'" (click)="del('password')">
+      <span>-</span>
+    </button>
+  </div>
+
+  <div class="mt20">白名单</div>
+  <div class="list-widget">
+    <nz-table #nzTable2
+              [nzAjaxData]="whiteList"
+              [nzIsPagination]="false">
+      <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let data of nzTable2.data;let i = index;"
+          class="stripe-table"
+          [class.application-item]="data.DeviceID"
+          [class.active]="data.isActive"
+          [class.view]="type === 'view'"
+          (click)="changeActive('white', data);">
+        <td nz-td><span>{{data.DeviceID}}</span></td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div *ngIf="type !=='view'" class="mt10">
+    <button nz-button [nzType]="'dashed'" (click)="add(title2,content2,footer2)">
+      <span>+</span>
+    </button>
+    <button nz-button [nzType]="'dashed'" (click)="del('white')">
+      <span>-</span>
+    </button>
+  </div>
+
+  <ng-template #title>
+    <span>添加密码</span>
+  </ng-template>
+  <ng-template #content>
+    <div>
+      <form nz-form [formGroup]="passwordForm">
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col [nzSpan]="6">
+            <label nz-form-item-required>名称</label>
+          </div>
+          <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('password', 'DeviceName')">
+            <input class="w" formControlName="DeviceName" nz-input
+                   [nzSize]="'large'" (keyup.enter)="handleOk()">
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col [nzSpan]="6">
+            <label nz-form-item-required>密码</label>
+          </div>
+          <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('password', 'Password')">
+            <input class="w" formControlName="Password" nz-input
+                   [nzSize]="'large'" (keyup.enter)="handleOk()">
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div>
+      <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk('password')"
+              [disabled]="!passwordForm.valid">
+        保存
+      </button>
+    </div>
+  </ng-template>
+  <ng-template #title2>
+    <span>添加白名单</span>
+  </ng-template>
+  <ng-template #content2>
+    <div>
+      <form nz-form [formGroup]="whiteForm">
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col [nzSpan]="6">
+            <label nz-form-item-required>设备id</label>
+          </div>
+          <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('white', 'DeviceID')">
+            <input class="w" formControlName="DeviceID" nz-input placeholder=""
+                   [nzSize]="'large'" (keyup.enter)="handleOk()">
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  <ng-template #footer2>
+    <div>
+      <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk('white')"
+              [disabled]="!whiteForm.valid">
+        保存
+      </button>
+    </div>
+  </ng-template>
+</div>

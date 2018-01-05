@@ -1,0 +1,43 @@
+<div>
+  <div class="h400" appCustomScrollbar>
+    <div class="table-wrap">
+      <nz-table class="content-table" #nzTable
+                [nzIsPagination]="false"
+                [nzAjaxData]="folders.list"
+                [nzLoading]="folders.isLoading">
+        <tbody nz-tbody>
+        <ng-template ngFor let-data [ngForOf]="nzTable.data">
+          <ng-template ngFor let-item [ngForOf]="folders.expandDataCache[data.id]">
+            <tr nz-tbody-tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)"
+                [class.active]="folders?.itemIsActive?.id === item.id">
+              <td nz-td [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="folders.checked($event,item)">
+                </label>
+              </td>
+              <td nz-td class="cp" (click)="folders.active(item, data.id)">
+                <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
+                <nz-row-expand-icon [(nzExpand)]="item.expand"
+                                    (nzExpandChange)="folders.collapse(folders.expandDataCache[data.id],item,$event)"
+                                    [nzShowExpand]="!item.isLastNode"></nz-row-expand-icon>
+                <span class="text-primary">
+                <i *ngIf="item.source===1" class="icon-allicon-01 mr3 f14 va-1i"></i>
+                <i *ngIf="item.source===2" class="icon-allicon-02 mr3 f14 va-1i"></i>
+                {{item.name}}
+              </span>
+              </td>
+            </tr>
+          </ng-template>
+        </ng-template>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+  <div class="mb0i mt20" nz-form-item nz-row>
+    <div class="tar" nz-col [nzOffset]="12" [nzSpan]="12" nz-form-control>
+      <button nz-button [nzType]="'primary'" [nzSize]="'large'"
+              (click)="submit($event)" appPermission>保存
+      </button>
+      <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel($event)" appPermission>取消</button>
+    </div>
+  </div>
+</div>

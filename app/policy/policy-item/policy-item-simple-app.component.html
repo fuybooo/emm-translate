@@ -1,0 +1,39 @@
+<div class="policy-version-box">
+  <!--单一应用 只针对iOS-->
+  iOS5.0+
+</div>
+<div>
+  <div *ngIf="policyType !== 'simpleDesk' && type !== 'view'">
+    <span>请选择已配置好的单一应用</span>
+    <nz-select class="w120" [(ngModel)]="simpleAppId" (ngModelChange)="searchSimpleApp($event)">
+      <nz-option
+        *ngFor="let option of simpleApps"
+        [nzLabel]="option.policyName"
+        [nzValue]="option.id">
+      </nz-option>
+    </nz-select>
+  </div>
+  <ng-container *ngIf="policyType === 'simpleDesk' || (simpleAppId && simpleAppId !== '')">
+    <p *ngIf="type !== 'view'">应用<span class="c-red" *ngIf="policyType === 'simpleDesk'">*</span></p>
+    <p *ngIf="type !== 'view' && policyType === 'simpleDesk'" class="text-tip">请选择一个应用（注：必须得先选择一个应用才能设置后面的设置项）</p>
+    <div class="policy-simple-app-app-box">
+      <span class="policy-img-box dibi va-9"><img *ngIf="app" [src]="app.artworkUrl60"></span>
+      <span>{{app?.trackName}}</span>
+    </div>
+    <div class="mb10" *ngIf="type !== 'view' && policyType === 'simpleDesk'">
+      <button nz-button [nzType]="'default'" (click)="selectApp()">
+        <span>选择应用</span>
+      </button>
+    </div>
+    <div class="mb10" *ngFor="let item of data" [class.pl20]="item.level === 2">
+      <nz-select [(ngModel)]="item.value" [nzDisabled]="isView || (!app && (!simpleAppId || simpleAppId === '--'))" class="w120">
+        <nz-option
+          *ngFor="let option of options"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+      <span [class.text-diseditable]="isView">{{item.label}}</span>
+    </div>
+  </ng-container>
+</div>

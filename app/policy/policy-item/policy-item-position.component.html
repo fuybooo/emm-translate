@@ -1,0 +1,20 @@
+<div class="policy-version-box">
+  <ng-container *ngIf="system === 'Android'">Android4.4+</ng-container>
+  <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+</div>
+<div class="mb10">
+  <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="enablePosition">
+    <span>启用设备定位</span>
+  </label>
+</div>
+<div>
+  <span [class.text-diseditable]="type === 'view'">设备定位数据上报频率：</span>
+  <nz-select *ngIf="type !== 'view'" class="w120" [(ngModel)]="value">
+    <nz-option
+      *ngFor="let option of options"
+      [nzLabel]="option.label"
+      [nzValue]="option.value">
+    </nz-option>
+  </nz-select>
+  <span *ngIf="type === 'view'" class="text-diseditable">{{util.getLabelByValue(options, value)}}</span>
+</div>

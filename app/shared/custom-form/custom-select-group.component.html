@@ -1,0 +1,163 @@
+<!-- user/dept/group -->
+<div class="form-select">
+
+
+<div class="custom-select-group" nz-row [nzGutter]="0">
+  <!-- 第一栏：选择栏 -->
+  <div nz-col [nzSpan]="14" class="select-group">
+    <!-- label -->
+    <!--<div nz-row [nzGutter]="8" class="select-group-label">-->
+      <!--<span class="label">{{selectLabel || '请选择用户/用户组/部门'}}</span>-->
+      <!--<i class="anticon anticon-search fr f18 search"></i>-->
+    <!--</div>-->
+    <!-- label -->
+    <div nz-row [nzGutter]="8" class="p03">
+      <app-custom-search [placeholder]="selectLabel || '请选择用户/用户组/部门'" (searchChange)="searchChange($event)" (doSearch)="doSearch($event)"></app-custom-search>
+    </div>
+    <!-- body -->
+    <div nz-row [nzGutter]="0" class="select-group-body">
+      <div nz-col [nzSpan]="8" class="group">
+        <ng-container *ngFor="let label of labels">
+          <ng-container [ngSwitch]="label">
+            <div *ngSwitchCase="'user'" class="cp" [class.active]="activeType.label ==='user'" (click)="changeSelectType('user')">用户</div>
+            <div *ngSwitchCase="'group'" class="cp" [class.active]="activeType.label ==='group'" (click)="changeSelectType('group')">用户组</div>
+            <div *ngSwitchCase="'dept'" class="cp" [class.active]="activeType.label ==='dept'" (click)="changeSelectType('dept')">部门</div>
+            <div *ngSwitchCase="'deviceGroup'" class="cp" [class.active]="activeType.label ==='deviceGroup'" (click)="changeSelectType('deviceGroup')">设备组</div>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div nz-col [nzSpan]="16" class="select">
+        <div *ngIf="activeType.label ==='user'">
+          <div class="h260" appCustomScrollbar [options]="usersOptions">
+            <nz-table #nzTable
+                      [nzAjaxData]="users.list"
+                      [nzLoading]="users.isLoading"
+                      [nzIsPagination]="false">
+              <tbody nz-tbody>
+                <!--users-->
+                <tr nz-tbody-tr *ngFor="let item of nzTable.data" title="{{item.name}}" [class.active]="users?.itemIsActive?.id === item.id">
+                  <td nz-td [nzCheckbox]="true">
+                    <label nz-checkbox [(ngModel)]="item.checked" [nzDisabled]="users.disabledCheckeds"
+                           (ngModelChange)="users.checked($event,item)">
+                    </label>
+                  </td>
+                  <td nz-td (click)="users.active(item)">{{item.name}}</td>
+                </tr>
+                <!--loading-->
+                <tr nz-tbody-tr *ngIf="users.param.total>users.list.length">
+                  <td nz-td [attr.colspan]="6" class="tac">
+                    <nz-spin [nzSize]="'small'"></nz-spin>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+        <div *ngIf="activeType.label ==='group'">
+          <div class="h260" appCustomScrollbar [options]="groupsOptions">
+            <nz-table #nzTable
+                      [nzAjaxData]="groups.list"
+                      [nzLoading]="groups.isLoading"
+                      [nzIsPagination]="false">
+              <tbody nz-tbody>
+              <!--groups-->
+              <tr nz-tbody-tr *ngFor="let item of nzTable.data" title="{{item.name}}" [class.active]="groups?.itemIsActive?.id === item.id">
+                <td nz-td [nzCheckbox]="true">
+                  <label nz-checkbox [(ngModel)]="item.checked" [nzDisabled]="groups.disabledCheckeds"
+                         (ngModelChange)="groups.checked($event,item)">
+                  </label>
+                </td>
+                <td nz-td (click)="groups.active(item)">{{item.name}}</td>
+              </tr>
+              <!--loading-->
+              <tr nz-tbody-tr *ngIf="groups.param.total>groups.list.length">
+                <td nz-td [attr.colspan]="6" class="tac">
+                  <nz-spin [nzSize]="'small'"></nz-spin>
+                </td>
+              </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+        <div *ngIf="activeType.label ==='dept'">
+          <div class="h260" appCustomScrollbar>
+            <nz-table class="content-table" #nzTableDept
+                      [nzIsPagination]="false"
+                      [nzAjaxData]="depts.list"
+                      [nzLoading]="depts.isLoading">
+              <tbody nz-tbody>
+              <ng-template ngFor let-item [ngForOf]="nzTableDept.data">
+                <tr nz-tbody-tr *ngIf="depts.show(item)" [class.active]="depts?.itemIsActive?.id === item.id">
+                  <td nz-td [nzCheckbox]="true">
+                    <label nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="depts.checkedExpand($event,item)">
+                    </label>
+                  </td>
+                  <td nz-td class="cp" (click)="depts.active(item)">
+                    <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
+                    <nz-row-expand-icon [(nzExpand)]="item.expand" [nzShowExpand]="!item.isLastNode">
+                    </nz-row-expand-icon>
+                    <span class="text-primary">
+                      {{item.name}}
+                    </span>
+                  </td>
+                </tr>
+              </ng-template>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+        <div *ngIf="activeType.label === 'deviceGroup'">
+          <app-device-group [isPopupSelect]="true" [params]="deviceGroupParams"
+                            (deviceGroupCheckData)="onChangeDeviceGroupCheckData($event)"></app-device-group>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 第二栏：按钮栏 -->
+  <div nz-col [nzSpan]="3" class="check-button">
+    <i class="anticon anticon-arrow-right" (click)="toRight()"></i>
+    <i class="anticon anticon-arrow-left" (click)="toLeft()"></i>
+  </div>
+  <!-- 第三栏：结果栏 -->
+  <div nz-col [nzSpan]="7" class="select-result">
+    <!-- label -->
+    <div nz-row class="select-group-label">
+      <span class="label">{{resultLabel ||
+        '选择结果'
+        }}</span>
+    </div>
+    <div nz-row [nzGutter]="0" class="select-group-body">
+      <div class="h260" appCustomScrollbar>
+        <nz-table #nzTable [nzAjaxData]="result.data || []"
+                  [nzLoading]="false"
+                  [nzIsPagination]="false">
+          <tbody nz-tbody>
+          <!--users-->
+          <tr nz-tbody-tr *ngFor="let item of nzTable.data" title="{{item.name}}" [class.active]="users?.itemIsActive?.id === item.id">
+            <td nz-td [nzCheckbox]="true">
+              <!--<label nz-checkbox [(ngModel)]="item.checked" [nzDisabled]="users.disabledCheckeds"-->
+                     <!--(ngModelChange)="users.checked($event,item)">-->
+              <!--</label>-->
+              <label nz-checkbox [(ngModel)]="item.checked">
+              </label>
+            </td>
+            <td nz-td>{{item.name}}</td>
+          </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+  </div>
+</div>
+<!--foot-->
+<div *ngIf="popup" class="mb0i" nz-form-item nz-row>
+  <div class="mb0i" nz-row nz-form-item>
+    <div class="tar" nz-col [nzOffset]="12" [nzSpan]="12" nz-form-control>
+      <button nz-button [nzType]="'primary'" (click)="submit()">保存
+      </button>
+      <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel()">取消</button>
+    </div>
+  </div>
+</div>
+</div>
+

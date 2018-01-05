@@ -1,0 +1,71 @@
+<div *ngIf="type===''" class="table-wrap uesr-table common-gray-bg" appCustomScrollbar [options]="options">
+  <nz-table #nzTable
+            [nzAjaxData]="userGroup.list"
+            [nzLoading]="userGroup.isLoading"
+            [nzIsPagination]="false">
+    <tbody nz-tbody>
+    <tr class="icon-hover-show " nz-tbody-tr *ngFor="let data of nzTable.data" [class.active]="userGroup?.itemIsActive?.id === data.id">
+      <td nz-td [nzCheckbox]="true">
+        <label nz-checkbox class="ml12"  [(ngModel)]="data.checked" [nzDisabled]="data.id === -3"
+               (ngModelChange)="userGroup.checked($event,data)">
+        </label>
+      </td>
+      <td class="cp" nz-td (click)="userGroup.active(data)">
+            <span class="text-primary">
+              <i *ngIf="data.source===1" class="icon-allicon-04 mr3 f14 va-1i"></i>
+              <i *ngIf="data.source===2" class="icon-allicon-05 mr3 f14 va-1i"></i>
+              <span class="text-overflow" title="{{data.name}}">{{data.name}}</span>
+            </span>
+      </td>
+      <td nz-td class="tar pri20i user-group-hover">
+        <button class="nb" (click)="userGroup.delete(data)" appPermission="1">
+          <i *ngIf="data.source===1" class="icon-allicon-30 anticon-click f14 icon-hover delect-hover-red"
+             title="此分组下的用户不会被删除" appPermission="1"></i>
+        </button>
+      </td>
+      <td class="tar pri20i user-table-last" nz-td width="55">{{data.user_count}}</td>
+    </tr>
+    <tr nz-tbody-tr *ngIf="userGroup.list.length > 0 && userGroup.list.length < userGroup.param.total">
+      <td nz-td [attr.colspan]="4">
+        <nz-spin [nzTip]="'正在读取数据...'">
+          <nz-alert [nzType]="'info'" [nzMessage]="''"
+                    [nzDescription]="''">
+          </nz-alert>
+        </nz-spin>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
+<div *ngIf="type==='simply'" class="table-wrap" appCustomScrollbar [options]="options">
+  <nz-table #nzTable
+            [nzAjaxData]="userGroup.list"
+            [nzLoading]="userGroup.isLoading"
+            [nzIsPagination]="false">
+    <tbody nz-tbody>
+    <tr nz-tbody-tr *ngFor="let data of nzTable.data" [class.active]="userGroup?.itemIsActive?.id === data.id">
+      <td nz-td [nzCheckbox]="true">
+        <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="userGroup.checked($event,data)">
+        </label>
+      </td>
+      <td class="cp" nz-td (click)="userGroup.active(data)">
+            <span class="text-primary">
+              <i *ngIf="data.source===1" class="icon-allicon-04 mr3 f14 va-1i"></i>
+              <i *ngIf="data.source===2" class="icon-allicon-05 mr3 f14 va-1i"></i>
+              {{data.name}}
+            </span>
+      </td>
+    </tr>
+    <tr nz-tbody-tr *ngIf="userGroup.list.length > 0 && userGroup.list.length < userGroup.param.total">
+      <td nz-td [attr.colspan]="4">
+        <nz-spin [nzTip]="'正在读取数据...'">
+          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+          </nz-alert>
+        </nz-spin>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+

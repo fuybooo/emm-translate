@@ -1,0 +1,110 @@
+<div>
+  <div class="content-wrap hi">
+    <div nz-row [nzGutter]="0" class="hi">
+      <div nz-col [nzSpan]="4" class="content-left-wrap common-gray-bg">
+        <ul>
+          <li><a [class.active]="type === 'AllFiles'" (click)="changeType('AllFiles')" href="javascript:void(0);">全部文件</a></li>
+          <li><a [class.active]="type === 'PictureFiles'" (click)="changeType('PictureFiles')" href="javascript:void(0);">图片</a></li>
+          <li><a [class.active]="type === 'AudioFiles'" (click)="changeType('AudioFiles')" href="javascript:void(0);">音频</a></li>
+          <li><a [class.active]="type === 'VideoFiles'" (click)="changeType('VideoFiles')" href="javascript:void(0);">视频</a></li>
+          <li><a [class.active]="type === 'OtherFiles'" (click)="changeType('OtherFiles')" href="javascript:void(0);">其他</a></li>
+          <li class="tag-li">
+            <div>
+              <span>标签</span>
+              <button class="nb fr" (click)="addTag()" appPermission>
+                <i class="icon-allicon-53 anticon-click f16" appPermission></i>
+              </button>
+            </div>
+            <div class="list max-h90i" appCustomScrollbar>
+              <!-- todo: 多选 -->
+              <!--<nz-checkable-tag *ngFor="let tag of tags.list" [nzChecked]="tags.checkedList.indexOf(tag) > -1"-->
+                                <!--(nzChange)="tags.checked($event, tag)">-->
+                <!--{{tag.tagName}}-->
+              <!--</nz-checkable-tag>-->
+              <!-- 单选 -->
+              <nz-checkable-tag *ngFor="let tag of tags.list" [nzChecked]="tags.itemIsActive?.id === tag.id"
+                                (nzChange)="tags.active(tag)">
+                {{tag.tagName}}
+              </nz-checkable-tag>
+            </div>
+          </li>
+          <li><a [class.active]="type === 'RecycleBin'" (click)="changeType('RecycleBin')" href="javascript:void(0);">回收站</a></li>
+        </ul>
+      </div>
+      <div nz-col [nzSpan]="20" class="">
+        <!-- 所有文件 -->
+        <app-content-all-files *ngIf="type === 'AllFiles' || type === 'PictureFiles' || type === 'AudioFiles' || type === 'VideoFiles' || type === 'OtherFiles'"
+                               (search)="doSearch($event)"
+                               (newFolderEvent)="newFolder($event)"
+                               (deleteRemoteEvent)="deleteRemote($event)"
+                               (visibleRangeEvent)="visibleRange($event)"
+                               (downloadPermissionsEvent)="downloadPermissions($event)"
+                               (documentPermissionsEvent)="documentPermissions($event)"
+                               (moveEvent)="move($event)"
+                               (copyEvent)="copy($event)"
+                               (uploadFileEvent)="uploadFile($event)">
+        </app-content-all-files>
+        <!--&lt;!&ndash; 图片 &ndash;&gt;-->
+        <!--<app-content-picture-files *ngIf="type === 'PictureFiles'"-->
+                                   <!--(search)="doSearch($event)"-->
+                                   <!--(newFolderEvent)="newFolder($event)"-->
+                                   <!--(deleteRemoteEvent)="deleteRemote($event)"-->
+                                   <!--(visibleRangeEvent)="visibleRange($event)"-->
+                                   <!--(downloadPermissionsEvent)="downloadPermissions($event)"-->
+                                   <!--(documentPermissionsEvent)="documentPermissions($event)"-->
+                                   <!--(moveEvent)="move($event)"-->
+                                   <!--(copyEvent)="copy($event)"-->
+                                   <!--(uploadFileEvent)="uploadFile($event)">-->
+        <!--</app-content-picture-files>-->
+        <!--&lt;!&ndash; 音频 &ndash;&gt;-->
+        <!--<app-content-audio-files *ngIf="type === 'AudioFiles'"-->
+                                 <!--(search)="doSearch($event)"-->
+                                 <!--(newFolderEvent)="newFolder($event)"-->
+                                 <!--(deleteRemoteEvent)="deleteRemote($event)"-->
+                                 <!--(visibleRangeEvent)="visibleRange($event)"-->
+                                 <!--(downloadPermissionsEvent)="downloadPermissions($event)"-->
+                                 <!--(documentPermissionsEvent)="documentPermissions($event)"-->
+                                 <!--(moveEvent)="move($event)"-->
+                                 <!--(copyEvent)="copy($event)"-->
+                                 <!--(uploadFileEvent)="uploadFile($event)">-->
+        <!--</app-content-audio-files>-->
+        <!--&lt;!&ndash; 视频 &ndash;&gt;-->
+        <!--<app-content-video-files *ngIf="type === 'VideoFiles'"-->
+                                 <!--(search)="doSearch($event)"-->
+                                 <!--(newFolderEvent)="newFolder($event)"-->
+                                 <!--(deleteRemoteEvent)="deleteRemote($event)"-->
+                                 <!--(visibleRangeEvent)="visibleRange($event)"-->
+                                 <!--(downloadPermissionsEvent)="downloadPermissions($event)"-->
+                                 <!--(documentPermissionsEvent)="documentPermissions($event)"-->
+                                 <!--(moveEvent)="move($event)"-->
+                                 <!--(copyEvent)="copy($event)"-->
+                                 <!--(uploadFileEvent)="uploadFile($event)">-->
+        <!--</app-content-video-files>-->
+        <!--&lt;!&ndash; 其他 &ndash;&gt;-->
+        <!--<app-content-other-files *ngIf="type === 'OtherFiles'"-->
+                                 <!--(search)="doSearch($event)"-->
+                                 <!--(newFolderEvent)="newFolder($event)"-->
+                                 <!--(deleteRemoteEvent)="deleteRemote($event)"-->
+                                 <!--(visibleRangeEvent)="visibleRange($event)"-->
+                                 <!--(downloadPermissionsEvent)="downloadPermissions($event)"-->
+                                 <!--(documentPermissionsEvent)="documentPermissions($event)"-->
+                                 <!--(moveEvent)="move($event)"-->
+                                 <!--(copyEvent)="copy($event)"-->
+                                 <!--(uploadFileEvent)="uploadFile($event)">-->
+        <!--</app-content-other-files>-->
+        <!-- 回收站 -->
+        <app-content-recycle-bin *ngIf="type === 'RecycleBin'"
+                                 (search)="doSearch($event)"
+                                 (newFolderEvent)="newFolder($event)"
+                                 (deleteRemoteEvent)="deleteRemote($event)"
+                                 (visibleRangeEvent)="visibleRange($event)"
+                                 (downloadPermissionsEvent)="downloadPermissions($event)"
+                                 (documentPermissionsEvent)="documentPermissions($event)"
+                                 (moveEvent)="move($event)"
+                                 (copyEvent)="copy($event)"
+                                 (uploadFileEvent)="uploadFile($event)">
+        </app-content-recycle-bin>
+      </div>
+    </div>
+  </div>
+</div>

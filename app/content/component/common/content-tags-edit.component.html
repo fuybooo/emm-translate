@@ -1,0 +1,33 @@
+<!-- table -->
+<div class="content-table-head-file-distributes ml17">
+  <div>分发对象</div>
+  <div>更新时间</div>
+  <div>下载次数</div>
+  <div>浏览次数</div>
+</div>
+<div class="cb"></div>
+<div class="content-table-wrap common-border-left" appCustomScrollbar [options]="options">
+  <nz-table class="content-table table-td-height44"
+            #nzTable
+            [nzAjaxData]="distributes.list"
+            [nzLoading]="distributes.isLoading"
+            [nzIsPagination]="false">
+    <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+        <td nz-td width="60%"><a>{{data.name}}</a></td>
+        <td nz-td width="20%">{{data.timeStamp | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+        <td nz-td width="10%">{{data.remainTime}}天</td>
+        <td nz-td width="10%"></td>
+      </tr>
+      <!--loading-->
+      <tr nz-tbody-tr *ngIf="distributes.list.length < distributes.param.total">
+        <td nz-td [attr.colspan]="6">
+          <nz-spin [nzTip]="'正在读取数据...'">
+            <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+            </nz-alert>
+          </nz-spin>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

@@ -1,0 +1,17 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container *ngIf="system === 'Android'">Android4.4+</ng-container>
+    <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+  </div>
+  <div *ngFor="let item of data" class="mb10">
+    <div class="mb5" [class.text-diseditable]="type === 'view'">{{item.label}}</div>
+    <div class="text-tip mb5" *ngIf="type !== 'view'">{{item.tip}}</div>
+    <nz-select [nzDisabled]="type === 'view'" class="w120" [(ngModel)]="item.value">
+      <nz-option
+        *ngFor="let option of item.options"
+        [nzLabel]="option.label"
+        [nzValue]="option.value">
+      </nz-option>
+    </nz-select>
+  </div>
+</div>

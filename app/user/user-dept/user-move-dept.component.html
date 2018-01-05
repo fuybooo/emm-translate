@@ -1,0 +1,14 @@
+<div>
+  <!--<p class="pb10"><i class="anticon anticon-info-circle mr5"></i>一个设备只能存在于一个组</p>-->
+  <div class="h400" appCustomScrollbar>
+    <app-user-dept-list [type]="'simply-active'"></app-user-dept-list>
+  </div>
+  <div class="mb0i mt20" nz-form-item nz-row>
+    <div class="tar" nz-col [nzOffset]="12" [nzSpan]="12" nz-form-control>
+      <button nz-button [nzType]="'primary'" [nzSize]="'large'"
+              (click)="submit($event)">保存
+      </button>
+      <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel($event)" appPermission="1">取消</button>
+    </div>
+  </div>
+</div>

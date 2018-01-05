@@ -1,0 +1,71 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container>iOS5.0+</ng-container>
+  </div>
+  <div *ngFor="let form of forms; let i = index;" class="policy-item-content-block">
+    <div class="policy-item-add-or-sub">
+      <button nz-button [nzType]="'default'" (click)="add()">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'default'" (click)="del(i)">
+        <span>-</span>
+      </button>
+    </div>
+    <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">帐户描述</label>
+          <p class="text-tip">帐户的显示名称</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AccountDescription')">
+          <input class="w320i" formControlName="AccountDescription" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">账户名称</label>
+          <p class="text-tip">账户的用户全名</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AccountName')">
+          <input class="w320i" formControlName="AccountName" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i" nz-form-item-required>电子邮件地址</label>
+          <p class="text-tip">账户的谷歌电子邮件地址</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EmailAddress')">
+          <input class="w320i" formControlName="EmailAddress" nz-input nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+          <div nz-form-explain
+               *ngIf="getFormControl(i, 'EmailAddress').dirty && getFormControl(i, 'EmailAddress').hasError('required')">
+            电子邮件地址是必填项
+          </div>
+          <div nz-form-explain
+               *ngIf="getFormControl(i, 'EmailAddress').value !== '' && getFormControl(i, 'EmailAddress').dirty && getFormControl(i, 'EmailAddress').hasError('email')">
+            电子邮件地址格式不对
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">通信服务规则</label>
+          <p class="text-tip">选取通过此账号呼叫联系人时使用的默认应用。</p>
+          <button *ngIf="!selectedApps[i]" nz-button [nzType]="'default'" [disabled]="type === 'view'"  (click)="selectApp(i)">选取...</button><span class="text-tip" *ngIf="!selectedApps[i]">可选</span>
+          <div nz-row *ngIf="selectedApps[i]">
+            <div nz-col [nzSpan]="18">
+              <img [src]="selectedApps[i].artworkUrl60" alt="" height="25" width="25" class="va-11"><span>{{selectedApps[i].trackName}}</span>
+            </div>
+            <div nz-col [nzSpan]="6">
+              <button nz-button [nzType]="'default'" (click)="selectedApps[i] = null;">移除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

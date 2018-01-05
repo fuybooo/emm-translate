@@ -1,0 +1,108 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container>iOS5.0+</ng-container>
+  </div>
+  <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+    <div nz-form-item nz-row>
+      <div nz-form-label nz-col>
+        <label class="w320i">代理类型</label>
+      </div>
+      <div nz-col nz-form-control [nzValidateStatus]="getFormControl('ProxyType')" >
+        <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="ProxyType" (ngModelChange)="changeProxyType($event)">
+          <nz-option
+            *ngFor="let option of options30"
+            [nzLabel]="option.label"
+            [nzValue]="option.value">
+          </nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <ng-container *ngIf="getFormControl('ProxyType').value === 2">
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-form-item-required>代理服务器和端口</label>
+          <p class="text-tip">代理服务器的主机名称或IP地址及端口号</p>
+        </div>
+        <div class="w320i">
+          <div nz-form-control>
+            <div nz-col [nzSpan]="17">
+              <div nz-form-item nz-row>
+                <div>
+                  <div nz-form-control [nzValidateStatus]="getFormControl('ProxyServer')">
+                    <input class="w" formControlName="ProxyServer" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                           [nzSize]="'large'">
+                    <div nz-form-explain
+                         *ngIf="getFormControl('ProxyServer').dirty&&getFormControl('ProxyServer').hasError('required')">
+                      必填项不能为空
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="1">
+              <p nz-form-split>：</p>
+            </div>
+            <div nz-col [nzSpan]="6">
+              <div nz-form-item nz-row>
+                <div>
+                  <div nz-form-control [nzValidateStatus]="getFormControl('ProxyServerPort')">
+                    <nz-input-number class="w pl1i policy-port" formControlName="ProxyServerPort" [nzSize]="'large'" [nzDisabled]="type === 'view'"
+                                     [nzMin]="1" [nzMax]="65535" [nzStep]="1"></nz-input-number>
+                    <div nz-form-explain
+                         *ngIf="getFormControl('ProxyServerPort').dirty&&getFormControl('ProxyServerPort').hasError('required')">
+                      必填项不能为空
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">用户名</label>
+          <p class="text-tip">用于连接到代理的用户名</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('ProxyUsername')">
+          <input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">密码</label>
+          <p class="text-tip">用于鉴定代理的密码</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('ProxyPassword')">
+          <input type="password" class="w320i" formControlName="ProxyPassword" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="getFormControl('ProxyType').value === 1">
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i" nz-form-item-required>代理PAC URL</label>
+          <p class="text-tip">用于取回代理设置的 URL </p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('ProxyPACURL')">
+          <input class="w320i" formControlName="ProxyPACURL" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="ProxyPACFallbackAllowed">
+            <span>如果PAC无法连通，则允许直接连接</span>
+          </label>
+        </div>
+      </div>
+    </ng-container>
+    <div class="mb10" >
+      <label nz-checkbox [nzDisabled]="type === 'view'"  formControlName="ProxyCaptiveLoginAllowed" >
+        <span>允许忽略代理以访问强制网络</span>
+      </label>
+    </div>
+  </form>
+</div>

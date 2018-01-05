@@ -1,0 +1,31 @@
+<div class="table-wrap h600" appCustomScrollbar [options]="options">
+  <nz-table #nzTable
+            [nzAjaxData]="list.list"
+            [nzLoading]="list.isLoading"
+            [nzIsPagination]="false">
+    <tbody nz-tbody>
+    <tr nz-tbody-tr *ngFor="let data of nzTable.data; index as i; first as isFirst; last as isLast" [class.active]="list?.itemIsActive?.id === data.id">
+      <td class="cp" nz-td (click)="list.active(data)">
+        <img #img alt="example" width="30px" src="{{data?.iconUrl}}" (error)="img.src = ''">
+        <span class="text-primary dib pr" style="top: -7px; left: 8px;">
+          <i *ngIf="data.source===1" class="icon-allicon-04 mr3 f14 va-1i"></i>
+          <i *ngIf="data.source===2" class="icon-allicon-05 mr3 f14 va-1i"></i>
+          {{data.name}}
+        </span>
+      </td>
+      <td class="tar application-class-mouse-hover-f-0" nz-td>
+        <i *ngIf="!isFirst" class="anticon anticon-click anticon-arrow-up mr15" (click)="positionAdjustment('up', data, i)"></i>
+        <i *ngIf="!isLast" class="anticon anticon-click anticon-arrow-down mr30" (click)="positionAdjustment('down', data, i)"></i>
+      </td>
+    </tr>
+    <tr nz-tbody-tr *ngIf="list.list.length > 0 && list.list.length < list.param.total">
+      <td nz-td [attr.colspan]="4">
+        <nz-spin [nzTip]="'正在读取数据...'">
+          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+          </nz-alert>
+        </nz-spin>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>

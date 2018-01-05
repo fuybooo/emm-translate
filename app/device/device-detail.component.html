@@ -1,0 +1,320 @@
+<div class="device-detail-wrap common-white-bg">
+  <div class="content-section-title common-gray-bg">{{showType === 2 ?
+    '设备组详情'
+    :
+    '设备详情'
+    }}</div>
+  <nz-collapseset [nzBordered]="false" class="common-collapseset" [class.dni]="showType !== 1" id="device-detail-collapseset">
+    <nz-collapse class="device-detail-item" [nzTitle]="'basic_info' | translate" [nzActive]="collapseBase" id="collapseBase">
+      <table>
+        <tr>
+          <td>IMEI</td>
+          <td>{{deviceInfo?.imei}}</td>
+        </tr>
+        <tr>
+          <td>MEID</td>
+          <td>{{deviceInfo?.meid}}</td>
+        </tr>
+        <tr>
+          <td>MAC</td>
+          <td>{{deviceInfo?.mac}}</td>
+        </tr>
+        <tr>
+          <td>SN</td>
+          <td>{{deviceInfo?.sn}}</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td>{{'device_brand' | translate}}</td>
+          <td>{{deviceInfo?.brand}}</td>
+        </tr>
+        <tr>
+          <td>{{'device_model' | translate}}</td>
+          <td>{{deviceInfo?.model}}</td>
+        </tr>
+        <tr>
+          <td>{{'asset_id' | translate}}</td>
+          <td>{{deviceInfo?.assetId}}</td>
+        </tr>
+      </table>
+      <table class="table-break">
+        <tr>
+          <td>{{'owner' | translate}}</td>
+          <td>{{displayOwner}}</td>
+        </tr>
+        <tr>
+          <td>{{'account' | translate}}</td>
+          <td>{{deviceInfo?.account}}</td>
+        </tr>
+        <tr>
+          <td>设备分组</td>
+          <td>
+            <nz-breadcrumb [nzSeparator]="' > '">
+              <nz-breadcrumb-item *ngFor="let g of deviceGroup;"
+                                  (click)="toGroup(g)" class="text-primary f14i">{{g.name | translate}}
+              </nz-breadcrumb-item>
+            </nz-breadcrumb>
+          </td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td>设备状态</td>
+          <td [innerHTML]="deviceInfo?.deviceState"></td>
+        </tr>
+        <tr>
+          <td>{{'register_date' | translate}}</td>
+          <td>{{deviceRegisterDate}}</td>
+        </tr>
+        <tr>
+          <td>{{'last_logged_date' | translate}}</td>
+          <td>{{deviceLastLoginDate}}</td>
+        </tr>
+      </table>
+    </nz-collapse>
+    <nz-collapse class="device-detail-item" [nzTitle]="'策略'" [(nzActive)]="collapsePolicy" id="collapsePolicy" *ngIf="!isSelfHelp">
+      <table>
+        <ng-container *ngFor="let item of devicePolicy">
+          <tr *ngIf="item.id && !(item.policyType === 'Illegal' && deviceSystem === 'iOS')">
+            <td>{{policyService.getPolicyNameByPolicyType(item.policyType)}}</td>
+            <td><a (click)="toPolicy(item.url, item.id)">{{item.policyName === '默认策略' ? ('policy_default' | translate) : item.policyName}}</a></td>
+          </tr>
+        </ng-container>
+      </table>
+    </nz-collapse>
+    <nz-collapse class="device-detail-item" [nzTitle]="'运营商信息'" [(nzActive)]="collapseOperator" id="collapseOperator">
+      <table>
+        <tr>
+          <td>运营商名称</td>
+          <td>{{deviceInfo?.operator}}</td>
+        </tr>
+        <tr>
+          <td>手机号码</td>
+          <td>{{deviceInfo?.phoneNumber}}</td>
+        </tr>
+        <tr>
+          <td>IMSI</td>
+          <td>{{deviceInfo?.imsi}}</td>
+        </tr>
+        <tr>
+          <td>ICCID</td>
+          <td>{{deviceInfo?.iccid}}</td>
+        </tr>
+        <tr>
+          <td>信号强度</td>
+          <td>{{deviceInfo?.signalIntensity}}</td>
+        </tr>
+        <tr>
+          <td>是否漫游</td>
+          <td>{{roam}}</td>
+        </tr>
+      </table>
+    </nz-collapse>
+    <nz-collapse class="device-detail-item" [nzTitle]="'系统信息'" [(nzActive)]="collapseSystemInformation" id="collapseSystemInformation">
+      <table>
+        <tr>
+          <td>系统平台</td>
+          <td>{{deviceSystem}}</td>
+        </tr>
+        <tr>
+          <td>操作系统版本</td>
+          <td>{{deviceSystemVersion}}</td>
+        </tr>
+        <tr>
+          <td>固件版本</td>
+          <td>{{deviceInfo?.firmwareVersion}}</td>
+        </tr>
+        <tr>
+          <td>客户端版本</td>
+          <td>{{deviceInfo?.clientVersion}}</td>
+        </tr>
+        <tr>
+          <td>API支持</td>
+          <td>{{deviceInfo?.apiSupport}}</td>
+        </tr>
+      </table>
+    </nz-collapse>
+    <nz-collapse class="device-detail-item device-detail-hardware" [nzTitle]="'硬件信息'" [(nzActive)]="collapseHardwareInformation" id="collapseHardwareInformation">
+      <table>
+        <tr>
+          <td>电池状态</td>
+          <td>
+            <span [hidden]="batteryUsageNum === undefined || batteryUsageNum === null">
+              <span class="battery-body">
+                <span class="battery-content" [ngStyle]="batteryUsageStyle"></span>
+              </span>
+              <span class="text-aux ml20"><span>剩余电量</span>{{batteryUsageNum}}%</span>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>内存状态</td>
+          <td>
+            <div [hidden]="memoryUsageNumber === undefined || memoryUsageNumber === null" class="p5_0 w_80">
+              <div class="text-aux">{{memoryUsageUsed | number:'.0-2'}}GB / {{memoryUsageTotal | number:'.0-2'}}GB
+                <span>已用</span>{{memoryUsageNumber | number:'.0-0'}}%
+              </div>
+              <div class="usage-box">
+                <div class="usage-content bg-2" [ngStyle]="memoryUsageStyle"></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>存储状态</td>
+          <td>
+            <div [hidden]="storageUsageNumber === undefined || storageUsageNumber === null" class="p5_0 w_80">
+              <div class="text-aux">{{storageUsageUsed | number:'.0-2'}}GB / {{storageUsageTotal | number:'.0-2'}}GB
+                <span>已用</span>{{storageUsageNumber | number:'.0-0'}}%
+              </div>
+              <div class="usage-box">
+                <div class="usage-content bg-3" [ngStyle]="storageUsageStyle"></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>SD卡状态</td>
+          <td>
+            <div [hidden]="sdUsageNumber === undefined || sdUsageNumber === null" class="p5_0 w_80">
+              <div class="text-aux">{{sdUsageUsed | number:'.0-2'}}GB / {{sdUsageTotal | number:'.0-2'}}GB
+                <span>已用</span>{{sdUsageNumber | number:'.0-0'}}%
+              </div>
+              <div class="usage-box">
+                <div class="usage-content bg-4" [ngStyle]="sdUsageStyle"></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </nz-collapse>
+    <nz-collapse class="device-detail-item" [nzTitle]="'网络信息'" [(nzActive)]="collapseNetworkInformation" id="collapseNetworkInformation">
+      <table>
+        <tr>
+          <td>通话时长</td>
+          <td>{{deviceInfo?.phoneTalkTime}}<span>分钟</span></td>
+        </tr>
+        <tr>
+          <td>蜂窝移动数据流量</td>
+          <td>{{deviceInfo?.cellularDataStr}}</td>
+        </tr>
+        <tr>
+          <td>WiFi SSID</td>
+          <td>{{deviceInfo?.wifiSSID}}</td>
+        </tr>
+        <tr>
+          <td>WiFi 信号强度</td>
+          <td>{{deviceInfo?.wifiSignalIntensity}}</td>
+        </tr>
+        <tr>
+          <td>WiFi 使用量</td>
+          <td>{{deviceInfo?.wifiUsageStr}}</td>
+        </tr>
+      </table>
+    </nz-collapse>
+    <nz-collapse class="device-detail-item device-detail-app" [nzTitle]="'应用信息'" [(nzActive)]="collapseUseNetworkInformation" id="collapseUseNetworkInformation">
+      <div class="max-h400i c-border" appCustomScrollbar [options]="appOptions">
+        <nz-table #appTable [nzAjaxData]="deviceAppData"
+                  [nzLoading]="isLoading"
+                  [nzIsPagination]="false">
+          <thead nz-thead>
+          <tr>
+            <th nz-th [nzWidth]="'66%'" class="brb_1_e"><span>应用名称</span></th>
+            <th nz-th class="brb_1_e"><span>版本</span></th>
+          </tr>
+          </thead>
+          <tbody nz-tbody>
+          <tr nz-tbody-tr *ngFor="let data of appTable.data">
+            <td nz-td>{{data.name}}</td>
+            <td nz-td>{{data.version}}</td>
+          </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </nz-collapse>
+    <nz-collapse class="device-detail-item" [nzTitle]="'每天用量统计'" [(nzActive)]="collapseStatistics" id="collapseStatistics">
+      <div class="device-detail-daily">
+        <p class="mb10"><span class="badge-block mr10 bg-5"></span>WIFI用量统计</p>
+        <nz-radio-group [(ngModel)]="wifiUsageMonth" class="btn-group-bg-5">
+          <label nz-radio-button [nzValue]="currentMonth"
+                 (click)="getDeviceUsage(1)"><span>{{currentMonth}}<span>月</span></span></label>
+          <label nz-radio-button [nzValue]="lastMonth"
+                 (click)="getDeviceUsage(1)"><span>{{lastMonth}}月</span></label>
+          <label nz-radio-button [nzValue]="lastLastMonth"
+                 (click)="getDeviceUsage(1)"><span>{{lastLastMonth}}月</span></label>
+        </nz-radio-group>
+        <div id="device-detail-daily-chart-wifi" class="device-detail-daily-chart"></div>
+      </div>
+      <div class="device-detail-daily">
+        <p class="mb10"><span class="badge-block mr10 bg-7"></span>数据用量统计</p>
+        <nz-radio-group [(ngModel)]="dataUsageMonth" class="btn-group-bg-7">
+          <label nz-radio-button [nzValue]="currentMonth"
+                 (click)="getDeviceUsage(2)"><span>{{currentMonth}}<span>月</span></span></label>
+          <label nz-radio-button [nzValue]="lastMonth"
+                 (click)="getDeviceUsage(2)"><span>{{lastMonth}}<span>月</span></span></label>
+          <label nz-radio-button [nzValue]="lastLastMonth"
+                 (click)="getDeviceUsage(2)"><span>{{lastLastMonth}}<span>月</span></span></label>
+        </nz-radio-group>
+        <div id="device-detail-daily-chart-data" class="device-detail-daily-chart"></div>
+      </div>
+      <div class="device-detail-daily">
+        <p class="mb10"><span class="badge-block mr10 bg-9"></span>通话时间统计</p>
+        <nz-radio-group [(ngModel)]="talkUsageMonth" class="btn-group-bg-9">
+          <label nz-radio-button [nzValue]="currentMonth"
+                 (click)="getDeviceUsage(3)"><span>{{currentMonth}}<span>月</span></span></label>
+          <label nz-radio-button [nzValue]="lastMonth"
+                 (click)="getDeviceUsage(3)"><span>{{lastMonth}}<span>月</span></span></label>
+          <label nz-radio-button [nzValue]="lastLastMonth"
+                 (click)="getDeviceUsage(3)"><span>{{lastLastMonth}}<span>月</span></span></label>
+        </nz-radio-group>
+        <div id="device-detail-daily-chart-talk" class="device-detail-daily-chart"></div>
+      </div>
+    </nz-collapse>
+    <nz-collapse class="device-detail-item device-detail-log" [nzTitle]="'日志'" [(nzActive)]="collapseLog" id="collapseLog" *ngIf="!isSelfHelp">
+      <nz-radio-group [(ngModel)]="deviceLog" class="btn-group-bg-7">
+        <label nz-radio-button [nzValue]="1" (click)="deviceLogData=[];getDeviceLog()"><span>操作日志</span></label>
+        <label nz-radio-button [nzValue]="2" (click)="deviceLogData=[];getDeviceLog()"><span>违规日志</span></label>
+        <label nz-radio-button [nzValue]="3" (click)="deviceLogData=[];getDeviceLog()"><span>流转日志</span></label>
+      </nz-radio-group>
+      <div class="table-wrap mt10" appCustomScrollbar [options]="options">
+        <nz-table #nzTable [nzAjaxData]="deviceLogData"
+                  [nzLoading]="isLoading"
+                  [nzIsPagination]="false">
+          <thead nz-thead>
+          <tr>
+            <th [hidden]="deviceLog !== 1" nz-th [nzWidth]="'33%'"><span>命令</span></th>
+            <th [hidden]="deviceLog !== 1" nz-th [nzWidth]="'33%'"><span>状态</span></th>
+            <th [hidden]="deviceLog !== 2" nz-th [nzWidth]="'33%'"><span>违规动作</span></th>
+            <th [hidden]="deviceLog !== 2" nz-th [nzWidth]="'33%'"><span>处理措施</span></th>
+            <th [hidden]="deviceLog !== 3" nz-th [nzWidth]="'33%'"><span>姓名</span></th>
+            <th [hidden]="deviceLog !== 3" nz-th [nzWidth]="'33%'"><span>帐号/邮箱</span></th>
+            <th nz-th><span>时间</span></th>
+          </tr>
+          </thead>
+          <tbody nz-tbody>
+          <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+            <td [hidden]="deviceLog !== 1" nz-td>{{data.command | policyPipe}}</td>
+            <td [hidden]="deviceLog !== 1" nz-td>{{data.state | commandStatePipe}}</td>
+            <td [hidden]="deviceLog !== 2" nz-td title="{{data.violation | illegalPipe}}"><span class="text-overflow">{{data.violation | illegalPipe}}</span></td>
+            <td [hidden]="deviceLog !== 2" nz-td title="{{data.handle | illegalPolicy}}"><span class="text-overflow">{{data.handle | illegalPolicy}}</span></td>
+            <td [hidden]="deviceLog !== 3" nz-td>{{data.deviceDisplayname}}</td>
+            <td [hidden]="deviceLog !== 3" nz-td>{{data.deviceUsername}}({{data.emailAddress}})</td>
+            <td width="30%" nz-td>{{data.time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+          </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </nz-collapse>
+  </nz-collapseset>
+  <div *ngIf="showPackUp && showType === 1" class="pack-up" (click)="packUp()">收起</div>
+  <!--<div class="device-view-more" (click)="initCollapse()" *ngIf="showType === 1">-->
+  <!--收起-->
+  <!--</div>-->
+  <app-device-group-form [class.dni]="showType !== 2" [type]="'view'"></app-device-group-form>
+  <ng-container *ngIf="showType === 0">
+    <img class="db m150_a" [src]="blankImgSrc" alt="没有信息">
+  </ng-container>
+</div>
+<div class="app-mask" [class.dn]="!deviceDetailSpin"></div>
+<nz-spin class="app-spin" [nzSize]="'large'" [nzSpinning]="deviceDetailSpin"></nz-spin>

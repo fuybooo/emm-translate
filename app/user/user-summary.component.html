@@ -1,0 +1,16 @@
+<div>
+  <div class="summary-panel" nz-row [nzGutter]="20">
+    <div nz-col [nzSpan]="6" *ngFor="let state of userSearch.userStateStatistics">
+      <ul class="panel-user" [class.active]="state.isActive" (click)="userStateToggle(state)">
+        <li class="panel-title">{{state.title}}</li>
+        <li class="panel-item">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-25 mr5 vat mt15i dibi"></i>
+            <span>{{state.number}}</span>
+          </span>
+          <span class="panel-desc-value">{{state.percentage}}%</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

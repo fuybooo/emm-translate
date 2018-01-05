@@ -1,0 +1,109 @@
+<div class="policy-version-box">
+  <ng-container *ngIf="system === 'Android'">Android4.4+</ng-container>
+  <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+</div>
+<div>
+  <div class="mb10">
+    <label nz-checkbox [(ngModel)]="disableChangeSIM" [nzDisabled]="system === 'iOS' || type === 'view'">
+      <span>禁止更换SIM卡</span>
+    </label>
+  </div>
+  <div class="mb10 nz-input-w120i">
+    <label nz-checkbox [(ngModel)]="openLimitMonthlyCallTime" [nzDisabled]="type === 'view'" (ngModelChange)="changeMonthlyCallTime($event)">
+      <span>限制每个月通话时长</span>
+    </label>
+    <nz-input-number [nzPlaceHolder]="placeholderCallTime"
+                     [nzDisabled]="!openLimitMonthlyCallTime || type === 'view'"
+                     [(ngModel)]="limitMonthlyCallTime"
+                     [nzMin]="1"
+                     [nzMax]="44640"
+                     class="w120i"
+    ></nz-input-number>
+    <span [class.text-diseditable]="!openLimitMonthlyCallTime">分钟</span>
+  </div>
+  <ng-container *ngIf="system === 'Android'">
+    <div class="mb10 ml20">
+      <label nz-checkbox [(ngModel)]="openCallTimeBillingCycle" [nzDisabled]="!openLimitMonthlyCallTime || type === 'view'">
+        <span>移动通信计费周期</span>
+      </label>
+    </div>
+    <nz-radio-group [(ngModel)]="callTimeBillingMode">
+      <div class="mb10 ml20">
+        <label nz-radio [nzValue]="1" [nzDisabled]="!openCallTimeBillingCycle || !openLimitMonthlyCallTime || type === 'view'">
+          <span>每月</span>
+        </label>
+        <span class="text-tip">从每月的第一天到每月最后一天</span>
+      </div>
+      <div class="mb10 ml20">
+        <label nz-radio [nzValue]="2" [nzDisabled]="!openCallTimeBillingCycle || !openLimitMonthlyCallTime || type === 'view'">
+          <span>自定义</span>
+        </label>
+        <span [class.text-diseditable]="!openCallTimeBillingCycle || !openLimitMonthlyCallTime || callTimeBillingMode !== 2 || type === 'view'">每月</span>
+        <nz-select [nzPlaceHolder]="''" class="w60" [(ngModel)]="callTimeFrom" [nzDisabled]="!openCallTimeBillingCycle || !openLimitMonthlyCallTime || callTimeBillingMode !== 2 || type === 'view'">
+          <nz-option
+            *ngFor="let option of options10"
+            [nzLabel]="option.label"
+            [nzValue]="option.value">
+          </nz-option>
+        </nz-select>
+        <span [class.text-diseditable]="!openCallTimeBillingCycle || !openLimitMonthlyCallTime || callTimeBillingMode !== 2 || type === 'view'">日</span>
+        <span [class.text-diseditable]="!openCallTimeBillingCycle || !openLimitMonthlyCallTime || callTimeBillingMode !== 2 || type === 'view'">至下月</span>
+        <nz-select [nzPlaceHolder]="''" class="w60" [(ngModel)]="callTimeTo" [nzDisabled]="!openCallTimeBillingCycle || !openLimitMonthlyCallTime || callTimeBillingMode !== 2 || type === 'view'">
+          <nz-option
+            *ngFor="let option of options10"
+            [nzLabel]="option.label"
+            [nzValue]="option.value">
+          </nz-option>
+        </nz-select>
+        <span [class.text-diseditable]="!openCallTimeBillingCycle || !openLimitMonthlyCallTime || callTimeBillingMode !== 2 || type === 'view'">日</span>
+      </div>
+    </nz-radio-group>
+  </ng-container>
+  <div class="mb10 nz-input-w120i">
+    <label nz-checkbox [(ngModel)]="openLimitMonthlyData" [nzDisabled]="type === 'view'" (ngModelChange)="changeMonthlyData($event)">
+      <span>限制每个月移动数据流量</span>
+    </label>
+    <nz-input-number [nzPlaceHolder]="placeholderData" [nzMin]="1"
+                     [(ngModel)]="limitMonthlyData"
+                     [nzDisabled]="!openLimitMonthlyData || type === 'view'"
+                     class="w120i"></nz-input-number>
+    <span [class.text-diseditable]="!openLimitMonthlyData">M</span>
+  </div>
+  <div class="mb10 ml20">
+    <label nz-checkbox [(ngModel)]="openDataBillingCycle" [nzDisabled]="!openLimitMonthlyData || type === 'view'">
+      <span>数据流量计费周期</span>
+    </label>
+  </div>
+  <nz-radio-group [(ngModel)]="dataBillingMode">
+    <div class="mb10 ml20">
+      <label nz-radio [nzValue]="1" [nzDisabled]="!openDataBillingCycle || !openLimitMonthlyData || type === 'view'">
+        <span>每月</span>
+      </label>
+      <span class="text-tip">从每月的第一天到每月最后一天</span>
+    </div>
+    <div class="mb10 ml20">
+      <label nz-radio [nzValue]="2" [nzDisabled]="!openDataBillingCycle || !openLimitMonthlyData || type === 'view'">
+        <span>自定义</span>
+      </label>
+      <span [class.text-diseditable]="!openDataBillingCycle || !openLimitMonthlyData || dataBillingMode !== 2 || type === 'view'">每月</span>
+      <nz-select [nzPlaceHolder]="''" class="w60" [(ngModel)]="dataFrom" [nzDisabled]="!openDataBillingCycle || !openLimitMonthlyData || dataBillingMode !== 2 || type === 'view'">
+        <nz-option
+          *ngFor="let option of options10"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+      <span [class.text-diseditable]="!openDataBillingCycle || !openLimitMonthlyData || dataBillingMode !== 2 || type === 'view'">日</span>
+      <span [class.text-diseditable]="!openDataBillingCycle || !openLimitMonthlyData || dataBillingMode !== 2 || type === 'view'">至下月</span>
+      <nz-select [nzPlaceHolder]="''" class="w60" [(ngModel)]="dataTo" [nzDisabled]="!openDataBillingCycle || !openLimitMonthlyData || dataBillingMode !== 2 || type === 'view'">
+        <nz-option
+          *ngFor="let option of options10"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+      <span [class.text-diseditable]="!openDataBillingCycle || !openLimitMonthlyData || dataBillingMode !== 2 || type === 'view'">日</span>
+    </div>
+  </nz-radio-group>
+</div>
+

@@ -1,0 +1,91 @@
+<div class="policy-version-box">
+  <!--安全桌面 只针对Android-->
+  Android4.4+
+</div>
+<div class="policy-item-launcher">
+  <!--只在非显示界面，且非安全桌面模块出现-->
+  <div *ngIf="type !== 'view' && policyType !== 'securityDesk'">
+    <span>请选择安全桌面</span>
+    <nz-select class="w120" [(ngModel)]="launcherId" (ngModelChange)="searchLauncher($event)">
+      <nz-option
+        *ngFor="let option of launcherList"
+        [nzLabel]="option.policyName"
+        [nzValue]="option.id">
+      </nz-option>
+    </nz-select>
+  </div>
+  <div *ngIf="type === 'view' && (launcherId && launcherId !== '--')">
+    <div>安全桌面名称</div>
+    <span>{{util.getObjectByField(launcherList, launcherId, 'id')?.policyName}}</span>
+    <div>安全桌面描述</div>
+    <span>{{util.getObjectByField(launcherList, launcherId, 'id')?.policyDescribe}}</span>
+  </div>
+  <ng-container *ngIf="policyType === 'securityDesk' || (launcherId && launcherId !== '--')">
+    <div>
+      <p [class.text-diseditable]="isView">选择类型</p>
+      <p *ngIf="!isView" class="text-diseditable">安全桌面应用的使用类型</p>
+      <nz-select *ngIf="!isView" class="w120" [(ngModel)]="useType" (ngModelChange)="changeUseType()">
+        <nz-option
+          *ngFor="let option of options"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+      <span *ngIf="isView">{{util.getLabelByValue(options, useType)}}</span>
+    </div>
+    <div class="common-input-wrap">
+      <p [class.text-diseditable]="isView">管理员密码</p>
+      <p *ngIf="!isView" class="text-diseditable">登录退出安全桌面的密码</p>
+      <nz-input [nzDisabled]="isView" [(ngModel)]="password" [nzType]="'password'" *ngIf="!showPassword" (ngModelChange)="changePassword($event)" [nzPlaceHolder]="'密码是必填项'"></nz-input>
+      <nz-input [nzDisabled]="isView" [(ngModel)]="password" [nzType]="'text'" *ngIf="showPassword" [nzPlaceHolder]="'密码是必填项'"></nz-input>
+      <i class="cp" [class.icon-allicon-89]="!showPassword" [class.icon-allicon-88]="showPassword" (mousedown)="showPassword = true;" (mouseup)="showPassword=false;"></i>
+      <span class="text-warning">{{errorMsg}}</span>
+    </div>
+    <div [class.text-diseditable]="isView" class="mb10">
+      应用
+    </div>
+    <app-application-list-widget [data]="selectedAppList" [type]="type"
+                                 (outData)="outDataChange('selected', $event)"></app-application-list-widget>
+    <div *ngIf="!isView" class="mt10">
+      <button nz-button [nzType]="'dashed'" (click)="add('selected')" [disabled]="isDisableAdd">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'dashed'" (click)="del('selected')">
+        <span>-</span>
+      </button>
+    </div>
+    <div [class.text-diseditable]="isView" class="mb10 mt10">
+      隐藏应用
+    </div>
+    <app-application-list-widget [data]="hiddenAppList" [type]="type"
+                                 (outData)="outDataChange('hidden', $event)"></app-application-list-widget>
+    <div *ngIf="!isView" class="mt10">
+      <button nz-button [nzType]="'dashed'" (click)="add('hidden')">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'dashed'" (click)="del('hidden')">
+        <span>-</span>
+      </button>
+    </div>
+    <div nz-row *ngFor="let item of systemApp; let i = index;" class="mt10">
+      <div nz-col [nzSpan]="3" [class.text-diseditable]="isView">
+        {{i === 0 ? '系统应用' : ''}}
+      </div>
+      <div nz-col [nzSpan]="20">
+        <label nz-checkbox [nzDisabled]="isView || useType === 1" [(ngModel)]="item.value">
+          <span>{{item.label}}</span>
+        </label>
+      </div>
+    </div>
+    <div nz-row *ngFor="let item of configableApp; let i = index;">
+      <div nz-col [nzSpan]="3" [class.text-diseditable]="isView">
+        {{i === 0 ? '可配置项' : ''}}
+      </div>
+      <div nz-col [nzSpan]="20">
+        <label nz-checkbox [nzDisabled]="isView" [(ngModel)]="item.value">
+          <span>{{item.label}}</span>
+        </label>
+      </div>
+    </div>
+  </ng-container>
+</div>

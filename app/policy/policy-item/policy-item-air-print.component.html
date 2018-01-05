@@ -1,0 +1,101 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+  </div>
+  <div>打印机</div>
+  <div class="list-widget">
+    <nz-table #nzTable
+              [nzAjaxData]="data"
+              [nzIsPagination]="false">
+      <tbody nz-tbody>
+      <tr nz-tbody-tr>
+        <td nz-td width="60%"><span>主机名称/IP地址</span></td>
+        <td nz-td><span>资源路径</span></td>
+      </tr>
+      <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"
+          class="stripe-table"
+          [class.application-item]="data.IPAddress"
+          [class.active]="data.isActive"
+          [class.view]="type === 'view'"
+          (click)="changeActive(data);">
+        <td nz-td width="60%"><span>{{data.IPAddress}}</span></td>
+        <td nz-td><span>{{data.ResourcePath}}</span></td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div *ngIf="type !=='view'" class="mt10">
+    <button nz-button [nzType]="'dashed'" (click)="add(title,content,footer)">
+      <span>+</span>
+    </button>
+    <button nz-button [nzType]="'dashed'" (click)="del()">
+      <span>-</span>
+    </button>
+  </div>
+
+  <ng-template #title>
+    <span>添加AirPrint</span>
+  </ng-template>
+  <ng-template #content>
+    <div>
+      <form nz-form [formGroup]="form">
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col [nzSpan]="6">
+            <label nz-form-item-required>主机名称/IP地址</label>
+          </div>
+          <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('IPAddress')">
+            <input class="w" formControlName="IPAddress" nz-input placeholder="请输入主机名称/IP地址，最多不超过100个字"
+                   [nzSize]="'large'" (keyup.enter)="handleOk()">
+            <div nz-form-explain *ngIf="getFormControl('IPAddress').dirty&&getFormControl('IPAddress').hasError('required')">
+              请输入主机名称/IP地址！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('IPAddress').dirty&&getFormControl('IPAddress').hasError('maxlength')">
+              主机名称/IP地址不能超过100个字！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('IPAddress').dirty&&getFormControl('IPAddress').hasError('duplicated')">
+              主机名称/IP地址是重复的！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('IPAddress').dirty&&getFormControl('IPAddress').hasError('specialCharacter')">
+              主机名称/IP地址只能包含数字，字母，-，_，@，#！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('IPAddress').dirty&&getFormControl('IPAddress').pending">
+              验证中...
+            </div>
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col [nzSpan]="6">
+            <label nz-form-item-required>资源路径</label>
+          </div>
+          <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('ResourcePath')">
+            <input class="w" formControlName="ResourcePath" nz-input placeholder="请输入资源路径，最多不超过100个字"
+                   [nzSize]="'large'" (keyup.enter)="handleOk()">
+            <div nz-form-explain *ngIf="getFormControl('ResourcePath').dirty&&getFormControl('ResourcePath').hasError('required')">
+              请输入资源路径！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('ResourcePath').dirty&&getFormControl('ResourcePath').hasError('maxlength')">
+              资源路径不能超过100个字！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('ResourcePath').dirty&&getFormControl('ResourcePath').hasError('duplicated')">
+              资源路径是重复的！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('ResourcePath').dirty&&getFormControl('ResourcePath').hasError('specialCharacter')">
+              资源路径只能包含数字，字母，-，_，@，#！
+            </div>
+            <div nz-form-explain *ngIf="getFormControl('ResourcePath').dirty&&getFormControl('ResourcePath').pending">
+              验证中...
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div>
+      <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk()"
+              [disabled]="!form.valid">
+        保存
+      </button>
+    </div>
+  </ng-template>
+</div>

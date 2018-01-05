@@ -1,0 +1,27 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+  </div>
+  <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+    <div nz-form-item nz-row>
+      <div nz-form-label nz-col>
+        <label class="w320i">“如果丢失，请归还到...” 信息</label>
+        <p class="text-tip">显示在登录窗口和锁定屏幕中的信息</p>
+      </div>
+      <div nz-col nz-form-control [nzValidateStatus]="getFormControl('IfLostReturnToMessage')">
+        <input class="w320i" formControlName="IfLostReturnToMessage" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+               [nzSize]="'large'">
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-form-label nz-col>
+        <label class="w320i">资源标记信息</label>
+        <p class="text-tip">显示在登录窗口和锁定屏幕底部的信息</p>
+      </div>
+      <div nz-col nz-form-control [nzValidateStatus]="getFormControl('resourceTag')">
+        <input class="w320i" formControlName="resourceTag" nz-input placeholder="可选" [nzDisabled]="type === 'view'"
+               [nzSize]="'large'">
+      </div>
+    </div>
+  </form>
+</div>

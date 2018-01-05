@@ -1,0 +1,192 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container>iOS5.0+</ng-container>
+  </div>
+  <div *ngFor="let form of forms; let i = index;" class="policy-item-content-block">
+    <div class="policy-item-add-or-sub">
+      <button nz-button [nzType]="'default'" (click)="add()">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'default'" (click)="del(i)">
+        <span>-</span>
+      </button>
+    </div>
+    <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i">账户名称</label>
+          <p class="text-tip">Exchange ActiveSync 账户的名称</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Account')">
+          <input class="w320i" formControlName="Account" nz-input [disabled]="type === 'view'" placeholder="Exchange ActiveSync" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-form-item-required>Exchange ActiveSync 主机</label>
+          <p class="text-tip">Microsoft Exchange Server</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Host')">
+          <input class="w320i" formControlName="Host" nz-input [disabled]="type === 'view'" placeholder="[必填]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+          <div nz-form-explain
+               *ngIf="getFormControl(i, 'Host').dirty&&getFormControl(i, 'Host').hasError('required')">
+            必填项不能为空
+          </div>
+        </div>
+      </div>
+      <!--<div nz-form-item nz-row>-->
+        <!--<div nz-form-label nz-col>-->
+          <!--<label class="w310i">用户的显示名称</label>-->
+          <!--<p class="text-tip">用户的显示名称（例如：“John Appleseed”）</p>-->
+        <!--</div>-->
+        <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'PayloadDisplayName')">-->
+          <!--<input class="w320i" formControlName="PayloadDisplayName" nz-input [disabled]="type === 'view'" placeholder="在设备上设置" [nzDisabled]="type === 'view'"-->
+                 <!--[nzSize]="'large'">-->
+        <!--</div>-->
+      <!--</div>-->
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="SSL">
+            <span>使用SSL</span>
+          </label>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i">用户</label>
+          <p class="text-tip">包含可选域(例如“user” 或者 "domain/user")的账户用户</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'UserName')">
+          <input  class="w320i" formControlName="UserName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                  [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i">电子邮件地址</label>
+          <p class="text-tip">账户地址(例如: john@example.com)</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EmailAddress')">
+          <input  class="w320i" formControlName="EmailAddress" nz-input  placeholder="默认为 username@host" [nzDisabled]="type === 'view'"
+                  [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i">密码</label>
+          <p class="text-tip">账户的密码 (例如"MyP4sswOrd!")</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Password')">
+          <input type="password" class="w320i" formControlName="Password" nz-input [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i">要同步过去邮件的天数</label>
+          <p class="text-tip">要同步过去邮件的天数</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i,'MailNumberOfPastDaysToSync')" >
+          <nz-select [nzDisabled]="type === 'view'" class="w320i" formControlName="MailNumberOfPastDaysToSync">
+            <nz-option
+              *ngFor="let option of _options27"
+              [nzLabel]="option.label"
+              [nzValue]="option.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i">鉴定评定名称</label>
+          <p class="text-tip">ActiveSync的名称或描述</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CertificateName')">
+          <input class="w320i" formControlName="CertificateName" nz-input [nzDisabled]="type === 'view'"  placeholder="描述"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i">鉴定凭证</label>
+          <p class="text-tip">用于鉴定 ActiveSync 账号的凭证</p>
+        </div>
+        <!--此处是下拉框-->
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i,'voucherId')" >
+          <nz-select  [nzDisabled]="true" class="w320i" formControlName="voucherId">
+            <nz-option
+              *ngFor="let option of _options28"
+              [nzLabel]="option.label"
+              [nzValue]="option.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="PreventMove">
+            <span>允许移动邮件</span>
+          </label>
+          <p class="text-tip">可以将邮件从这个账户移到其他账户</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="disableMailRecentsSyncing">
+            <span>允许同步最近使用的地址</span>
+          </label>
+          <p class="text-tip">同步最近使用的地址时包括此账户</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="allowMailDrop">
+            <span>允许使用 Mail Drop</span>
+          </label>
+          <p class="text-tip">允许此用户使用 Mail Drop</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="PreventAppSheet">
+            <span>仅在“邮件”中使用</span>
+          </label>
+          <p class="text-tip">只在"邮件"应用中从此账户发送邮件</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="SMIMESigningEnabled">
+            <span>启用 S/MIEI 信息签名</span>
+          </label>
+          <p class="text-tip">默认给此账户的信息签名</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="SMIMEEncryptionEnabled">
+            <span>启用 S/MIEI 信息加密</span>
+          </label>
+          <p class="text-tip">默认加密此账户的信息</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">通信服务规则</label>
+          <p class="text-tip">选取通过此账号呼叫联系人时使用的默认应用。</p>
+          <button *ngIf="!selectedApps[i]" nz-button [nzType]="'default'" [disabled]="type === 'view'" (click)="selectApp(i)">选取...</button><span class="text-tip" *ngIf="!selectedApps[i]">可选</span>
+          <div nz-row *ngIf="selectedApps[i]">
+            <div nz-col [nzSpan]="18">
+              <img [src]="selectedApps[i].artworkUrl60" alt="" height="25" width="25" class="va-11"><span>{{selectedApps[i].trackName}}</span>
+            </div>
+            <div nz-col [nzSpan]="6">
+              <button nz-button [nzType]="'default'" (click)="selectedApps[i] = null;">移除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

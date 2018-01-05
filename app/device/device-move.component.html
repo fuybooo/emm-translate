@@ -1,0 +1,19 @@
+<div>
+  <p class="pb10"><i class="anticon anticon-info-circle device-move-tip mr5"></i>一个设备只能存在于一个组</p>
+  <app-device-group [isPopupMove]="true"
+                    [params]="params"
+  ></app-device-group>
+  <div class="mb0i mt20" nz-form-item nz-row>
+    <div nz-col [nzSpan]="12" nz-form-control>
+      <button nz-button [nzType]="'default'" (click)="popupAddGroup()" appPermission="1">
+        <span><i class="icon-allicon-20 mr5"></i>{{'add_group' | translate}}</span>
+      </button>
+    </div>
+    <div class="tar" nz-col [nzSpan]="12" nz-form-control>
+      <button nz-button [nzType]="'primary'" [nzSize]="'large'"
+              (click)="submit()">保存
+      </button>
+      <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel()">取消</button>
+    </div>
+  </div>
+</div>

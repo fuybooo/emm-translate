@@ -1,0 +1,19 @@
+<div class="policy-version-box">
+  <ng-container *ngIf="system === 'Android'">Android4.4+</ng-container>
+  <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+</div>
+<div>
+  <span class="text-diseditable" *ngIf="type === 'view'">
+    {{value}}（指定允许接入的最低操作系统版本）
+  </span>
+  <div *ngIf="type !== 'view'">
+    <p>指定允许接入的最低操作系统版本</p>
+    <nz-select *ngIf="type !== 'view'" class="w120" [(ngModel)]="value">
+      <nz-option
+        *ngFor="let option of options"
+        [nzLabel]="option.label"
+        [nzValue]="option.value">
+      </nz-option>
+    </nz-select>
+  </div>
+</div>

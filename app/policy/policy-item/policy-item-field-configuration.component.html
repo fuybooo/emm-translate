@@ -1,0 +1,112 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+  </div>
+  <div>未标记的电子邮件域</div>
+  <p class="mt5 text-tip">不匹配这些域中任何一项的电子邮件地址将在“邮件”中标记出来</p>
+  <div class="list-widget">
+    <nz-table #nzTable
+              [nzAjaxData]="EmailDomains"
+              [nzIsPagination]="false">
+      <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"
+          class="stripe-table"
+          [class.application-item]="data.url"
+          [class.active]="data.isActive"
+          [class.view]="type === 'view'"
+          (click)="changeActive(data);">
+        <td nz-td><span>{{data.url}}</span></td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div *ngIf="type !=='view'" class="mt10">
+    <button nz-button [nzType]="'dashed'" (click)="urlType = 'EmailDomains';add(title,content,footer)">
+      <span>+</span>
+    </button>
+    <button nz-button [nzType]="'dashed'" (click)="del('EmailDomains')">
+      <span>-</span>
+    </button>
+  </div>
+
+  <div class="pt20">被管理的Safari网域</div>
+  <p class="mt5 text-tip">域的 URL 模式，来自该域的文稿将视为被管理</p>
+  <div class="list-widget">
+    <nz-table #nzTable2
+              [nzAjaxData]="WebDomains"
+              [nzIsPagination]="false">
+      <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let data of nzTable2.data;let i = index;"
+          class="stripe-table"
+          [class.application-item]="data.url"
+          [class.active]="data.isActive"
+          [class.view]="type === 'view'"
+          (click)="changeActive(data);">
+        <td nz-td><span>{{data.url}}</span></td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div *ngIf="type !=='view'" class="mt10">
+    <button nz-button [nzType]="'dashed'" (click)="urlType = 'WebDomains';add(title,content,footer)">
+      <span>+</span>
+    </button>
+    <button nz-button [nzType]="'dashed'" (click)="del('WebDomains')">
+      <span>-</span>
+    </button>
+  </div>
+  <div class="pt20">Safari 密码自动填充域（仅限被监督的设备）</div>
+  <p class="mt5 text-tip">网站的 URL 模式，来自该网站的密码可被存储</p>
+  <div class="list-widget">
+    <nz-table #nzTable3
+              [nzAjaxData]="SafariPasswordAutoFillDomains"
+              [nzIsPagination]="false">
+      <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let data of nzTable3.data;let i = index;"
+          class="stripe-table"
+          [class.application-item]="data.url"
+          [class.active]="data.isActive"
+          [class.view]="type === 'view'"
+          (click)="changeActive(data);">
+        <td nz-td><span>{{data.url}}</span></td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <div *ngIf="type !=='view'" class="mt10">
+    <button nz-button [nzType]="'dashed'" (click)="urlType = 'SafariPasswordAutoFillDomains';add(title,content,footer)">
+      <span>+</span>
+    </button>
+    <button nz-button [nzType]="'dashed'" (click)="del('SafariPasswordAutoFillDomains')">
+      <span>-</span>
+    </button>
+  </div>
+
+  <ng-template #title>
+    <span>添加URL地址</span>
+  </ng-template>
+  <ng-template #content>
+    <div>
+      <form nz-form [formGroup]="form">
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col [nzSpan]="6">
+            <label nz-form-item-required>URL</label>
+          </div>
+          <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('url')">
+            <input class="w" formControlName="url" nz-input
+                   [nzSize]="'large'" (keyup.enter)="handleOk()">
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div>
+      <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk()"
+              [disabled]="!form.valid">
+        保存
+      </button>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,95 @@
+<div *ngIf="type===''" class="table-wrap common-gray-bg x-axis-scroll-table" appCustomScrollbar [options]="options">
+  <nz-table class="content-table" #nzTable
+            [nzIsPagination]="false"
+            [nzAjaxData]="dept.list"
+            [nzLoading]="dept.isLoading">
+    <tbody nz-tbody>
+    <ng-template ngFor let-item [ngForOf]="nzTable.data">
+      <tr class="icon-hover-show" nz-tbody-tr *ngIf="dept.show(item)"
+          [class.active]="dept?.itemIsActive?.id === item.id">
+        <td nz-td [nzCheckbox]="true">
+          <label nz-checkbox class="ml12" [(ngModel)]="item.checked" (ngModelChange)="dept.checkedExpand($event,item)">
+          </label>
+        </td>
+        <td nz-td class="cp" (click)="dept.active(item)">
+          <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
+          <nz-row-expand-icon [nzShowExpand]="!item.isLastNode" [(nzExpand)]="item.expand"></nz-row-expand-icon>
+          <span class="text-primary">
+            <i *ngIf="item.source===1" class="icon-allicon-01 mr3 f14 va-1i"></i>
+            <i *ngIf="item.source===2" class="icon-allicon-02 mr3 f14 va-1i"></i>
+            <span class="text-overflow" title="{{item.name}}">{{item.name}}</span>
+          </span>
+        </td>
+        <td nz-td class="tar" width="70">
+          <button class="nb" (click)="editDept(item)" appPermission="1">
+            <i *ngIf="item.source===1" class="icon-allicon-19 anticon-click f14 icon-hover edit-hover-skyblue" title="修改部门名称" appPermission="1"></i>
+          </button>
+          <button class="nb" (click)="deleteDept(item)" appPermission="1">
+            <i *ngIf="item.source===1" class="icon-allicon-30 anticon-click f14 icon-hover delect-hover-red" title="删除" appPermission="1"></i>
+          </button>
+        </td>
+        <td nz-td class="tar pri20i" width="65">{{item.user_count}}</td>
+      </tr>
+    </ng-template>
+    </tbody>
+  </nz-table>
+</div>
+<div *ngIf="type==='simply'" class="table-wrap" appCustomScrollbar [options]="options">
+  <nz-table class="content-table" #nzTable
+            [nzIsPagination]="false"
+            [nzAjaxData]="dept.list"
+            [nzLoading]="dept.isLoading">
+    <tbody nz-tbody>
+    <ng-template ngFor let-data [ngForOf]="nzTable.data">
+      <ng-template ngFor let-item [ngForOf]="dept.expandDataCache[data.id]">
+        <tr nz-tbody-tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)"
+            [class.active]="dept?.itemIsActive?.id === item.id">
+          <td nz-td [nzCheckbox]="true">
+            <label nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="dept.checked($event,item)">
+            </label>
+          </td>
+          <td nz-td class="cp" (click)="dept.active(item, data.id)">
+            <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
+            <nz-row-expand-icon [(nzExpand)]="item.expand"
+                                (nzExpandChange)="dept.collapse(dept.expandDataCache[data.id],item,$event)"
+                                [nzShowExpand]="!item.isLastNode"></nz-row-expand-icon>
+            <span class="text-primary">
+                <i *ngIf="item.source===1" class="icon-allicon-01 mr3 f14 va-1i"></i>
+                <i *ngIf="item.source===2" class="icon-allicon-02 mr3 f14 va-1i"></i>
+                {{item.name}}
+              </span>
+          </td>
+        </tr>
+      </ng-template>
+    </ng-template>
+    </tbody>
+  </nz-table>
+</div>
+<div *ngIf="type==='simply-active'" class="table-wrap" appCustomScrollbar [options]="options">
+  <nz-table class="content-table" #nzTable
+            [nzIsPagination]="false"
+            [nzAjaxData]="dept.list"
+            [nzLoading]="dept.isLoading">
+    <tbody nz-tbody>
+    <ng-template ngFor let-data [ngForOf]="nzTable.data">
+      <ng-template ngFor let-item [ngForOf]="dept.expandDataCache[data.id]">
+        <tr nz-tbody-tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)"
+            [class.active]="dept?.itemIsActive?.id === item.id" (click)="dept.active(item, data.id)">
+          <td nz-td class="cp">
+            <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
+            <nz-row-expand-icon [(nzExpand)]="item.expand"
+                                (nzExpandChange)="dept.collapse(dept.expandDataCache[data.id],item,$event)"
+                                [nzShowExpand]="!item.isLastNode"></nz-row-expand-icon>
+            <span class="text-primary">
+                <i *ngIf="item.source===1" class="icon-allicon-01 mr3 f14 va-1i"></i>
+                <i *ngIf="item.source===2" class="icon-allicon-02 mr3 f14 va-1i"></i>
+                {{item.name}}
+              </span>
+          </td>
+        </tr>
+      </ng-template>
+    </ng-template>
+    </tbody>
+  </nz-table>
+</div>
+

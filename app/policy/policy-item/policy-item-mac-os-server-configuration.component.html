@@ -1,0 +1,76 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container>iOS5.0+</ng-container>
+  </div>
+  <div *ngFor="let form of forms; let i = index;" class="policy-item-content-block">
+    <div class="policy-item-add-or-sub">
+      <button nz-button [nzType]="'default'" (click)="add()">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'default'" (click)="del(i)">
+        <span>-</span>
+      </button>
+    </div>
+    <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i" >帐户描述</label>
+          <p class="text-tip">macOS Server 账户的显示名称</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AccountDescription')">
+          <input class="w320i" formControlName="AccountDescription" nz-input placeholder="我的 Server 账户" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i" nz-form-item-required>服务器地址</label>
+          <p class="text-tip">服务器的主机名、IP 地址或 URL</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'HostName')">
+          <input class="w320i" formControlName="HostName" nz-input placeholder="必填" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+          <div nz-form-explain
+               *ngIf="getFormControl(i, 'HostName').dirty&&getFormControl(i, 'HostName').hasError('required')">
+            必填项不能为空
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i" nz-form-item-required>用户名</label>
+          <p class="text-tip">账户的用户名</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'UserName')">
+          <input class="w320i" formControlName="UserName" nz-input placeholder="必填" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+          <div nz-form-explain
+               *ngIf="getFormControl(i, 'UserName').dirty&&getFormControl(i, 'UserName').hasError('required')">
+            必填项不能为空
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">密码</label>
+          <p class="text-tip">账户的密码</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Password')">
+          <input type="password" class="w320i" formControlName="Password" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">文稿服务器端口</label>
+          <p class="text-tip">使用文稿服务所要连接的端口</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Port')">
+          <input  class="w320i" formControlName="Port" nz-input placeholder="8071" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

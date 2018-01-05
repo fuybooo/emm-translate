@@ -1,0 +1,148 @@
+<ng-container *ngIf="system === 'Android'">
+  <div *ngFor="let item of data;let i = index;" class="mb10">
+    <div class="policy-version-box" *ngIf="i === 0">Android4.4+</div>
+    <div class="policy-version-box" *ngIf="i === 5">Android5.1.1+</div>
+    <div class="policy-version-box" *ngIf="i === 9">华为EMUI</div>
+    <nz-select [(ngModel)]="item.value" [nzDisabled]="type === 'view'" class="w120" [nzPlaceHolder]="''">
+      <nz-option
+        *ngFor="let option of options"
+        [nzLabel]="option.label"
+        [nzValue]="option.value">
+      </nz-option>
+    </nz-select>
+    <span [class.text-diseditable]="type === 'view'">{{item.label}}</span>
+  </div>
+</ng-container>
+<ng-container *ngIf="system === 'iOS'">
+  <div class="switch-group-wrap">
+    <div class="line"></div>
+    <div class="group">
+      <nz-radio-group [(ngModel)]="dataType" class="btn-group-bg">
+        <label nz-radio-button [nzValue]="1"><span>功能</span></label>
+        <label nz-radio-button [nzValue]="2"><span>应用</span></label>
+        <label nz-radio-button [nzValue]="3"><span>媒体</span></label>
+      </nz-radio-group>
+    </div>
+  </div>
+  <div [hidden]="dataType !== 1">
+    <div class="mb10" *ngFor="let item of data.function" [class.pl20]="item.level === 2">
+      <nz-select [(ngModel)]="item.value" [nzDisabled]="type === 'view' || item.isDisabled" class="w120" (ngModelChange)="changeSelect(item, $event)">
+        <nz-option
+          *ngFor="let option of options"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+      <span [class.text-diseditable]="type === 'view'">{{item.label + (item.isSupervised ? supervisedDesc : '')}}</span>
+    </div>
+  </div>
+  <div [hidden]="dataType !== 2">
+    <div class="mb10" *ngFor="let item of data.application" [class.pl20]="item.level === 2">
+        <nz-select [(ngModel)]="item.value" [nzDisabled]="type === 'view' || item.isDisabled" class="w120" (ngModelChange)="changeSelect(item, $event)">
+          <ng-container *ngIf="item.field !== 'safariAcceptCookies'">
+            <nz-option
+              *ngFor="let option of options"
+              [nzLabel]="option.label"
+              [nzValue]="option.value">
+            </nz-option>
+          </ng-container>
+          <ng-container *ngIf="item.field === 'safariAcceptCookies'">
+            <nz-option
+              *ngFor="let option of _options17"
+              [nzLabel]="option.label"
+              [nzValue]="option.value">
+            </nz-option>
+          </ng-container>
+        </nz-select>
+      <span [class.text-diseditable]="type === 'view'">{{item.label + (item.isSupervised ? supervisedDesc : '')}}</span>
+    </div>
+    <!--<div>-->
+      <!--限制应用使用{{supervisedDesc}}-->
+      <!--<nz-select [(ngModel)]="limitApp" [nzDisabled]="type === 'view'" class="w120">-->
+        <!--<nz-option-->
+          <!--*ngFor="let option of _options53"-->
+          <!--[nzLabel]="option.label"-->
+          <!--[nzValue]="option.value">-->
+        <!--</nz-option>-->
+      <!--</nz-select>-->
+    <!--</div>-->
+    <!--<app-application-list-widget-->
+      <!--[type]="type"-->
+      <!--[data]="appList"-->
+      <!--(outData)="outDataChange($event)"-->
+    <!--&gt;</app-application-list-widget>-->
+    <!--<div *ngIf="type !== 'view'">-->
+      <!--<button nz-button [nzType]="'default'" [disabled]="limitApp === 1" (click)="add()">-->
+        <!--<span>+</span>-->
+      <!--</button>-->
+      <!--<button nz-button [nzType]="'default'" (click)="del()">-->
+        <!--<span>-</span>-->
+      <!--</button>-->
+    <!--</div>-->
+  </div>
+  <div [hidden]="dataType !== 3">
+    <div class="mb10">
+      <span [class.text-diseditable]="type === 'view'">{{data.media[0].label}}</span>
+      <nz-select [(ngModel)]="data.media[0].value" [nzDisabled]="type === 'view'" class="w120">
+        <nz-option
+          *ngFor="let option of _options16"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+    </div>
+    <div class="mb10">
+      <span [class.text-diseditable]="type === 'view'">允许的内容评级（设定许可的最大评级）</span>
+    </div>
+    <div class="mb10">
+      <span class="dib w120" [class.text-diseditable]="type === 'view'">{{data.media[1].label}}</span>
+      <nz-select [(ngModel)]="data.media[1].value" [nzDisabled]="type === 'view'" class="w120">
+        <nz-option
+          *ngFor="let option of _options13"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+    </div>
+    <div class="mb10">
+      <span class="dib w120" [class.text-diseditable]="type === 'view'">{{data.media[2].label}}</span>
+      <nz-select [(ngModel)]="data.media[2].value" [nzDisabled]="type === 'view'" class="w120">
+        <nz-option
+          *ngFor="let option of _options14"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+    </div>
+    <div class="mb10">
+      <span class="dib w120" [class.text-diseditable]="type === 'view'">{{data.media[3].label}}</span>
+      <nz-select [(ngModel)]="data.media[3].value" [nzDisabled]="type === 'view'" class="w120">
+        <nz-option
+          *ngFor="let option of _options15"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+    </div>
+    <div class="mb10">
+      <nz-select [(ngModel)]="data.media[4].value" [nzDisabled]="type === 'view'" class="w120">
+        <nz-option
+          *ngFor="let option of options"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+      <span [class.text-diseditable]="type === 'view'">{{data.media[4].label}}</span>
+    </div>
+    <div class="mb10">
+      <nz-select [(ngModel)]="data.media[5].value" [nzDisabled]="type === 'view'" class="w120">
+        <nz-option
+          *ngFor="let option of options"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+      <span [class.text-diseditable]="type === 'view'">{{data.media[5].label}}</span>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,56 @@
+<div class="w h">
+  <div id="map" class="w min-w1000 min-h530"></div>
+  <div class="map-search-wrap map-trail" nz-row [nzGutter]="8" [class.dni]="isLine">
+    <div nz-col [nzSpan]="8" [class.w1i]="hideSearch">
+      <nz-input [(ngModel)]="searchText"
+                [nzDisabled]="!searchComplete"
+                (ngModelChange)="searchPoint()"
+                [class.hide-ant-input]="hideSearch"
+                [class.search-ant-input]="!hideSearch">
+        <ng-template #addOnAfter><i class="anticon anticon-search" (click)="hideSearch=!hideSearch;"></i></ng-template>
+      </nz-input>
+    </div>
+    <ul *ngIf="!hideSearch && searchText.trim() !== ''" class="map-trail-search-ul" [hidden]="!showSearchRes" appCustomScrollbar>
+      <li class="search-item" *ngFor="let option of searchOptions" (click)="showPoint(option.deviceId)">
+        <ul class="search-order"><i class="anticon anticon-environment-o"></i></ul>
+        <ul class="search-content">
+          <li><a href="javascript:void(0);">{{option.userDisplayName}}</a></li>
+          <li>{{option.userName}}</li>
+          <li>IMEI: {{option.deviceIMEI}}</li>
+          <li>{{option.deviceModel}}</li>
+        </ul>
+      </li>
+      <li class="search-item search-item-none" *ngIf="searchOptions.length === 0">没有找到匹配项</li>
+    </ul>
+  </div>
+  <div class="map-search-wrap" nz-row [nzGutter]="0" [class.dni]="!isLine">
+    <div nz-col [nzSpan]="24">
+      <div nz-row [nzGutter]="10">
+        <div nz-col [nzSpan]="2">
+          <button nz-button (click)="back()"><i class="anticon anticon-left"></i></button>
+        </div>
+        <div nz-col [nzSpan]="8">
+          <nz-datepicker
+            class="w"
+            (ngModelChange)="startDate=$event;startValueChange()"
+            [ngModel]="startDate"
+            [nzDisabledDate]="disabledStartDate"
+            [nzFormat]="'YYYY-MM-DD'"
+            [nzPlaceHolder]="'开始日期'"></nz-datepicker>
+        </div>
+        <div nz-col [nzSpan]="8">
+          <nz-datepicker
+            class="w"
+            (ngModelChange)="endDate=$event;endValueChange()"
+            [ngModel]="endDate"
+            [nzDisabledDate]="disabledEndDate"
+            [nzFormat]="'YYYY-MM-DD'"
+            [nzPlaceHolder]="'结束日期'"></nz-datepicker>
+        </div>
+        <div nz-col [nzSpan]="4">
+          <button nz-button (click)="getLine()"><i class="anticon anticon-search"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="table-wrap table-td-height" appCustomScrollbar [options]="options">
+  <nz-table #nzTable
+            [nzAjaxData]="users.list"
+            [nzLoading]="users.isLoading"
+            [nzIsPagination]="false">
+    <tbody nz-tbody>
+    <!--group-->
+    <tr class="icon-hover-show" nz-tbody-tr *ngFor="let g of users.group" [class.active]="users?.itemIsActive?.id === g.id">
+      <td nz-td [nzCheckbox]="true">
+        <label nz-checkbox class="pl20i" [(ngModel)]="g.checked" [nzDisabled]="users.disabledCheckeds"
+               (ngModelChange)="users.checked($event,g,'group')">
+        </label>
+      </td>
+      <td class="cp" nz-td (click)="users.active(g)">
+            <span class="text-primary">
+              <i *ngIf="g.source===1" class="icon-allicon-04 mr3 f14 va-1i"></i>
+              <i *ngIf="g.source===2" class="icon-allicon-05 mr3 f14 va-1i"></i>
+              {{g.name}}
+            </span>
+      </td>
+      <td nz-td class="tar user-group-hover">
+        <i *ngIf="userGroupService?.itemIsActive?.id > 0" class="anticon anticon-minus-circle-o anticon-click icon-hover edit-hover-skyblue"
+           (click)="remove(g, 'group')"
+           title="移除此用户组"
+           appPermission="1"></i>
+        <i class="anticon anticon-delete anticon-click icon-hover delect-hover-red"
+           (click)="deleteGroup(g, 'group')"
+           title="删除此用户组"
+           appPermission="1"></i>
+      </td>
+      <td class="tar" nz-td>{{g.userNumber}}</td>
+    </tr>
+    <!--users-->
+    <tr class="icon-hover-show" nz-tbody-tr *ngFor="let item of nzTable.data" [class.active]="users?.itemIsActive?.id === item.id">
+      <td nz-td [nzCheckbox]="true">
+        <label nz-checkbox [(ngModel)]="item.checked" [nzDisabled]="users.disabledCheckeds"
+               (ngModelChange)="users.checked($event,item)">
+        </label>
+      </td>
+      <td nz-td (click)="users.active(item)">
+        <span class="text-primary">{{item.name}}</span>
+      </td>
+      <td nz-td>
+        <!-- 从用组中移除 -->
+        <button class="nb" (click)="remove(item, 'user')" appPermission="1">
+          <i *ngIf="userGroupService?.itemIsActive?.id > 0" class="icon-allicon-09 anticon-click f14 icon-hover"
+             title="移除此用户"
+             appPermission="1"></i>
+        </button>
+        <!-- 从部门中移除 -->
+        <button class="nb" (click)="removeForDept(item, 'user')" appPermission="1">
+          <i *ngIf="deptService?.itemIsActive?.id > 0" class="icon-allicon-09 anticon-click f14 icon-hover"
+             title="移除此用户"
+          ></i>
+        </button>
+        <button class="nb" (click)="deleteUser(item)" appPermission="1">
+          <i *ngIf="item.state===0" class="icon-allicon-30 anticon-click f14 icon-hover delect-hover-red"
+             title="删除此用户"
+             appPermission="1"></i>
+        </button>
+      </td>
+      <td nz-td class="tar pri20i">
+        <!-- [用户状态]0：未激活;1：已激活;5：锁定;7：停用 -->
+          <i *ngIf="item.state===0" class="icon-allicon-07" style="color: green;" title="未激活" (click)="userStateChange(item)"></i>
+          <i *ngIf="item.state===1" class="icon-allicon-06" style="color: green;" title="已激活" (click)="userStateChange(item)"></i>
+          <i *ngIf="item.state === 5 || item.state === 6" class="icon-allicon-13" style="color: green;" title="锁定" (click)="userStateChange(item)"></i>
+          <i *ngIf="item.state===7" class="icon-allicon-08" style="color: green;" title="停用" (click)="userStateChange(item)"></i>
+      </td>
+    </tr>
+    <!--loading-->
+    <tr nz-tbody-tr *ngIf="users.param.page >0 && users.param.total>users.param.pageSize * users.param.page">
+      <td nz-td [attr.colspan]="6">
+        <nz-spin [nzTip]="'正在读取数据...'">
+          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+          </nz-alert>
+        </nz-spin>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
+

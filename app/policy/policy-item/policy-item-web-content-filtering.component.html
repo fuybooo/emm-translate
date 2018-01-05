@@ -1,0 +1,329 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+  </div>
+  <div class="mb20">
+    <label class="w310i">过滤类型</label>
+    <div>
+      <nz-select *ngIf="type !== 'view'" class="w320i" [(ngModel)]="filterType">
+        <nz-option
+          *ngFor="let option of options35"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+    </div>
+  </div>
+  <ng-container *ngIf="filterType === 1">
+    <label class="w320i">允许的URL</label>
+    <p class="text-tip">允许的特定URL</p>
+    <div class="list-widget">
+      <nz-table #nzTable
+                [nzAjaxData]="PermittedURLs"
+                [nzIsPagination]="false">
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"
+            class="stripe-table"
+            [class.active]="data.isActive"
+            [class.application-item]="data.URL"
+            [class.view]="type === 'view'"
+            (click)="changeActive(data, 'URL');">
+          <td nz-td><span>{{data.URL}}</span></td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div *ngIf="type !=='view'" class="mt10">
+      <button nz-button [nzType]="'dashed'" (nzdisabled)="type === 'view'" (click)="add('PermittedURLs', title,content,footer)">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'dashed'" (nzdisabled)="type === 'view'" (click)="del('PermittedURLs')">
+        <span>-</span>
+      </button>
+    </div>
+    <!--列入黑名单中的URL-->
+    <div class="mt20">
+      <label class="w320i">列入黑名单中的URL</label>
+      <p class="text-tip">允许的特定URL</p>
+      <div class="list-widget">
+        <nz-table #nzTable2
+                  [nzAjaxData]="BlacklistedURLs"
+                  [nzIsPagination]="false">
+          <tbody nz-tbody>
+          <tr nz-tbody-tr *ngFor="let data of nzTable2.data;let i = index;"
+              class="stripe-table"
+              [class.active]="data.isActive"
+              [class.application-item]="data.URL"
+              [class.view]="type === 'view'"
+              (click)="changeActive(data, 'URL');">
+            <td nz-td><span>{{data.URL}}</span></td>
+          </tr>
+          </tbody>
+        </nz-table>
+      </div>
+      <div *ngIf="type !=='view'" class="mt10">
+        <button nz-button [nzType]="'dashed'" (nzdisabled)="type === 'view'" (click)="add('BlacklistedURLs', title,content,footer)">
+          <span>+</span>
+        </button>
+        <button nz-button [nzType]="'dashed'" (nzdisabled)="type === 'view'" (click)="del('BlacklistedURLs')">
+          <span>-</span>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="filterType === 2">
+    <!--特定网站-->
+    <label class="w320i">特定网站</label>
+    <p class="text-tip">允许的 URL (将显示为书签)</p>
+    <div class="list-widget">
+      <nz-table #nzTable3
+                [nzAjaxData]="WhitelistedBookmarks"
+                [nzIsPagination]="false">
+        <tbody nz-tbody>
+        <tr nz-tbody-tr>
+          <td nz-td><span>书签</span></td>
+          <td nz-td><span>标题</span></td>
+          <td nz-td><span>URL</span></td>
+        </tr>
+        <tr nz-tbody-tr *ngFor="let data of nzTable3.data;let i = index;"
+            class="stripe-table"
+            [class.active]="data.isActive"
+            [class.application-item]="data.URL"
+            [class.view]="type === 'view'"
+            (click)="changeActive(data, 'BookmarkPath');">
+          <td nz-td><span>{{data.BookmarkPath}}</span></td>
+          <td nz-td><span>{{data.Title}}</span></td>
+          <td nz-td><span>{{data.URL}}</span></td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div *ngIf="type !=='view'" class="mt10">
+      <button nz-button [nzType]="'dashed'" (nzdisabled)="type === 'view'" (click)="add('WhitelistedBookmarks', title,content,footer)">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'dashed'" (nzdisabled)="type === 'view'" (click)="del('WhitelistedBookmarks')">
+        <span>-</span>
+      </button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="filterType === 3">
+    <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i" nz-form-item-required>过滤器名称</label>
+          <p class="text-tip">在应用和设备上显示过滤器的名称</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('UserDefinedName')">
+          <input class="w320i" formControlName="UserDefinedName" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+          <div nz-form-explain
+               *ngIf="getFormControl('UserDefinedName').dirty&&getFormControl('UserDefinedName').hasError('required')">
+            必填项不能为空
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i" nz-form-item-required>标识符</label>
+          <p class="text-tip">包含过滤器提供商的应用捆绑包标识符</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('PluginBundleID')">
+          <input class="w320i" formControlName="PluginBundleID" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+          <div nz-form-explain
+               *ngIf="getFormControl('PluginBundleID').dirty&&getFormControl('PluginBundleID').hasError('required')">
+            必填项不能为空
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">服务地址</label>
+          <p class="text-tip">设备的主机名、IP 地址或 URL</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('ServerAddress')">
+          <input class="w320i" formControlName="ServerAddress" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">组织</label>
+          <p class="text-tip">供过滤器提供商使用的组织参数</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('Organization')">
+          <input class="w320i" formControlName="Organization" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">用户名</label>
+          <p class="text-tip">对服务进行鉴定的用户名</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('UserName')">
+          <input class="w320i" formControlName="UserName" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">密码</label>
+          <p class="text-tip">对服务进行鉴定的密码</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('Password')">
+          <input class="w320i" type="password" formControlName="Password" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">证书</label>
+          <p class="text-tip">对服务进行鉴定的证书</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl('_voucher')">
+          <input class="w320i" formControlName="_voucher" [nzDisabled]="true"  nz-input placeholder="在“证书”有效负载中添加证书 " [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="FilterBrowsers">
+            <span>过滤WebKit流量</span>
+          </label>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="FilterSockets">
+            <span>过滤套接字流量</span>
+          </label>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">自定数据</label>
+          <p class="text-tip">自定过滤器的配置数据</p>
+        </div>
+        <div class="list-widget">
+          <nz-table #nzTable4
+                    [nzAjaxData]="VendorConfig"
+                    [nzIsPagination]="false">
+            <tbody nz-tbody>
+            <tr nz-tbody-tr>
+              <td nz-td width="60%"><span>键</span></td>
+              <td nz-td><span>值</span></td>
+            </tr>
+            <tr nz-tbody-tr *ngFor="let data of nzTable4.data;let i = index;"
+                class="stripe-table"
+                [class.active]="data.isActive"
+                [class.application-item]="data.Key"
+                [class.view]="type === 'view'"
+                (click)="changeActive(data, 'Key');">
+              <td nz-td width="60%"><span>{{data.Key}}</span></td>
+              <td nz-td><span>{{data.Value}}</span></td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </div>
+        <div *ngIf="type !=='view'" class="mt10">
+          <button nz-button [nzType]="'dashed'" (nzdisabled)="type === 'view'" (click)="add('VendorConfig', title,content,footer)">
+            <span>+</span>
+          </button>
+          <button nz-button [nzType]="'dashed'" (nzdisabled)="type === 'view'" (click)="del('VendorConfig')">
+            <span>-</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+  <ng-template #title>
+    <span>允许的URL</span>
+  </ng-template>
+  <ng-template #content>
+    <div>
+      <form nz-form [formGroup]="listForm">
+        <ng-container *ngIf="filterType !== 3">
+          <ng-container *ngIf="filterType === 2">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="6">
+                <label nz-form-item-required>书签</label>
+              </div>
+              <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getListFormControl('BookmarkPath')">
+                <input class="w" formControlName="BookmarkPath" nz-input placeholder=""
+                       [nzSize]="'large'" (keyup.enter)="handleOk()">
+                <div nz-form-explain
+                     *ngIf="getListFormControl('BookmarkPath').dirty && getListFormControl('BookmarkPath').hasError('required')">
+                  必填项不能为空
+                </div>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="6">
+                <label nz-form-item-required>标题</label>
+              </div>
+              <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getListFormControl('Title')">
+                <input class="w" formControlName="Title" nz-input placeholder=""
+                       [nzSize]="'large'" (keyup.enter)="handleOk()">
+                <div nz-form-explain
+                     *ngIf="getListFormControl('Title').dirty && getListFormControl('Title').hasError('required')">
+                  必填项不能为空
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label nz-form-item-required>URL</label>
+            </div>
+            <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getListFormControl('URL')">
+              <input class="w" formControlName="URL" nz-input placeholder=""
+                     [nzSize]="'large'" (keyup.enter)="handleOk()">
+              <div nz-form-explain
+                   *ngIf="getListFormControl('URL').dirty && getListFormControl('URL').hasError('required')">
+                必填项不能为空
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="filterType === 3">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label nz-form-item-required>键</label>
+            </div>
+            <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getListFormControl('Key')">
+              <input class="w" formControlName="Key" nz-input placeholder=""
+                     [nzSize]="'large'" (keyup.enter)="handleOk()">
+              <div nz-form-explain
+                   *ngIf="getListFormControl('Key').dirty && getListFormControl('Key').hasError('required')">
+                必填项不能为空
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label nz-form-item-required>值</label>
+            </div>
+            <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getListFormControl('Value')">
+              <input class="w" formControlName="Value" nz-input placeholder=""
+                     [nzSize]="'large'" (keyup.enter)="handleOk()">
+              <div nz-form-explain
+                   *ngIf="getListFormControl('Value').dirty && getListFormControl('Value').hasError('required')">
+                必填项不能为空
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div>
+      <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk()"
+              [disabled]="!listForm.valid">
+        保存
+      </button>
+    </div>
+  </ng-template>
+</div>

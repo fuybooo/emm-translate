@@ -1,0 +1,31 @@
+<div nz-row [nzGutter]="20" class="page-wrap" >
+  <div nz-col [nzSpan]="12" class="mb20" *ngFor="let item of list">
+    <div class="log-box">
+      <div nz-row>
+        <div nz-col [nzSpan]="24" class="title common-gray-bg">
+         <div class="brb_1_e"> {{item.label}} </div>
+        </div>
+      </div>
+      <div nz-row class="p30">
+        <button nz-button [nzType]="'default'" (click)="exportReport(item.name, title, content, footer)" class="ml10">
+          <span><i class="icon-allicon-23 mr5"></i>导出报表</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #title>
+  <span>策略导出</span>
+</ng-template>
+<ng-template #content>
+  <div class="lh50 f14">
+    导出全部违规设备的列表
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="modal-btn-box">
+    <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="policyHandleOk()">确定</button>
+    <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel()">取消</button>
+  </div>
+</ng-template>

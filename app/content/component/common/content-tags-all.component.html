@@ -1,0 +1,21 @@
+<div>
+  <app-custom-form [options]="tagForm"></app-custom-form>
+  <div nz-row>
+    <div nz-col [nzSpan]="16" [nzOffset]="6" class="content-tags-all min-h100i pl5i" appCustomScrollbar>
+      <nz-tag [nzClosable]="true" *ngFor="let tag of tags.list"
+              (nzBeforeClose)="delete($event, tag.id)">
+        {{tag.tagName}}
+      </nz-tag>
+    </div>
+  </div>
+  <!--<form nz-form [formGroup]="form">-->
+    <!--<div class="mb0i" nz-row nz-form-item>-->
+      <!--<div class="tar" nz-col [nzOffset]="12" [nzSpan]="12" nz-form-control>-->
+        <!--<button nz-button [nzType]="'primary'" [nzSize]="'large'" [disabled]="!tagForm.formGroup.valid"-->
+                <!--(click)="submit($event)">保存-->
+        <!--</button>-->
+        <!--<button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel($event)">取消</button>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</form>-->
+</div>

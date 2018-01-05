@@ -1,0 +1,203 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container *ngIf="system === 'Android'">Android4.4+</ng-container>
+    <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+  </div>
+  <div class="cb mb10">
+    <nz-select *ngIf="type !== 'view'" class="w120" [(ngModel)]="enclosureType" (nzOpenChange)="changeEnclosureType($event)">
+      <nz-option
+        *ngFor="let option of _options19"
+        [nzLabel]="option.label"
+        [nzValue]="option.value">
+      </nz-option>
+    </nz-select>
+  </div>
+  <div class="cb">
+    <div nz-row>
+      <div nz-col [nzSpan]="4">
+        选择应用{{enclosureType === 1 ?
+        '时间'
+        :
+        '地理'
+        }}围栏的方式
+      </div>
+      <div nz-col [nzSpan]="20">
+        <nz-radio-group [(ngModel)]="enclosureMode">
+          <div class="mb10">
+            <label nz-radio [nzValue]="1" [nzDisabled]="type === 'view'">
+              <span>进入围栏操作</span>
+            </label>
+            <span class="text-tip">进入围栏时应用围栏操作，离开围栏时取消围栏操作</span>
+          </div>
+          <div class="mb10">
+            <label nz-radio [nzValue]="2" [nzDisabled]="type === 'view'">
+              <span>离开围栏操作</span>
+            </label>
+            <span class="text-tip">离开围栏时应用围栏操作，进入围栏时取消围栏操作</span>
+          </div>
+        </nz-radio-group>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="enclosureType === 1" class="cb mb10">
+    <div nz-row>
+      <div nz-col [nzSpan]="4">
+        设置围栏时间
+      </div>
+      <div nz-col [nzSpan]="20">
+        <div nz-row>
+          <div nz-col [nzSpan]="24" class="mb10">
+            <!--<nz-select *ngIf="type !== 'view'" class="w120" [(ngModel)]="enclosureCircleType">-->
+              <!--<nz-option-->
+                <!--*ngFor="let option of _options20"-->
+                <!--[nzLabel]="option.label"-->
+                <!--[nzValue]="option.value">-->
+              <!--</nz-option>-->
+            <!--</nz-select>-->
+            <button *ngIf="type !== 'view'" nz-button [nzType]="'default'"
+                    (click)="addTimeSection()"
+                    [disabled]="displayTimeSection.length === 3">添加
+            </button>
+          </div>
+          <ng-container>
+            <div *ngFor="let item of displayTimeSection;let i = index;" class="mb10">
+              <nz-timepicker [(ngModel)]="item.from"
+                             [nzFormat]="'HH:mm'" [nzDisabled]="type === 'view'"></nz-timepicker>
+              -
+              <nz-timepicker [(ngModel)]="item.to"
+                             [nzFormat]="'HH:mm'" [nzDisabled]="type === 'view'"></nz-timepicker>
+              <i class="icon-allicon-08" (click)="delTimeSection(i)" *ngIf="type !== 'view' && i !== 0"></i>
+            </div>
+          </ng-container>
+          <div nz-col [nzSpan]="24">
+            <nz-radio-group [(ngModel)]="enclosureTimeType">
+              <div class="mb10">
+                <label nz-radio [nzValue]="1" [nzDisabled]="type === 'view'">
+                  <span>每天</span>
+                </label>
+              </div>
+              <div class="mb10">
+                <label nz-radio [nzValue]="2" [nzDisabled]="type === 'view'">
+                  <span>工作日</span>
+                </label>
+                <span class="text-tip">默认为周一至周五</span>
+              </div>
+              <div class="mb10">
+                <label nz-radio [nzValue]="3" [nzDisabled]="type === 'view'">
+                  <span>每周</span>
+                </label>
+                <nz-checkbox-group [(ngModel)]="weeklyOptions" [nzDisabled]="type === 'view' || enclosureTimeType !== 3"
+                                   (ngModelChange)="changeWeeklyOptions(weeklyOptions)"></nz-checkbox-group>
+              </div>
+              <div class="mb10">
+                <div nz-row>
+                  <div nz-col [nzSpan]="4">
+                    <label nz-radio [nzValue]="4" [nzDisabled]="type === 'view'">
+                      <span>每月</span>
+                    </label>
+                  </div>
+                  <div nz-col [nzSpan]="20">
+                    <app-day-select [(selectedDay)]="selectedDay" [isDisabled]="type === 'view' || enclosureTimeType !== 4"></app-day-select>
+                  </div>
+                </div>
+              </div>
+            </nz-radio-group>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="enclosureType === 2" class="cb mb10">
+    <div nz-row>
+      <div nz-col [nzSpan]="4">
+        地理围栏描述
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-input [(ngModel)]="geoDesc" nzType="textarea" [nzDisabled]="type === 'view'"
+                  [nzAutosize]="autosize" nzPlaceHolder="请输入地理围栏描述，300字以内"></nz-input>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="enclosureType === 2" class="cb mb10">
+    <div nz-row>
+      <div nz-col [nzSpan]="4">
+        地理围栏范围
+        <span class="text-warning" *ngIf="type !== 'view'">*</span>
+      </div>
+      <div nz-col [nzSpan]="20">
+        <div class="mb10" *ngIf="type !== 'view'">
+          <button nz-button [nzType]="'default'" (click)="popupGeoEnclosure()">
+            <span><i class="icon-allicon-21 mr5"></i>选择范围</span>
+          </button>
+        </div>
+        <div>
+          <span>地理围栏-经度：</span>
+          <span class="text-primary-static">{{longitude}}</span>
+          <span class="ml30">地理围栏-纬度：</span>
+          <span class="text-primary-static">{{latitude}}</span>
+          <span class="ml30">活动半径（米）：</span>
+          <span class="text-primary-static">{{radius}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cb">
+    <div nz-row>
+      <div nz-col [nzSpan]="4">
+        设置围栏策略
+      </div>
+      <div nz-col [nzSpan]="20">
+        <div nz-row>
+          <div nz-col [nzSpan]="4">
+            设备限制
+          </div>
+          <div nz-col [nzSpan]="20">
+            <div *ngFor="let item of limitList;let i = index" class="mb10">
+              <div class="policy-version-box" *ngIf="i === 4 && system === 'Android'">Android 5.1.1</div>
+              <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="item.value">
+                <span>{{item.label}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="mb10">
+          <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="lockContainer">
+            <span>锁定容器</span>
+          </label>
+          <span class="text-tip">禁止进入EMM客户端</span>
+        </div>
+        <div class="mb10" nz-row>
+          <div nz-col [nzSpan]="4">
+            蜂窝移动网络限制
+          </div>
+          <div nz-col [nzSpan]="12">
+            <div nz-row class="mb10">
+              <div nz-col [nzSpan]="24">
+                <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="disablePhone">
+                  <span>禁用电话</span>
+                </label>
+              </div>
+            </div>
+            <div nz-row>
+              <div nz-col [nzSpan]="24">
+                <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="disableMobileData">
+                  <span>禁用蜂窝移动网络</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <p class="text-version tar"><i class="anticon anticon-exclamation-circle mr8"></i>移动蜂窝网络仅小米、华为API支持</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cb">
+    <!--暂时只有iOS需要应用黑白名单-->
+    <app-policy-item-application *ngIf="system === 'iOS'"
+      [type]="type" [system]="system"
+      [config]="enclosureApplicationConfig"
+      [mode]="2" [policyType]="policyType"></app-policy-item-application>
+  </div>
+</div>

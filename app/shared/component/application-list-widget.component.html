@@ -1,0 +1,22 @@
+<div class="list-widget" appCustomScrollbar>
+  <nz-table #nzTable
+            [nzAjaxData]="data"
+            [nzIsPagination]="false">
+    <tbody nz-tbody>
+    <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"
+        class="stripe-table"
+        [class.application-item]="data.name || data.trackName"
+        [class.active]="data.isActive"
+        [class.view]="type === 'view'"
+        (click)="changeActive(data);">
+      <td nz-td>
+        <span class="application-img">
+          <img *ngIf="data.artworkUrl60 || (data.iconUrl)"
+            alt="" height="25" width="25" class="va-9 mr10" [src]="data.artworkUrl60 || (data.iconUrl)">
+        </span>
+        {{data.name || data.trackName}}
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>

@@ -1,0 +1,2183 @@
+<div>
+  <div class="policy-version-box">
+    iOS5.0+
+  </div>
+  <ng-container *ngIf="type !== 'view'">
+    <div *ngFor="let form of forms; let i = index;" class="policy-item-content-block">
+      <div class="policy-item-add-or-sub">
+        <button nz-button [nzType]="'default'" (click)="add()">
+          <span>+</span>
+        </button>
+        <button nz-button [nzType]="'default'" (click)="del(i)">
+          <span>-</span>
+        </button>
+      </div>
+      <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+        <!--连接名称-->
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label nz-form-item-required class="w310i">连接名称</label>
+            <p class="text-tip">连接的显示名称（显示在设备上）</p>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'UserDefinedName')">
+            <input class="w320i" formControlName="UserDefinedName" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                   [nzSize]="'large'">
+            <div nz-form-explain
+                 *ngIf="getFormControl(i, 'UserDefinedName').dirty && getFormControl(i, 'UserDefinedName').hasError('required')">
+              必填项不能为空
+            </div>
+          </div>
+        </div>
+        <!--连接类型 此处是下拉框大的分类-->
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label class="w310i">连接类型</label>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'VPNType')">
+            <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="VPNType" [nzDisabled]="true">
+              <nz-option
+                *ngFor="let option of _options26"
+                [nzLabel]="option.label"
+                [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+
+        <!--IKEv2页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'IKEv2'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IPv4">
+                <span>通过VPN发送所有流量</span>
+              </label>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="AlwaysOn">
+                <span>始终打开VPN（仅限被监管的设备）</span>
+              </label>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AlwaysOn').value !== true">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">服务器</label>
+                <p class="text-tip">服务器的主机名或IP地址</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'RemoteAddress')">
+                <input class="w320i" formControlName="RemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+                <div nz-form-explain
+                     *ngIf="getFormControl(i, 'RemoteAddress').dirty && getFormControl(i, 'RemoteAddress').hasError('required')">
+                  必填项不能为空
+                </div>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">远程标识符</label>
+                <p class="text-tip">FQDN、UserFQDN、地址或ASN1DN远程标识符</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'LocalIdentifier')">
+                <input  class="w320i" formControlName="LocalIdentifier" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">局部标识符</label>
+                <p class="text-tip">FQDN、UserFQDN、地址或ASN1DN局部标识符</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'LocalIdentifier')">
+                <input  class="w320i" formControlName="LocalIdentifier" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <p class="text-tip">用于连接的鉴定类型</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                  <nz-option
+                    *ngFor="let option of _options40"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <!--设备鉴定下拉框分组-->
+            <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value === 2">
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>身份证书</span>
+                </label>
+                <p class="text-tip">用于连接无线网络的凭证</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'IsRemovable')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options47"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+              <div nz-form-item nz-row>
+                <div nz-form-label nz-col>
+                  <label class="w310i">证书类型</label>
+                  <p class="text-tip">颁发的证书类型 (仅限设备鉴定)</p>
+                </div>
+                <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CalDAVUsername')">
+                  <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="CalDAVUsername">
+                    <nz-option
+                      *ngFor="let option of _options52"
+                      [nzLabel]="option.label"
+                      [nzValue]="option.value">
+                    </nz-option>
+                  </nz-select>
+                </div>
+              </div>
+              <div nz-form-item nz-row>
+                <div nz-form-label nz-col>
+                  <label class="w310i">服务器证书签发者通用名称</label>
+                  <p class="text-tip">服务器证书签发者的通用名称</p>
+                </div>
+                <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ServerCertificateIssuerCommonName')">
+                  <input  class="w320i" formControlName="ServerCertificateIssuerCommonName" nz-input placeholder="[采用证书鉴定的 EAP 此项必填]" [nzDisabled]="type === 'view'"
+                          [nzSize]="'large'">
+                </div>
+              </div>
+              <div nz-form-item nz-row>
+                <div nz-form-label nz-col>
+                  <label class="w310i">服务器证书通用名称</label>
+                  <p class="text-tip">服务器证书的通用名称</p>
+                </div>
+                <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ServerCertificateCommonName')">
+                  <input  class="w320i" formControlName="ServerCertificateCommonName" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                          [nzSize]="'large'">
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value === 3">
+              <div nz-form-item nz-row>
+                <div nz-form-label nz-col>
+                  <label class="w310i">共享秘钥</label>
+                  <p class="text-tip">用于连接的共享秘钥</p>
+                </div>
+                <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SharedSecret')">
+                  <input  class="w320i" formControlName="SharedSecret" nz-input [nzDisabled]="type === 'view'"
+                          [nzSize]="'large'">
+                </div>
+              </div>
+            </ng-container>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="ExtendedAuthEnabled">
+                  <span>启用EAP</span>
+                </label>
+                <p class="text-tip">启用扩展鉴定</p>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">失效同层检测速率</label>
+                <p class="text-tip">连接检测间隔时间</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'DeadPeerDetectionRate')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="DeadPeerDetectionRate">
+                  <nz-option
+                    *ngFor="let option of _options56"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisableRedirect">
+                  <span>停用重定向</span>
+                </label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisableMOBIKE">
+                  <span>停用移动性和多重主目录</span>
+                </label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="UseConfigurationAttributeInternalIPSubnet">
+                  <span>使用IPv4/IPv6内部子网属性</span>
+                </label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="EnablePFS">
+                  <span>启用完全正向保密</span>
+                </label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="EnableCertificateRevocationCheck">
+                  <span>启用证书撤销检查</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <div class="switch-group-wrap">
+                <div class="line"></div>
+                <div class="group">
+                  <nz-radio-group formControlName="IsRemovable" class="btn-group-bg">
+                    <label nz-radio-button [nzValue]="1"><span>IKE SA 参数</span></label>
+                    <label nz-radio-button [nzValue]="2"><span>子 SA 参数</span></label>
+                  </nz-radio-group>
+                </div>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">加密算法</label>
+                <p class="text-tip">要使用的加密算法</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EncryptionAlgorithm')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="EncryptionAlgorithm">
+                  <nz-option
+                    *ngFor="let option of _options54"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">完整性算法</label>
+                <p class="text-tip">要使用的完整性算法</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'IntegrityAlgorithm')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="IntegrityAlgorithm">
+                  <nz-option
+                    *ngFor="let option of _options55"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">Diffie-Hellman 群组</label>
+                <p class="text-tip">Diffie Hellman 群组编号</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'DiffieHellmanGroup')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="DiffieHellmanGroup">
+                  <nz-option
+                    *ngFor="let option of _options42"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">累计时间 (以分钟为单位)</label>
+                <p class="text-tip">SA 累计时间 (rekey 时隔时间，以分钟为单位)</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'LifeTimeInMinutes')">
+                <input  class="w320i" formControlName="LifeTimeInMinutes" nz-input placeholder="1440"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="getFormControl(i, 'AlwaysOn').value === true">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="UIToggleEnabled">
+                  <span>允许用户停用自动连接</span>
+                </label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="Action">
+                  <span>为蜂窝移动网络和Wi-Fi使用相同的隧道配置</span>
+                </label>
+              </div>
+            </div>
+            <ng-container *ngIf="getFormControl(i, 'Action').value === true || getFormControl(i, 'AlwaysOn').value === true">
+              <div>
+                <div class="switch-group-wrap">
+                  <div class="line"></div>
+                  <div class="group">
+                    <nz-radio-group formControlName="IsRemovable" class="btn-group-bg">
+                      <label nz-radio-button [nzValue]="1"><span>蜂窝移动网络</span></label>
+                      <label nz-radio-button [nzValue]="2"><span>Wi-Fi</span></label>
+                    </nz-radio-group>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">服务器</label>
+                <p class="text-tip">服务器的主机名或IP地址</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'RemoteAddress')">
+                <input class="w320i" formControlName="RemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+                <div nz-form-explain
+                     *ngIf="getFormControl(i, 'RemoteAddress').dirty && getFormControl(i, 'RemoteAddress').hasError('required')">
+                  必填项不能为空
+                </div>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">远程标识符</label>
+                <p class="text-tip">FQDN、UserFQDN、地址或ASN1DN远程标识符</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'LocalIdentifier')">
+                <input  class="w320i" formControlName="LocalIdentifier" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">局部标识符</label>
+                <p class="text-tip">FQDN、UserFQDN、地址或ASN1DN局部标识符</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'LocalIdentifier')">
+                <input  class="w320i" formControlName="LocalIdentifier" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">设备鉴定</label>
+                <p class="text-tip">用于连接的鉴定类型</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                  <nz-option
+                    *ngFor="let option of _options40"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <!--设备鉴定下拉框分组-->
+            <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value === 2">
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>身份证书</span>
+                </label>
+                <p class="text-tip">用于连接无线网络的凭证</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options47"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+              <div nz-form-item nz-row>
+                <div nz-form-label nz-col>
+                  <label class="w310i">证书类型</label>
+                  <p class="text-tip">颁发的证书类型 (仅限设备鉴定)</p>
+                </div>
+                <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CalDAVUsername')">
+                  <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="CalDAVUsername">
+                    <nz-option
+                      *ngFor="let option of _options52"
+                      [nzLabel]="option.label"
+                      [nzValue]="option.value">
+                    </nz-option>
+                  </nz-select>
+                </div>
+              </div>
+              <div nz-form-item nz-row>
+                <div nz-form-label nz-col>
+                  <label class="w310i">服务器证书签发者通用名称</label>
+                  <p class="text-tip">服务器证书签发者的通用名称</p>
+                </div>
+                <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ServerCertificateIssuerCommonName')">
+                  <input  class="w320i" formControlName="ServerCertificateIssuerCommonName" nz-input placeholder="[采用证书鉴定的 EAP 此项必填]" [nzDisabled]="type === 'view'"
+                          [nzSize]="'large'">
+                </div>
+              </div>
+              <div nz-form-item nz-row>
+                <div nz-form-label nz-col>
+                  <label class="w310i">服务器证书通用名称</label>
+                  <p class="text-tip">服务器证书的通用名称</p>
+                </div>
+                <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ServerCertificateCommonName')">
+                  <input  class="w320i" formControlName="ServerCertificateCommonName" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                          [nzSize]="'large'">
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value === 3">
+              <div nz-form-item nz-row>
+                <div nz-form-label nz-col>
+                  <label class="w310i">共享秘钥</label>
+                  <p class="text-tip">用于连接的共享秘钥</p>
+                </div>
+                <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SharedSecret')">
+                  <input  class="w320i" formControlName="SharedSecret" nz-input [nzDisabled]="type === 'view'"
+                          [nzSize]="'large'">
+                </div>
+              </div>
+            </ng-container>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="ExtendedAuthEnabled">
+                  <span>启用EAP</span>
+                </label>
+                <p class="text-tip">启用扩展鉴定</p>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">失效同层检测速率</label>
+                <p class="text-tip">连接检测间隔时间</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'DeadPeerDetectionRate')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="DeadPeerDetectionRate">
+                  <nz-option
+                    *ngFor="let option of _options56"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisableRedirect">
+                  <span>停用重定向</span>
+                </label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisableMOBIKE">
+                  <span>停用移动性和多重主目录</span>
+                </label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="UseConfigurationAttributeInternalIPSubnet">
+                  <span>使用IPv4/IPv6内部子网属性</span>
+                </label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="EnablePFS">
+                  <span>启用完全正向保密</span>
+                </label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="EnableCertificateRevocationCheck">
+                  <span>启用证书撤销检查</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <div class="switch-group-wrap">
+                <div class="line"></div>
+                <div class="group">
+                  <nz-radio-group formControlName="IsRemovable" class="btn-group-bg">
+                    <label nz-radio-button [nzValue]="1" ><span>IKE SA 参数</span></label> <!-- formControlName="IKESecurityAssociationParameters"-->
+                    <label nz-radio-button [nzValue]="2" ><span>子 SA 参数</span></label> <!--  formControlName="ChildSecurityAssociationParameters" -->
+                  </nz-radio-group>
+                </div>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">加密算法</label>
+                <p class="text-tip">要使用的加密算法</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EncryptionAlgorithm')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="EncryptionAlgorithm">
+                  <nz-option
+                    *ngFor="let option of _options54"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">完整性算法</label>
+                <p class="text-tip">要使用的完整性算法</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'IntegrityAlgorithm')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="IntegrityAlgorithm">
+                  <nz-option
+                    *ngFor="let option of _options55"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">Diffie-Hellman 群组</label>
+                <p class="text-tip">Diffie Hellman 群组编号</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'DiffieHellmanGroup')">
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="DiffieHellmanGroup">
+                  <nz-option
+                    *ngFor="let option of _options42"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">累计时间 (以分钟为单位)</label>
+                <p class="text-tip">SA 累计时间 (rekey 时隔时间，以分钟为单位)</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'LifeTimeInMinutes')">
+                <input  class="w320i" formControlName="LifeTimeInMinutes" nz-input placeholder="1440" [disabled]="type === 'view'"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!--IPsec页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'IPsec'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或IP地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'RemoteAddress')">
+              <input class="w320i" formControlName="RemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+              <div nz-form-explain
+                   *ngIf="getFormControl(i, 'RemoteAddress').dirty && getFormControl(i, 'RemoteAddress').hasError('required')">
+                必填项不能为空
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">账户</label>
+              <p class="text-tip">用于鉴定连接的用户账户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthName')">
+              <input  class="w320i" formControlName="XAuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">密码</label>
+              <p class="text-tip">用于鉴定连接的密码</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+              <input type="password" class="w320i" formControlName="XAuthPassword" nz-input placeholder="[在设备上设置]"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">设备鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options46"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>身份证书</span>
+              </label>
+              <p class="text-tip">用于连接无线网络的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>包括用户 PIN 码</span>
+                </label>
+                <p class="text-tip">每次连接时均要求输入 PIN 码，并在鉴定时发送</p>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">群组名称</label>
+                <p class="text-tip">连接的群组标识符</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'LocalIdentifier')">
+                <input  class="w320i" formControlName="LocalIdentifier" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">共享秘钥</label>
+                <p class="text-tip">用于连接的共享秘钥</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SharedSecret')">
+                <input  class="w320i" formControlName="SharedSecret" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>使用混合鉴定</span>
+                </label>
+                <p class="text-tip">使用密钥、名称和服务器端证书进行鉴定</p>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>提示输入密码</span>
+                </label>
+                <p class="text-tip">提示用户在设备上输入密码</p>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!--L2TP页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'L2TP'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-form-item-required class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或IP地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" [nzDisabled]="type === 'view'"  nz-input placeholder="[必填]"
+                     [nzSize]="'large'">
+              <div nz-form-explain
+                   *ngIf="getFormControl(i, 'CommRemoteAddress').dirty && getFormControl(i, 'CommRemoteAddress').hasError('required')">
+                必填项不能为空
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的用户鉴定</p>
+            </div>
+            <div nz-col nz-form-control>
+              <nz-radio-group formControlName="_userAppraisalType">
+                <div class="mb10">
+                  <label nz-radio [nzValue]="1" [nzDisabled]="type === 'view'">
+                    <span>密码</span>
+                  </label>
+                  <input type="password" class="w320i" formControlName="ProxyPassword" [nzDisabled]="type === 'view'" nz-input
+                         [nzSize]="'large'">
+                </div>
+                <!--<div class="mb10">-->
+                  <!--<label nz-radio [nzValue]="2" [nzDisabled]="type === 'view'">-->
+                    <!--<span>RSA SecureID</span>-->
+                  <!--</label>-->
+                <!--</div>-->
+              </nz-radio-group>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OverridePrimary" [nzDisabled]="type === 'view'">
+                <span>通过VPN发送所有流量</span>
+              </label>
+            </div>
+          </div>
+          <div nz-form-item nz-row *ngIf="false">
+            <div nz-form-label nz-col>
+              <label class="w310i">设备鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod" [nzDisabled]="type === 'view'" >
+                <nz-option
+                  *ngFor="let option of _options46"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>身份证书</span>
+              </label>
+              <p class="text-tip">用于连接无线网络的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>包括用户 PIN 码</span>
+                </label>
+                <p class="text-tip">每次连接时均要求输入 PIN 码，并在鉴定时发送</p>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">群组名称</label>
+                <p class="text-tip">连接的群组标识符</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'LocalIdentifier')">
+                <input  class="w320i" formControlName="LocalIdentifier" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">共享秘钥</label>
+                <p class="text-tip">用于连接的共享秘钥</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SharedSecret')">
+                <input  class="w320i" formControlName="SharedSecret" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                        [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>使用混合鉴定</span>
+                </label>
+                <p class="text-tip">使用密钥、名称和服务器端证书进行鉴定</p>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>提示输入密码</span>
+                </label>
+                <p class="text-tip">提示用户在设备上输入密码</p>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!--PPTP页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'PPTP'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-form-item-required class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或IP地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的用户鉴定</p>
+            </div>
+            <div nz-col nz-form-control>
+              <nz-radio-group formControlName="AuthPassword">
+                <div class="mb10">
+                  <label nz-radio [nzValue]="1" [nzDisabled]="type === 'view'">
+                    <span>密码</span>
+                  </label>
+                  <input type="password" class="w320i" formControlName="AuthPassword" nz-input [nzDisabled]="type === 'view'"
+                         [nzSize]="'large'">
+                </div>
+                <div class="mb10">
+                  <label nz-radio [nzValue]="2" [nzDisabled]="type === 'view'">
+                    <span>RSA SecureID</span>
+                  </label>
+                </div>
+              </nz-radio-group>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">加密级别</label>
+              <p class="text-tip">连接所应用的数据加密级别</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options48"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>通过 VPN 发送所有流量</span>
+              </label>
+            </div>
+          </div>
+        </ng-container>
+
+        <!--cisco页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'cisco'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label  class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或IP地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">群组</label>
+              <p class="text-tip">用于鉴定连接的群组</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'VendorConfig')">
+              <input  class="w320i" formControlName="VendorConfig" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options49"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options57"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===3">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+
+          </ng-container>
+        </ng-container>
+
+        <!--juniper页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'juniper'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label  class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或IP地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">领域</label>
+              <p class="text-tip">用于鉴定连接的领域</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Realm')">
+              <input  class="w320i" formControlName="Realm" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">角色</label>
+              <p class="text-tip">用于鉴定连接的角色</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Role')">
+              <input  class="w320i" formControlName="Role" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options49"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===3">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+
+          </ng-container>
+        </ng-container>
+
+        <!--pulse页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'pulse'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label  class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或IP地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">领域</label>
+              <p class="text-tip">用于鉴定连接的领域</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Realm')">
+              <input  class="w320i" formControlName="Realm" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">角色</label>
+              <p class="text-tip">用于鉴定连接的角色</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Role')">
+              <input  class="w320i" formControlName="Role" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options49"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===3">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+
+          </ng-container>
+        </ng-container>
+
+        <!--F5页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'F5'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label  class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或IP地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options49"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===3">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!--sonic页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'sonic'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label  class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或IP地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">登录群组或域</label>
+              <p class="text-tip">用于鉴定连接的登录群组或域</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'LoginGroupOrDomain')">
+              <input  class="w320i" formControlName="LoginGroupOrDomain" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options51"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!--Aruba页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'Aruba'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label  class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或 IP 地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options51"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!--VPN页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'VPN'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label  class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或 IP 地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options51"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options50"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!--SSL页面-->
+        <ng-container *ngIf="getFormControl(i, 'VPNType').value === 'SSL'">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label  class="w310i">标识符</label>
+              <p class="text-tip">自定 SSL VPN 的标识符</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label  class="w310i">服务器</label>
+              <p class="text-tip">服务器的主机名或 IP 地址</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CommRemoteAddress')">
+              <input class="w320i" formControlName="CommRemoteAddress" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">帐户</label>
+              <p class="text-tip">用于鉴定连接的用户帐户</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthName')">
+              <input  class="w320i" formControlName="AuthName" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">自定数据</label>
+              <p class="text-tip">自定数据的密钥和字符串值</p>
+            </div>
+            <!--此处是自定数据的表格-->
+
+
+
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">用户鉴定</label>
+              <p class="text-tip">用于连接的鉴定类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'AuthenticationMethod')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="AuthenticationMethod">
+                <nz-option
+                  *ngFor="let option of _options51"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===1">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label class="w310i">密码</label>
+                <p class="text-tip">用于鉴定连接的密码</p>
+              </div>
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+                <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                       [nzSize]="'large'">
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFormControl(i, 'AuthenticationMethod').value ===2">
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                <span>凭证</span>
+              </label>
+              <p class="text-tip">用于鉴定连接的凭证</p>
+            </div>
+            <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">
+              <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+              <!--[nzSize]="'large'">-->
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                <nz-option
+                  *ngFor="let option of _options47"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IsRemovable">
+                  <span>启用请求 VPN 域</span>
+                </label>
+                <p class="text-tip">将建立 VPN 的域名和主机名</p>
+              </div>
+            </div>
+            <!--此处是启用请求 VPN 域的表格-->
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col>
+                <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="DisconnectOnIdle">
+                  <span>闲置时断开连接</span>
+                </label>
+                <p class="text-tip">闲置超过此时长后断开连接</p>
+              </div>
+              <div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+                <!--<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"-->
+                <!--[nzSize]="'large'">-->
+                <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">
+                  <nz-option
+                    *ngFor="let option of _options57"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+
+
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label class="w310i">代理设置</label>
+            <p class="text-tip">配置此VPN连接所使用的代理</p>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'Proxies')">
+            <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="Proxies" [nzDisabled]="true">
+              <nz-option
+                *ngFor="let option of _options36"
+                [nzLabel]="option.label"
+                [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <!--代理设置 选择无时的状态-->
+        <ng-container *ngIf="getFormControl(i, 'Proxies').value === 1">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">密码</label>
+              <p class="text-tip">用于鉴定连接的密码</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+              <input type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+        </ng-container>
+
+
+        <!--代理设置 选择手动时的状态-->
+        <ng-container *ngIf="getFormControl(i, 'Proxies').value === 2">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-form-item-required>邮件服务器和端口</label>
+              <p class="text-tip">代理服务器的主机或 IP 地址及端口号</p>
+            </div>
+            <div class="w320i">
+              <div nz-form-control>
+                <div nz-col [nzSpan]="17">
+                  <div nz-form-item nz-row>
+                    <div>
+                      <div nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyServer')">
+                        <input class="w" formControlName="ProxyServer" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                               [nzSize]="'large'">
+                        <div nz-form-explain
+                             *ngIf="getFormControl(i, 'ProxyServer').dirty&&getFormControl(i, 'ProxyServer').hasError('required')">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="1">
+                  <p nz-form-split>：</p>
+                </div>
+                <div nz-col [nzSpan]="6">
+                  <div nz-form-item nz-row>
+                    <div>
+                      <div nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyServerPort')">
+                        <input class="w" formControlName="ProxyServerPort" nz-input [nzDisabled]="type === 'view'"
+                               [nzSize]="'large'">
+                        <div nz-form-explain
+                             *ngIf="getFormControl(i, 'ProxyServerPort').dirty && getFormControl(i, 'ProxyServerPort').hasError('required')">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">鉴定</label>
+              <p class="text-tip">用于连接到代理的用户名</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'CalDAVPassword')">
+              <input class="w320i" formControlName="CalDAVPassword" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">密码</label>
+              <p class="text-tip">用于鉴定代理的密码</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'XAuthPassword')">
+              <input  type="password" class="w320i" formControlName="XAuthPassword" nz-input [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+        </ng-container>
+
+
+        <!--代理设置 选择自动时的状态-->
+        <ng-container *ngIf="getFormControl(i, 'Proxies').value === 3">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w310i">代理服务器URL</label>
+              <p class="text-tip">用于取回代理设置的 URL </p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPACURL')">
+              <input  class="w320i" formControlName="ProxyPACURL" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                      [nzSize]="'large'">
+            </div>
+          </div>
+        </ng-container>
+
+
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label class="w310i">闲置时断开连接</label>
+            <p class="text-tip">闲置给定时间后断开连接</p>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'DisconnectOnIdle')">
+            <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="DisconnectOnIdle" [nzDisabled]="true">
+              <nz-option
+                *ngFor="let option of _options57"
+                [nzLabel]="option.label"
+                [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="type === 'view'">
+    <div class="policy-simple-list" appCustomScrollbar>
+      <nz-table #nzTable
+                [nzAjaxData]="data"
+                [nzIsPagination]="false">
+        <tbody nz-tbody>
+        <tr class="thead">
+          <td width="80%">连接名称</td>
+          <td>连接类型</td>
+        </tr>
+        <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"
+            [class.view]="type === 'view'">
+          <td nz-td>
+            {{data.UserDefinedName}}
+          </td>
+          <td nz-td>
+            {{util.getLabelByValue(_options26, data.VPNType)}}
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </ng-container>
+</div>

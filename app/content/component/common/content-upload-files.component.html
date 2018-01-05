@@ -1,0 +1,86 @@
+<div>
+  <form nz-form [formGroup]="form">
+    <!-- 上传文件 -->
+    <div nz-form-item nz-row [nzGutter]="20">
+      <div nz-form-label nz-col [nzSpan]="4">
+        <label nz-form-item-required>选择文件</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control>
+        <!-- ng2FileSelect 文件上传 -->
+        <div>
+          <button nz-button [nzType]="'primary'" class="btn-secondary" (click)="file.click();" appPermission>
+            <span>请选择文件</span>
+          </button>
+          <input #file type="file" ng2FileSelect [uploader]="uploader" multiple/>
+          <span class="text-tip ml10">支持所有文件格式</span>
+        </div>
+        <div class="max-h200i" appCustomScrollbar>
+          <div nz-row [nzGutter]="20" *ngFor="let item of uploader.queue">
+            <div nz-col [nzSpan]="1">
+              <i class="anticon anticon-question-circle-o"></i>
+            </div>
+            <div nz-col [nzSpan]="15" class="wba">{{item?.file?.name}}</div>
+            <div nz-col [nzSpan]="3">{{(item?.file?.size/1024/1024 + '').split('.')[0]}}MB</div>
+            <div nz-col [nzSpan]="3"><i class="anticon anticon-close-circle"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--是否加密-->
+    <div nz-form-item nz-row [nzGutter]="20" style="height: 20px !important;">
+      <div nz-col [nzSpan]="4" nz-form-label>
+        <label>是否加密</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control>
+        <label nz-checkbox formControlName="isEncryption">
+          <span>加密</span>
+        </label>
+      </div>
+    </div>
+    <!--选择标签-->
+    <div nz-form-item nz-row [nzGutter]="20">
+      <div nz-col [nzSpan]="4" nz-form-label>
+        <label>选择标签</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control>
+        <nz-select nzKeepUnListOptions [nzFilter]="false" [nzMode]="'multiple'"
+                   [nzPlaceHolder]="'在此输入标签, 最多不能超过10个字,按Enter进行添加'" (nzSearchChange)="tagsSearchChange($event)"
+                   formControlName="tags"
+                   [nzNotFoundContent]="'无法找到'">
+          <nz-option
+            *ngFor="let option of tags"
+            [nzLabel]="option.label"
+            [nzValue]="option.value">
+          </nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <!--分发对象-->
+    <div nz-form-item nz-row [nzGutter]="20">
+      <div nz-col [nzSpan]="4" nz-form-label>
+        <label>分发对象</label>
+      </div>
+      <div nz-col [nzSpan]="18" nz-form-control>
+        <app-custom-select-group class="h600" [(result)]="distributionObject"></app-custom-select-group>
+      </div>
+    </div>
+    <!--下载设置-->
+    <div nz-form-item nz-row [nzGutter]="20">
+      <div nz-col [nzSpan]="4" nz-form-label>
+        <label>下载设置</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control>
+        <label nz-checkbox formControlName="isDownload">
+          <span>下载权限</span>
+          <span class="ml10 f12 text-tip">不勾选此项，客户端只能预览文档，不能下载</span>
+        </label>
+      </div>
+    </div>
+    <div class="mb0i" nz-form-item nz-row>
+      <div class="tar" nz-col [nzOffset]="12" [nzSpan]="12" nz-form-control>
+        <button nz-button [nzType]="'primary'"  (click)="submit()" [disabled]="!form.valid" [nzSize]="'large'" appPermission>保存</button>
+        <button class="ml20" nz-button (click)="handleCancel()" [nzSize]="'large'" appPermission>取消</button>
+      </div>
+    </div>
+  </form>
+</div>

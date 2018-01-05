@@ -1,0 +1,22 @@
+<div class="policy-version-box">
+  <ng-container *ngIf="system === 'Android'">Android4.4+</ng-container>
+  <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+</div>
+<div *ngFor="let item of data" class="mb10">
+  <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="item.value">
+    <span>{{item.label}}</span>
+  </label>
+</div>
+<div>
+  <span [class.text-diseditable]="type === 'view'">数据上报频率：</span>
+  <nz-select *ngIf="type !== 'view'" class="w120" [(ngModel)]="value">
+    <nz-option
+      *ngFor="let option of options"
+      [nzLabel]="option.label"
+      [nzValue]="option.value">
+    </nz-option>
+  </nz-select>
+  <span *ngIf="type === 'view'" class="text-diseditable">
+    {{util.getLabelByValue(options, value)}}
+  </span>
+</div>

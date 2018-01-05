@@ -1,0 +1,76 @@
+<nz-back-top></nz-back-top>
+<nz-layout class="main-layout">
+  <nz-header class="main-top-header">
+    <div class="main-logo" [style.background]="logoUrl"></div>
+    <ul nz-menu [nzMode]="'horizontal'" class="main-top-nav" [nzClickActive]="false">
+      <li nz-menu-item *ngIf="currentUserInfo?.isAdmin && !currentUserInfo?.currentIsAdmin">
+        <button nz-button [nzType]="'primary'" class="btn-rare" (click)="toAdmin()">
+          <span>管理员</span>
+        </button>
+      </li>
+      <!--<li nz-submenu>-->
+      <!--<span title>{{currentLangStr}}<i class="anticon anticon-down"></i></span>-->
+      <!--<ul>-->
+      <!--<li nz-menu-item (click)="changeLang('zh')">简体中文</li>-->
+      <!--<li nz-menu-item (click)="changeLang('en')">English</li>-->
+      <!--</ul>-->
+      <!--</li>-->
+      <li nz-menu-item><i class="icon-allicon-78 mr5"></i>{{currentUser?.userName || 'Admin'}}
+      </li>
+      <li nz-menu-item (click)="logout()"><i class="icon-allicon-111 mr5"></i>{{'logout' | translate}}</li>
+      <li id="modify-password" *ngIf="!currentUserInfo?.isPortalAdmin" nz-menu-item (click)="modifyPassword()"><i
+        class="icon-allicon-95 mr5"></i>{{'edit_password' | translate}}
+      </li>
+      <!--<li id="modify-password" *ngIf="!currentUserInfo?.isPortalAdmin" nz-menu-item (click)="modifyPassword()"><i class="icon-allicon-95 mr5"></i>{{'edit_password' | translate}}</li>-->
+    </ul>
+  </nz-header>
+  <ng-container>
+    <nz-header class="main-header" *ngIf="currentUserInfo?.currentIsAdmin">
+      <ul nz-menu [nzMode]="'horizontal'" class="main-nav">
+        <ng-container *ngFor="let m of menu;">
+          <li id="main-menu-{{m.code}}" nz-submenu *ngIf="m && m.isParent">
+            <span title (click)="changeRouter(m)">{{m.code | translate}}</span>
+            <ul *ngIf="m.isParent">
+              <!--todo 此处的name在国际化需求下需要改为code，并将code对应的值在json文件中进行翻译-->
+              <ng-container *ngFor="let _m of m.children;">
+                <li class="pr" [class.menu-item-suffix-li]="_m.suffix" [class.advanced]="_m.advanced" nz-menu-item *ngIf="_m" (click)="changeRouter(_m)" [nzSelected]="_m.isActive">
+                  {{_m.name | translate}}
+                  <span class="li-menu-item-suffix"><i [class]="_m.suffix"></i></span>
+                </li>
+              </ng-container>
+            </ul>
+          </li>
+          <li id="main-menu-{{m.code}}" nz-menu-item *ngIf="m && !m.isParent" (click)="changeRouter(m)"
+              [nzSelected]="m.isActive">{{m.name | translate}}
+          </li>
+        </ng-container>
+      </ul>
+      <div class="main-header-btn-wrap" *ngIf="!currentUserInfo.isPortalAdmin">
+        <button nz-button [nzType]="'primary'" class="btn-rare" (click)="toSelfHelp()">
+          <span>自助服务</span>
+        </button>
+      </div>
+    </nz-header>
+    <nz-header class="main-breadcrumb-header" *ngIf="currentUserInfo?.currentIsAdmin">
+      <nz-breadcrumb [nzSeparator]="' > '">
+        <nz-breadcrumb-item (click)="changeRouter()" class="main-home-breadcrumb">{{breadcrumb.length === 0 ? '仪表盘' :
+          '首页'}}
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item *ngFor="let b of breadcrumb;let i = index;"
+                            (click)="changeRouter(b)"
+                            [class.text-primary]="i!==breadcrumb.length - 1">{{b.name | translate}}
+        </nz-breadcrumb-item>
+      </nz-breadcrumb>
+    </nz-header>
+    <nz-content class="main-content">
+      <div class="main-content-container">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </ng-container>
+  <!--<ng-container *ngIf="!currentUserInfo?.currentIsAdmin">-->
+    <!--<router-outlet></router-outlet>-->
+  <!--</ng-container>-->
+  <nz-footer class="main-footer">Copyright 2017, Software Co., Ltd. All Rights Reserved京ICP备16050279号-2</nz-footer>
+</nz-layout>
+

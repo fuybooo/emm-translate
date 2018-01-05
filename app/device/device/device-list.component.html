@@ -1,0 +1,74 @@
+<div>
+  <div class="content-section-title">
+    <label nz-checkbox [(ngModel)]="allCheck" [nzIndeterminate]="indeterminate" *ngIf="!util.isEmptyObject(params)"
+           (ngModelChange)="checkAll($event)"><span>{{'device_list' | translate}}</span></label>
+    <span *ngIf="util.isEmptyObject(params)">{{'device_list' | translate}}</span>
+  </div>
+  <div class="table-wrap" [style.height.px]="containerHeight" appCustomScrollbar [options]="options">
+    <nz-table class="content-table table-td-height"
+              #nzTable
+              [nzAjaxData]="data"
+              [nzLoading]="isLoading"
+              [nzIsPagination]="false">
+      <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let item of nzTable.data"
+          (mouseenter)="item.isDeleteVisible=true;item.isEditVisible=true;"
+          (mouseleave)="item.isDeleteVisible=false;item.isEditVisible=false;"
+          (click)="onClickDeviceList(item)"
+          [class.active]="item.isActive">
+        <td nz-td [nzCheckbox]="true" class="checkbox-td">
+          <label nz-checkbox [(ngModel)]="item.isChecked" (ngModelChange)="refreshStatus($event)">
+          </label>
+        </td>
+        <td nz-td (click)="getDeviceDetail(item)">
+          <div>
+            <p><a href="javascript: void(0);" class="text-primary">{{item.model}}</a></p>
+            <span class="title-blue-color">{{item.account}}</span>
+          </div>
+        </td>
+        <td nz-td width="30">
+          <button class="nb" (click)="popupEditDevice(item);" appPermission="1">
+            <i class="anticon-click"
+               (mouseenter)="item.isEditHighLight=true;"
+               (mouseleave)="item.isEditHighLight=false;"
+               title="{{'edit' | translate}}"
+               [class.vv]="item.isEditVisible"
+               [class.vh]="!item.isEditVisible"
+               [class.icon-allicon-18]="!item.isEditHighLight"
+               [class.icon-allicon-19]="item.isEditHighLight"
+               appPermission="1">
+            </i>
+          </button>
+        </td>
+        <td nz-td width="30">
+          <!-- todo 根据是否未激活判断是否能够删除设备 -->
+          <button class="nb" appPermission="1" (click)="popupDeleteDevice(item);">
+            <i class="anticon-click dn"
+               (mouseenter)="item.isDeleteHighLight=true;"
+               (mouseleave)="item.isDeleteHighLight=false;"
+               title="删除"
+               [class.dibi]="item.isDevUnactivated"
+               [class.vv]="item.isDeleteVisible"
+               [class.vh]="!item.isDeleteVisible"
+               [class.icon-allicon-30]="!item.isDeleteHighLight"
+               [class.icon-allicon-29]="item.isDeleteHighLight" appPermission="1"></i>
+          </button>
+        </td>
+        <td nz-td width="80" class="tar pri15">
+          <i class="icon-allicon-07 dni ml20" [class.dibi]="item.isDevUnactivated"></i>
+          <i class="icon-allicon-10 dni mr5" [class.dibi]="item.isDevRecovery"></i>
+          <span class="icon-allicon-15 dni mr5" [class.dibi]="item.isDevLogged">
+            <span class="path1"></span><span class="path2"></span>
+          </span>
+          <span class="icon-allicon-14 dni mr5" [class.dibi]="item.isDevLogout">
+            <span class="path1"></span><span class="path2"></span>
+          </span>
+          <i class="icon-allicon-09 dni mr5" [class.dibi]="item.isDevUnactivated && !item.isDevRecovery && item.isDevOnline === false"></i>
+          <i class="icon-allicon-17 dni mr5" [class.dibi]="item.isDevUnactivated && !item.isDevRecovery && item.isDevOnline === true"></i>
+          <i class="icon-allicon-13 dni mr5" [class.dibi]="item.isDevLock"></i>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>

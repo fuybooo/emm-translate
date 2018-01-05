@@ -1,0 +1,144 @@
+<div class="content-wrap-wrapper common-gray-bg">
+  <!--搜索区域-->
+  <div class="search-wrap p15_20">
+    <div nz-row>
+      <div nz-col [nzSpan]="24">
+        <div nz-row>
+          <div nz-col [nzSpan]="6" class="search-col">
+            <app-custom-search (searchChange)="searchChange($event)"
+                               (doSearch)="doSearch($event)"></app-custom-search>
+          </div>
+          <div nz-col [nzSpan]="11">
+            <button nz-button [nzType]="'default'" (click)="popupAddUser()" class="ml20" appPermission="1">
+              <span><i class="icon-allicon-20 mr5"></i>添加新用户</span>
+            </button>
+            <button nz-button [nzType]="'default'" (click)="popupMoveTo()" appPermission="1">
+              <span><i class="icon-allicon-26 mr5 gray-before"></i>{{'move' | translate}}</span>
+            </button>
+            <button nz-button [nzType]="'default'" (click)="popupUserPlace()">
+              <span><i class="icon-allicon-21 mr5 gray-before"></i>查看用户位置信息</span>
+            </button>
+          </div>
+          <!--用户状态-->
+          <div nz-col class="tar pri10i" [nzSpan]="7">
+            <button nz-button [nzType]="'default'"
+                    (click)="popupChangeUserState('active')" title="激活" appPermission="1" [appPermissionExtendOptions]="{disabled: changeUserStateDisable.active}">
+              <span><i class="icon-allicon-07"></i></span>
+            </button>
+            <button nz-button [nzType]="'default'"
+                    (click)="popupChangeUserState('blockUp')" title="停用" appPermission="1" [appPermissionExtendOptions]="{disabled: changeUserStateDisable.blockUp}">
+              <span><i class="icon-allicon-09"></i></span>
+            </button>
+            <button nz-button [nzType]="'default'"
+                    (click)="popupChangeUserState('locking')" title="锁定" appPermission="1" [appPermissionExtendOptions]="{disabled: changeUserStateDisable.locking}">
+              <span><i class="icon-allicon-12"></i></span>
+            </button>
+            <button nz-button [nzType]="'default'"
+                    (click)="popupChangeUserState('unlocked')" title="解锁" appPermission="1" [appPermissionExtendOptions]="{disabled: changeUserStateDisable.unlocked}">
+              <span><i class="icon-allicon-11"></i></span>
+            </button>
+            <button nz-button [nzType]="'default'"
+                    (click)="popupChangeUserState('reload')" title="启用" appPermission="1" [appPermissionExtendOptions]="{disabled: changeUserStateDisable.reload}">
+              <span><i class="icon-allicon-16"></i></span>
+            </button>
+            <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.active"-->
+                    <!--(click)="popupChangeUserState('active')" title="激活" appPermission>-->
+              <!--<span><i class="icon-allicon-07" appPermission></i></span>-->
+            <!--</button>-->
+            <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.blockUp"-->
+                    <!--(click)="popupChangeUserState('blockUp')" title="停用" appPermission>-->
+              <!--<span><i class="icon-allicon-09" appPermission></i></span>-->
+            <!--</button>-->
+            <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.locking"-->
+                    <!--(click)="popupChangeUserState('locking')" title="锁定" appPermission>-->
+              <!--<span><i class="icon-allicon-12" appPermission></i></span>-->
+            <!--</button>-->
+            <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.unlocked"-->
+                    <!--(click)="popupChangeUserState('unlocked')" title="解锁" appPermission>-->
+              <!--<span><i class="icon-allicon-11" appPermission></i></span>-->
+            <!--</button>-->
+            <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.reload"-->
+                    <!--(click)="popupChangeUserState('reload')" title="启用" appPermission>-->
+              <!--<span><i class="icon-allicon-16" appPermission></i></span>-->
+            <!--</button>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--操作按钮区域-->
+  <div class="operate-btn-group">
+    <div nz-row>
+      <!--用户组按钮操作区-->
+      <div nz-col class="operate-left-side p16_20" [nzSpan]="6">
+        <button nz-button [nzType]="'default'" (click)="popupAddUserGroup()" class="ml20" appPermission="1">
+          <span><i class="icon-allicon-20 mr5"></i>{{'add_group' | translate}}</span>
+        </button>
+        <button nz-button [nzType]="'default'" (click)="userGroup.delete()" appPermission="1">
+          <span><i class="icon-allicon-29 mr5"></i>{{'batch_delete' | translate}}</span>
+        </button>
+        <!--<button nz-button [nzType]="'default'">-->
+          <!--<span><i class="icon-allicon-27"></i></span>-->
+        <!--</button>-->
+      </div>
+      <!--用户按钮操作区-->
+      <div nz-col class="p16_20" [nzSpan]="10">
+        <!--<button nz-button [nzType]="'default'" (click)="popupAddUserToGroup()" class="ml10">-->
+          <!--<span><i class="icon-allicon-20 mr5"></i>添加到组</span>-->
+        <!--</button>-->
+        <button *ngIf="userGroup?.itemIsActive && userGroup?.itemIsActive.id > 0" class="ml20"
+                nz-button [nzType]="'default'" (click)="removeUsers()" appPermission="1">
+          <span><i class="icon-allicon-26 mr5"></i>{{'batch_remove' | translate}}</span>
+        </button>
+        <button nz-button [nzType]="'default'" (click)="popupImport()" class="ml20" appPermission="1">
+          <span><i class="icon-allicon-23 mr5"></i>{{'batch_import' | translate}}</span>
+        </button>
+        <!--<button nz-button [nzType]="'default'">-->
+          <!--<span><i class=""></i>{{'batch_export' | translate}}</span>-->
+        <!--</button>-->
+      </div>
+      <!--用户状态-->
+      <!--<div nz-col class="p10 tar pri10i" [nzSpan]="8">-->
+        <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.active"-->
+                <!--(click)="popupChangeUserState('active')" title="激活">-->
+          <!--<span><i class="icon-allicon-07"></i></span>-->
+        <!--</button>-->
+        <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.blockUp"-->
+                <!--(click)="popupChangeUserState('blockUp')" title="停用">-->
+          <!--<span><i class="icon-allicon-09"></i></span>-->
+        <!--</button>-->
+        <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.locking"-->
+                <!--(click)="popupChangeUserState('locking')" title="锁定">-->
+          <!--<span><i class="icon-allicon-12"></i></span>-->
+        <!--</button>-->
+        <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.unlocked"-->
+                <!--(click)="popupChangeUserState('unlocked')" title="解锁">-->
+          <!--<span><i class="icon-allicon-11"></i></span>-->
+        <!--</button>-->
+        <!--<button nz-button [nzType]="'default'" [disabled]="changeUserStateDisable.reload"-->
+                <!--(click)="popupChangeUserState('reload')" title="启用">-->
+          <!--<span><i class="icon-allicon-16"></i></span>-->
+        <!--</button>-->
+      <!--</div>-->
+    </div>
+  </div>
+  <!--列表内容区域-->
+  <div class="list-content">
+    <div nz-row>
+      <div nz-col class="list-content-group pl10" [nzSpan]="6">
+        <!-- 用户组list -->
+        <div class="content-section-title">用户组</div>
+        <app-user-group></app-user-group>
+      </div>
+      <div nz-col class="list-content-list" [nzSpan]="8">
+        <!--用户list-->
+        <div class="content-section-title">用户组/用户</div>
+        <app-user-list></app-user-list>
+      </div>
+      <div nz-col class="list-content-detail" [nzSpan]="10">
+        <!--用户详情或者用户组详情-->
+        <app-user-detail></app-user-detail>
+      </div>
+    </div>
+  </div>
+</div>

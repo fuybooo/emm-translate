@@ -1,0 +1,102 @@
+<!-- breadcrumb -->
+<nz-breadcrumb [nzSeparator]="' > '" class="content-breadcrumb common-border-left">
+  <nz-breadcrumb-item class="link" *ngIf="files.contentDistribute" (click)="files.contentDistribute = null">返回
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item *ngFor="let b of breadcrumb.breadcrumb; last as isLast"
+                      [class.link]="!isLast" (click)="breadcrumb.toTarget(b)">{{b.label}}
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<!-- table -->
+<div *ngIf="!files.contentDistribute" class="content-table-thead content-content-table-thead">
+  <div>
+    <label class="pl12i mr10" nz-checkbox [(ngModel)]="files.allChecked" (ngModelChange)="files.checkedAll($event)"
+           [nzIndeterminate]="files.indeterminate"></label>名称
+  </div>
+  <div>类型</div>
+  <div class="table-td-sort {{files.param.sortName === 'flag' ? files.param.sortOrder : ''}}">
+    大小
+    <span>
+      <i class="anticon anticon-caret-up" (click)="files.sort('flag', 'asc')"></i>
+      <i class="anticon anticon-caret-down" (click)="files.sort('flag', 'desc')"></i>
+    </span>
+  </div>
+  <div class="table-td-sort {{files.param.sortName === 'realsize' ? files.param.sortOrder : ''}}">
+    修改时间
+    <span>
+      <i class="anticon anticon-caret-up" (click)="files.sort('realsize', 'asc')"></i>
+      <i class="anticon anticon-caret-down" (click)="files.sort('realsize', 'desc')"></i>
+    </span>
+  </div>
+  <div>更多操作</div>
+</div>
+<div *ngIf="!files.contentDistribute" class="cb"></div>
+<div *ngIf="!files.contentDistribute" class="content-table-wrap-short common-white-bg common-border-left"
+     appCustomScrollbar [options]="options">
+  <nz-table class="content-table table-td-height"
+            #nzTable
+            [nzAjaxData]="files.list"
+            [nzLoading]="files.isLoading"
+            [nzIsPagination]="false">
+    <tbody nz-tbody>
+    <tr nz-tbody-tr class="icon-hover-show h50 lh content-content-table-thead" *ngFor="let data of nzTable.data">
+      <!--<td nz-td [nzCheckbox]="true">-->
+        <!---->
+      <!--</td>-->
+      <td nz-td class="p0i">
+        <label nz-checkbox [(ngModel)]="data.checked"
+               (ngModelChange)="files.checked($event,data);">
+        </label>
+        <!-- 文档图标 -->
+        <div class="icon-file vam {{data.flag | contentTypeToIcon}}"></div>
+        <div class="dib vam content">
+          <a (click)="itemNameClick(data)">{{data.name}}</a>
+          <!-- 收藏 -->
+          <button class="nb" (click)="starPermission(data)" appPermission>
+            <i *ngIf="data.collect" class="icon-allicon-46 anticon-click f14 ml5" appPermission></i>
+          </button>
+          <button class="nb" (click)="starPermission(data)" appPermission>
+            <i *ngIf="!data.collect" class="icon-allicon-48 anticon-click f14 ml5 icon-hover" appPermission></i>
+          </button>
+          <!-- 重命名 -->
+          <button class="nb" (click)="renameItem(data)" appPermission>
+            <i class="icon-allicon-19 anticon-click f14 ml5 icon-hover "></i>
+          </button>
+          <!-- 标签 -->
+          <br *ngIf="data.tags && data.tags.length > 0">
+          <nz-checkable-tag class="lh26 tag-custom" [nzColor]="'blue'" *ngFor="let tag of data.tags">{{tag.tagName}}
+          </nz-checkable-tag>
+          <button class="nb" (click)="editItemTags(data)" appPermission>
+            <i class="icon-allicon-53 anticon-click f14 ml5 icon-hover"></i>
+          </button>
+        </div>
+      </td>
+      <td nz-td><a class="text-aux">{{data.flag}}</a></td>
+      <td nz-td><a class="text-aux">{{data.size}}</a></td>
+      <td nz-td><a class="text-aux">{{data.updateTime | date:'yyyy-MM-dd HH:mm:ss'}}</a></td>
+      <td nz-td>
+        <button class="nb" appPermission (click)="distributeClick(data)">
+          <i class="icon-allicon-49 anticon-click f14 ml3 mr2 edit-hover-skyblue" appPermission
+             title="分发记录"></i>
+        </button>
+        <button class="nb" appPermission (click)="delete(data)">
+          <i class="icon-allicon-30 anticon-click f14 ml3 mr2 delect-hover-red" title="删除"
+             appPermission></i>
+        </button>
+      </td>
+    </tr>
+    <!--loading-->
+    <tr nz-tbody-tr *ngIf="files.list.length < files.param.total">
+      <td nz-td [attr.colspan]="6">
+        <nz-spin [nzTip]="'正在读取数据...'">
+          <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+          </nz-alert>
+        </nz-spin>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+<!-- 分发详情 -->
+<app-content-distribute-table *ngIf="files.contentDistribute && files.contentDistribute.id > 0"
+                              [content]="files.contentDistribute"></app-content-distribute-table>

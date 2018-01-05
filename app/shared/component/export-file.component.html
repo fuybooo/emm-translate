@@ -1,0 +1,61 @@
+<div>
+  <div nz-row [nzGutter]="8">
+    <div nz-col [nzSpan]="24" class="pb20">
+      <div>请选择需要导出的数据项</div>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="8" class="pb20" *ngIf="userData.length">
+    <div nz-col [nzSpan]="6">
+      <div>用户状态</div>
+    </div>
+    <div nz-col [nzSpan]="18">
+      <div nz-row [nzGutter]="8">
+        <div *ngFor="let user of userData" nz-col [nzSpan]="12" class="pb5">
+          <div>
+            <label nz-checkbox [nzDisabled]="user.isDisabled" [(ngModel)]="user.isChecked">
+              <span>{{user.label}}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="8" class="pb20">
+    <div nz-col [nzSpan]="6">
+      <div>数据基本项</div>
+    </div>
+    <div nz-col [nzSpan]="18">
+      <div nz-row [nzGutter]="8">
+        <div *ngFor="let basic of basicData" nz-col [nzSpan]="12" class="pb5">
+          <div>
+            <label nz-checkbox [nzDisabled]="true" [ngModel]="true">
+              <span>{{basic.label}}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="8" class="pb20">
+    <div nz-col [nzSpan]="6">
+      <div>数据扩展项</div>
+    </div>
+    <div nz-col [nzSpan]="18">
+      <div nz-row [nzGutter]="8">
+        <div *ngFor="let extend of extendData" nz-col [nzSpan]="12" class="pb5">
+          <div>
+            <label nz-checkbox [(ngModel)]="extend.isChecked">
+              <span>{{extend.label}}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="8" class="pb20">
+    <div class="tar" nz-col [nzOffset]="12" [nzSpan]="12" nz-form-control>
+      <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="doExport()">确定</button>
+      <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel()">取消</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div>
+  <div>
+    <div nz-row [nzGutter]="8" class="lh30">
+      <div nz-col [nzSpan]="5">
+        <div>{{desc}}</div>
+      </div>
+      <div nz-col [nzSpan]="14">
+        <div>
+          <button nz-button [nzType]="'primary'" class="btn-secondary" (click)="file.click();">
+            <span>请选择文件</span>
+          </button>
+          <input #file type="file" ng2FileSelect [uploader]="uploader" (change)="changeFile(file)"/>
+          <span class="text-tip ml10"><span>仅支持</span>
+            {{fileTypeLimit.join(',')}}
+            <span>文件</span></span>
+      </div>
+      </div>
+      <div *ngIf="template" nz-col [nzSpan]="5" class="tar">
+        <div>
+          <button nz-button [nzType]="'ghost'" class="btn-hollow" (click)="downloadTemplate()">
+            <span>数据导入示例</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="8" class="lh50">
+      <div nz-col [nzSpan]="19" [nzOffset]="5">
+        <div [hidden]="fileName === ''">
+          <span class="file-import-icon"><span [class]="iconImgCls"></span></span>
+          <span class="va6">{{fileName}}</span>
+          <i class="anticon anticon-close-circle import-close-circle" (click)="cancelFile(file)"></i>
+        </div>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="8" class="mt20">
+      <div nz-col [nzOffset]="12" [nzSpan]="12" class="tar">
+        <button nz-button [nzType]="'primary'" [nzSize]="'large'" [disabled]="!fileName" (click)="submitFile()">保存</button>
+        <button nz-button [nzSize]="'large'" class="ml20" (click)="handleCancel()">取消</button>
+      </div>
+    </div>
+  </div>
+</div>

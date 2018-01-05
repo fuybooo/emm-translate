@@ -1,0 +1,159 @@
+<ng-container *ngIf="step === 1">
+  <div class="login-img login-img-user"></div>
+  <p class="mb30 text-aux">登录</p>
+  <div nz-form-item nz-row *ngIf="errorMsg || isLock">
+    <div nz-col [nzSpan]="24" class="pl50i pri50i">
+      <div class="login-warning">
+        <i class="icon-allicon-08"></i>{{errorMsg}}<span *ngIf="isLock">
+      <span>您的帐户密码输入错误次数过多，已经被锁定，请点击“申请解锁”请求解锁，自动解锁剩余时间</span>
+        <span>{{unlockLeftTimeStr}}</span>
+        <span>！</span>
+    </span>
+      </div>
+    </div>
+  </div>
+  <div class="login-content pb30i">
+    <form nz-form [formGroup]="loginForm" class="login-form">
+      <div nz-form-item class="mb1i">
+        <div class="login-input" id="input-username" nz-form-control [nzValidateStatus]="getFormControl('username')">
+          <nz-input formControlName="username" [nzPlaceHolder]="'请输入帐户'" [nzSize]="'large'" (keyup.enter)="doLogin()">
+            <ng-template #prefix>
+              <i class="icon-allicon-68"></i>
+            </ng-template>
+          </nz-input>
+        </div>
+      </div>
+      <div nz-form-item class="mb1i">
+        <div class="login-input" nz-form-control [nzValidateStatus]="getFormControl('password')">
+          <nz-input formControlName="password" [nzType]="'password'" [nzPlaceHolder]="'请输入密码'"
+                    [nzSize]="'large'" (keyup.enter)="doLogin()">
+            <ng-template #prefix>
+              <i class="icon-allicon-69"></i>
+            </ng-template>
+          </nz-input>
+        </div>
+      </div>
+      <div nz-form-item class="mb10i">
+        <div nz-form-control>
+          <label nz-checkbox formControlName="remember" class="fl">
+            <span>记住密码</span>
+          </label>
+          <a class="text-primary fr" (click)="forgetPassword()">忘记密码?</a>
+        </div>
+      </div>
+      <div nz-form-item nz-row class="mb10i">
+        <div nz-col [nzSpan]="24" nz-form-control>
+          <button class="login-button" type="button" nz-button [nzType]="'primary'" [nzSize]="'large'"
+                  (click)="doLogin()">登录
+          </button>
+        </div>
+      </div>
+      <div nz-form-item nz-row *ngIf="isLock">
+        <div nz-col [nzSpan]="24" nz-form-control>
+          <button class="login-button" nz-button [nzType]="'primary'" [nzSize]="'large'" [disabled]="disableUnlock"
+                  (click)="toUnlock()">申请解锁
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!--<div class="login-download">-->
+    <!--<div class="download">-->
+      <!--<span class="android-download"></span>-->
+      <!--<span class="ios-download"></span>-->
+    <!--</div>-->
+    <!--<div class="fl h pt30">-->
+      <!--<p>扫一扫</p>-->
+      <!--<p>下载ThunderEMM客户端</p>-->
+    <!--</div>-->
+  <!--</div>-->
+</ng-container>
+<ng-container *ngIf="step === 2">
+  <div class="login-content">
+    <form nz-form [formGroup]="sendEmailForm" class="login-form">
+      <div nz-form-item nz-row class="login-title-row">
+        <div nz-col [nzSpan]="24" class="login-title">
+          密码重置
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="24" class="login-tip text-aux">
+          请填写您需要找回的帐号，稍后您的邮箱将会收到重置密码的邮件，请点击邮件中的链接进行密码重置。
+        </div>
+      </div>
+      <div nz-form-item class="mb10i">
+        <div class="login-input" id="forget-username-input" nz-form-control [nzValidateStatus]="getFormControl('username')">
+          <nz-input formControlName="username" [nzPlaceHolder]="'请输入帐户名'" [nzSize]="'large'">
+            <ng-template #prefix>
+              <i class="icon-allicon-70"></i>
+            </ng-template>
+          </nz-input>
+        </div>
+      </div>
+      <div nz-form-item nz-row class="mb10i">
+        <div class="login-input" nz-col [nzSpan]="16" nz-form-control
+             [nzValidateStatus]="getFormControl('vcode')">
+          <nz-input formControlName="vcode" [nzPlaceHolder]="'请输入验证码'" [nzSize]="'large'"
+                    (keyup.enter)="onClickSendEmail()">
+            <ng-template #prefix>
+              <i class="icon-allicon-69"></i>
+            </ng-template>
+          </nz-input>
+        </div>
+        <div class="" nz-col [nzSpan]="5">
+          <span class="login-validate-code">
+            <img [src]="vcodeUrl" alt="验证码" (click)="refreshVcode()" class="cp">
+          </span>
+        </div>
+        <div class="lh32" nz-col [nzSpan]="3">
+          <a class="login-validate-code-refresh" href="javascript: void(0);" (click)="refreshVcode()">换一张</a>
+        </div>
+      </div>
+      <div nz-form-item class="mb10i">
+        <div nz-form-control>
+          <label nz-checkbox formControlName="agreeProtocol" class="fl">
+            <span class="f12i">我已经阅读并同意遵守<a href="javascript: void(0);">《云创远景网络协议》</a></span>
+          </label>
+        </div>
+      </div>
+      <div nz-form-item nz-row class="login-button-wrap">
+        <div nz-col [nzSpan]="24" nz-form-control>
+          <button class="login-button" type="button" nz-button [nzType]="'primary'" [nzSize]="'large'"
+                  (click)="onClickSendEmail()">发送邮件
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-container>
+<ng-container *ngIf="step === 3">
+  <div class="login-content pt60i">
+    <div nz-row class="pb40">
+      <div nz-col [nzSpan]="24">
+        <div class="login-img-right"></div>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzSpan]="24" class="text-aux lh32">
+        邮件已发送到邮箱，请查收
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzSpan]="24" class="lh32">
+        <span class="text-primary-static">{{sendEmailForm.controls['username'].value}}</span>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzSpan]="24" class="text-aux lh32">
+        请在24小时内点击邮件链接完成密码重置
+      </div>
+    </div>
+    <div nz-row class="login-button-wrap">
+      <div nz-col [nzSpan]="24">
+        <button class="login-button" nz-button [nzType]="'primary'" [nzSize]="'large'"
+                (click)="switchLogin()">确定
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>

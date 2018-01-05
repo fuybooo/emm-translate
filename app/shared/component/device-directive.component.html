@@ -1,0 +1,42 @@
+<nz-dropdown class="ml7">
+  <button nz-button nz-dropdown appPermission="1"><span>{{'more_operate' | translate}}</span><i class="anticon anticon-down"></i></button>
+  <ul nz-menu>
+    <li nz-menu-item *ngFor="let item of moreOperators" class="li-menu-item" [class.li-division]="item.isDivision">
+      <a *ngIf="!item.isDivision" href="javascript:void(0);" (click)="sendCommand(item, title, content, footer)">
+        <i class="mr5" [ngClass]="item.cls"></i>{{item.name}}<i *ngIf="item.suffix" [ngClass]="item.suffix" class="ml30" [title]="item.title"></i>
+      </a>
+    </li>
+  </ul>
+</nz-dropdown>
+<ng-template #title>
+  <span>解锁密码</span>
+</ng-template>
+<ng-template #content>
+  <div>
+    <form nz-form [formGroup]="form">
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label nz-form-item-required>解锁密码</label>
+        </div>
+        <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('password')">
+          <input class="w" formControlName="password" nz-input placeholder="请输入解锁密码"
+                 [nzSize]="'large'" (keyup.enter)="handleOk()">
+          <div nz-form-explain *ngIf="getFormControl('password').dirty&&getFormControl('password').hasError('required')">
+            请输入解锁密码！
+          </div>
+          <div nz-form-explain *ngIf="getFormControl('password').dirty&&getFormControl('password').hasError('specialCharacter')">
+            解锁密码只能是6位数字！
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div>
+    <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk()"
+            [disabled]="!form.valid">
+      保存
+    </button>
+  </div>
+</ng-template>

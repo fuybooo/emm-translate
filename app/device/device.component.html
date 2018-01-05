@@ -1,0 +1,199 @@
+<div>
+  <div class="summary-panel" nz-row>
+    <div nz-col [nzSpan]="6">
+      <ul class="panel mr10">
+        <li class="panel-title" (click)="changePanelState('status')"><!-- 状态 -->{{'state_panel' | translate}}</li>
+        <li class="panel-item" (click)="changePanelState('status', 'logged')" [class.active]="devicePanel.status.logged.isActive">
+          <span class="panel-desc-box">
+            <span class="icon-allicon-31 mr12">
+              <span class="path1"></span><span class="path2"></span>
+            </span>{{'login' | translate}}
+          </span>
+          <span class="panel-desc-value">{{devicePanel.status.logged.number}}</span>
+        </li>
+        <li class="panel-item" (click)="changePanelState('status', 'logout')" [class.active]="devicePanel.status.logout.isActive">
+          <span class="panel-desc-box">
+            <span class="icon-allicon-32 mr12">
+              <span class="path1"></span><span class="path2"></span>
+            </span>{{'logout' | translate}}
+          </span>
+          <span class="panel-desc-value">{{devicePanel.status.logout.number}}</span>
+        </li>
+        <li class="panel-item" (click)="changePanelState('status', 'unactivated')" [class.active]="devicePanel.status.unactivated.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-33 mr12"></i>{{'unactivated' | translate}}
+          </span>
+          <span class="panel-desc-value">{{devicePanel.status.unactivated.number}}</span>
+        </li>
+        <li class="panel-item" (click)="changePanelState('status', 'recovery')" [class.active]="devicePanel.status.recovery.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-34 mr12"></i>{{'recovery' | translate}}
+          </span>
+          <span class="panel-desc-value">{{devicePanel.status.recovery.number}}</span>
+        </li>
+      </ul>
+    </div>
+    <div nz-col [nzSpan]="6">
+      <ul class="panel m010">
+        <li class="panel-title" (click)="changePanelState('security')">{{'security_panel' | translate}}</li>
+        <li class="panel-item panel-item-2" (click)="changePanelState('security', 'locked')" [class.active]="devicePanel.security.locked.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-35 mr12"></i>{{'locked' | translate}}
+          </span>
+          <span class="panel-desc-value">{{devicePanel.security.locked.number}}</span>
+        </li>
+        <li class="panel-item panel-item-2" (click)="changePanelState('security', 'breakout')" [class.active]="devicePanel.security.breakout.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-36 mr12"></i>{{'root_breakout' | translate}}
+          </span>
+          <span class="panel-desc-value">{{devicePanel.security.breakout.number}}</span>
+        </li>
+      </ul>
+    </div>
+    <div nz-col [nzSpan]="6">
+      <ul class="panel m010">
+        <li class="panel-title" (click)="changePanelState('system')">{{'system_panel' | translate}}</li>
+        <li class="panel-item" (click)="changePanelState('system', 'Android')" [class.active]="devicePanel.system.Android.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-37 mr12"></i>Android
+          </span>
+          <span class="panel-desc-value">{{devicePanel.system.Android.number}}</span>
+        </li>
+        <li class="panel-item" (click)="changePanelState('system', 'iOS')" [class.active]="devicePanel.system.iOS.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-38 mr12"></i>iOS
+          </span>
+          <span class="panel-desc-value">{{devicePanel.system.iOS.number}}</span>
+        </li>
+        <li class="panel-item" (click)="changePanelState('system', 'Windows')" [class.active]="devicePanel.system.Windows.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-39 mr12"></i>Windows
+          </span>
+          <span class="panel-desc-value">{{devicePanel.system.Windows.number}}</span>
+        </li>
+        <li class="panel-item" (click)="changePanelState('system', 'macOS')" [class.active]="devicePanel.system.macOS.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-40 mr12"></i>macOS
+          </span>
+          <span class="panel-desc-value">{{devicePanel.system.macOS.number}}</span>
+        </li>
+      </ul>
+    </div>
+    <div nz-col [nzSpan]="6">
+      <ul class="panel ml10">
+        <li class="panel-title" (click)="changePanelState('activity')">{{'activity_panel' | translate}}</li>
+          <li class="panel-item panel-item-2" (click)="changePanelState('activity', 'online')" [class.active]="devicePanel.activity.online.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-42 mr12"></i>{{'online' | translate}}
+          </span>
+          <span class="panel-desc-value">{{devicePanel.activity.online.number}}</span>
+        </li>
+        <li class="panel-item panel-item-2" (click)="changePanelState('activity', 'offline')" [class.active]="devicePanel.activity.offline.isActive">
+          <span class="panel-desc-box">
+            <i class="icon-allicon-41 mr12"></i>{{'offline' | translate}}
+          </span>
+          <span class="panel-desc-value">{{devicePanel.activity.offline.number}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="content-wrap-wrapper mt20 common-gray-bg">
+    <div class="search-wrap p16_20">
+      <div nz-row>
+        <div nz-col [nzSpan]="18">
+          <div nz-row>
+            <div nz-col [nzSpan]="8" class="search-col">
+              <nz-input [nzPlaceHolder]="'search_placeholder' | translate"
+                        [nzSize]="'default'" [(ngModel)]="searchWord"
+                        (ngModelChange)="changeSearchWord($event)"
+                        (keyup.enter)="doSearch()"
+              >
+                <ng-template #addOnAfter><i class="anticon anticon-search" (click)="doSearch()"></i></ng-template>
+              </nz-input>
+              <i class="anticon anticon-close-circle clearSearch" title="取消搜索" (click)="searchWord='';doSearch()" [class.dni]="searchWord==''"></i>
+            </div>
+            <div nz-col [nzSpan]="14">
+              <button nz-button [nzType]="'default'" (click)="popupDeviceTrail()" class="ml20">
+                <span><i class="icon-allicon-21 mr5 c-gray"></i>{{'device_place' | translate}}</span>
+              </button>
+              <button nz-button [nzType]="'default'" (click)="popupMoveTo()" appPermission="1">
+                <span><i class="icon-allicon-26 mr5 c-gray"></i>{{'move' | translate}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div nz-col class=" tar" [nzSpan]="6">
+          <label>{{'brand' | translate}}</label>
+          <nz-select class="w150 ml10"
+                     [nzPlaceHolder]="'please_select_brand' | translate"
+                     [(ngModel)]="selectedBrand"
+                     (nzOpenChange)="changeBrand($event)">
+            <nz-option
+              *ngFor="let option of brandOptions"
+              [nzLabel]="option.brand"
+              [nzValue]="option.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="operate-btn-group">
+      <div nz-row>
+        <div nz-col class="operate-left-side p16_20" [nzSpan]="6">
+          <button nz-button [nzType]="'default'" (click)="popupAddGroup()" class="ml20" appPermission="1">
+            <span><i class="icon-allicon-20 mr5"></i>{{'add_group' | translate}}</span>
+          </button>
+          <button nz-button [nzType]="'default'" (click)="popupDeleteGroup()" appPermission="1">
+            <span><i class="icon-allicon-29 mr5"></i>{{'batch_delete' | translate}}</span>
+          </button>
+          <!--<button nz-button [nzType]="'default'">-->
+            <!--<span><i class="icon-allicon-27 mr5"></i></span>-->
+          <!--</button>-->
+        </div>
+        <div nz-col class="p16_20" [nzSpan]="18" >
+          <button nz-button [nzType]="'default'" (click)="popupAddDevice()" class="ml20" appPermission="1">
+            <span><i class="icon-allicon-20 mr5 "></i>{{'add_device' | translate}}</span>
+          </button>
+          <button nz-button [nzType]="'default'" (click)="popupDeleteDevice()" appPermission="1">
+            <span><i class="icon-allicon-26 mr5 "></i>{{'batch_remove' | translate}}</span>
+          </button>
+          <button nz-button [nzType]="'default'" (click)="popupImport()" appButtonClick appPermission="1">
+            <span><i class="icon-allicon-23 mr5 "></i>{{'batch_import' | translate}}</span>
+          </button>
+          <!--<button nz-button [nzType]="'default'" (click)="popupExport()">-->
+            <!--<span><i class="icon-allicon-15 mr5"></i><i class="anticon anticon-download mr5"></i>{{'batch_export' | translate}}</span>-->
+          <!--</button>-->
+          <!--<nz-dropdown class="ml7">-->
+            <!--<button nz-button nz-dropdown><span>{{'more_operate' | translate}}</span><i class="anticon anticon-down"></i></button>-->
+            <!--<ul nz-menu>-->
+              <!--<li nz-menu-item *ngFor="let item of moreOperators" class="li-menu-item" [class.li-division]="item.isDivision">-->
+                <!--<a *ngIf="!item.isDivision" href="javascript:void(0);" (click)="sendCommand(item, title, content, footer)">-->
+                  <!--<i class="mr5" [ngClass]="item.cls"></i>{{item.name}}<i *ngIf="item.suffix" [ngClass]="item.suffix" class="ml30"></i>-->
+                <!--</a>-->
+              <!--</li>-->
+            <!--</ul>-->
+          <!--</nz-dropdown>-->
+          <app-device-directive [selectedDeviceData]="selectedDeviceData"></app-device-directive>
+        </div>
+      </div>
+    </div>
+    <div class="list-content">
+      <div nz-row class="common-white-bg">
+        <div nz-col class="list-content-group pl10 common-gray-bg" [nzSpan]="6">
+          <app-device-group
+            [params]="deviceGroupParams"
+            (deviceGroupCheckData)="onChangeDeviceGroupCheckData($event)"
+            (deleteGroupEvent)="onChangeDeleteGroupEvent($event)"
+            (specialIsCheckedEvent)="onChangeSpecialIsCheckedEvent($event)"
+          ></app-device-group>
+        </div>
+        <div nz-col class="list-content-list" [nzSpan]="8">
+          <app-device-list [params]="deviceParams" (deviceDataEmitter)="onChangeDeviceCheckData($event)"></app-device-list>
+        </div>
+        <div nz-col class="list-content-detail" [nzSpan]="10">
+          <app-device-detail></app-device-detail>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

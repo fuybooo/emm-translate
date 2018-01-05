@@ -1,0 +1,17 @@
+<nz-tabset [nzSelectedIndex]="policyService.currentSystem === 'Android' ? 0 : 1"
+  (nzSelectedIndexChange)="changeIndex($event)">
+  <nz-tab (nzClick)="onClickTab('Android')" [nzDisabled]="disableTab">
+    <ng-template #nzTabHeading>
+      Android{{policyModuleName}}
+    </ng-template>
+    <!--<app-policy-content *ngIf="policyService.currentSystem === 'Android'" [system]="'Android'" [policyType]="policyType"></app-policy-content>-->
+    <app-policy-content [system]="'Android'" [policyType]="policyType"></app-policy-content>
+  </nz-tab>
+  <nz-tab (nzClick)="onClickTab('iOS')" *ngIf="private_version!==1" [nzDisabled]="disableTab">
+    <ng-template #nzTabHeading>
+      iOS{{policyModuleName}}
+    </ng-template>
+    <!--<app-policy-content *ngIf="policyService.currentSystem === 'iOS'" [system]="'iOS'" [policyType]="policyType"></app-policy-content>-->
+    <app-policy-content [system]="'iOS'" [policyType]="policyType"></app-policy-content>
+  </nz-tab>
+</nz-tabset>

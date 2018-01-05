@@ -1,0 +1,210 @@
+<div class="setting-table ">
+  <div class="content-wrap-wrapper hi">
+    <div nz-row [nzGutter]="0" class="search-wrap common-box">
+      <div nz-col [nzSpan]="16">
+        <button nz-button [nzType]="'default'" (click)="newTrusteeship()" appPermission="1">
+          <span><i class="icon-allicon-20 mr5 f12"></i>添加Connector</span>
+        </button>
+        <button nz-button [nzType]="'default'" class="ml10" (click)="deleteConnector()" appPermission="1">
+          <span><i class="icon-allicon-29 mr5 f12"></i>删除</span>
+        </button>
+      </div>
+      <div nz-col [nzSpan]="8" class="search-col">
+        <app-custom-search (searchChange)="searchChange($event)" (doSearch)="doSearch($event)"></app-custom-search>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="0" class="push-content-wrap">
+      <div nz-col [nzSpan]="4" class="content-left-wrap common-gray-bg">
+        <ul>
+          <li>
+            <a [class.active]="connectorState === 'all'" (click)="ConnectorStateChange('all')" href="javascript:void(0);">
+              全部
+              <span class="fr">{{connectNumber.all}}</span>
+            </a>
+          </li>
+          <li>
+            <a [class.active]="connectorState === '0'" (click)="ConnectorStateChange('0')" href="javascript:void(0);">
+              已连接
+              <span class="fr">{{connectNumber['0']}}</span>
+            </a>
+          </li>
+          <li>
+            <a [class.active]="connectorState === '1'" (click)="ConnectorStateChange('1')" href="javascript:void(0);">
+              未连接
+              <span class="fr">{{connectNumber['1']}}</span>
+            </a>
+          </li>
+          <li>
+            <a [class.active]="connectorState === '2'" (click)="ConnectorStateChange('2')" href="javascript:void(0);">
+              连接断开
+              <span class="fr">{{connectNumber['2']}}</span>
+            </a>
+          </li>
+          <li>
+            <a [class.active]="connectorState === '3'" (click)="ConnectorStateChange('3')" href="javascript:void(0);">
+              连接失败
+              <span class="fr">{{connectNumber['3']}}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div nz-col [nzSpan]="9" class="push-table-content common-border-left">
+        <div class="content-table-thead ti6 setting-trusteeship-table-tr">
+          <div>
+            <!--<label nz-checkbox [(ngModel)]="allIsChecked" (ngModelChange)="refreshStatus($event)"></label>-->
+            <label nz-checkbox [(ngModel)]="trusteeship.allChecked" (ngModelChange)="trusteeship.checkedAll($event)"
+                   [nzIndeterminate]="trusteeship.indeterminate"></label>
+          </div>
+          <div class="ti15">序号</div>
+          <div>名称</div>
+        </div>
+        <div class="cb"></div>
+        <div class="content-center-wrap common-border-left table-td-height" appCustomScrollbar [options]="options">
+          <nz-table class="content-table"
+                    #nzTable
+                    [nzAjaxData]="trusteeship.list"
+                    [nzLoading]="trusteeship.isLoading"
+                    [nzIsPagination]="false">
+            <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of nzTable.data; index as i;"
+                [class.active]="trusteeship?.itemIsActive?.id === data.id"
+                (click)="trusteeship.active(data)"
+                class="setting-trusteeship-table-tr cp">
+              <td nz-td [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="data.checked"
+                (ngModelChange)="trusteeship.checked($event,data)">
+                </label>
+              </td>
+              <td nz-td>
+                connector{{i+1}}
+              </td>
+              <td nz-td>
+                <a href="javascript:void(0);">{{data.name}}</a><br>
+                <span class="td-ellipsis w90" title="{{data.description}}">{{data.description}}</span>
+              </td>
+              <td>
+                <!--<button class="nb" appPermission="1">-->
+                  <!--<i class="icon-allicon-110 mr12" appPermission="1"></i>-->
+                <!--</button>-->
+              </td>
+            </tr>
+            <!--loading-->
+            <tr nz-tbody-tr *ngIf="false">
+              <td nz-td [attr.colspan]="6">
+                <nz-spin [nzTip]="'正在读取数据...'">
+                  <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                  </nz-alert>
+                </nz-spin>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+      <div nz-col [nzSpan]="11">
+        <div class="content-table-thead push-table-thead">
+          <div class="pl20i">{{trusteeship.list.indexOf(trusteeship.itemIsActive)>-1 ? 'connector' + (trusteeship.list.indexOf(trusteeship.itemIsActive) + 1) : '详情'}}</div>
+          <div class="tar">
+            <button *ngIf="edit" nz-button [nzType]="'primary'" (click)="submit()" [disabled]="!form.valid" appPermission="1">保存</button>
+            <button *ngIf="edit" nz-button class="ml20" (click)="cancel()" appPermission="1">取消</button>
+            <button class="nb fr" (click)="edit=true;" appPermission="1">
+              <i *ngIf="!edit" title="编辑" class="icon-allicon-18 anticon-click mr5 f20 edit-hover-skyblue" appPermission="1"></i>
+            </button>
+          </div>
+        </div>
+        <div class="cb"></div>
+        <div class="p20 content-right-wrap common-white-bg f12" appCustomScrollbar>
+          <form *ngIf="trusteeship.list.indexOf(trusteeship.itemIsActive)>-1" nz-form  [formGroup]="form">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label>名称</label>
+              </div>
+              <div  nz-col [nzSpan]="18" class="lh32 f16 ml10 f12">
+                {{trusteeship.itemIsActive.name}}
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label>描述</label>
+              </div>
+              <div *ngIf="edit" nz-form-control [nzValidateStatus]="getFormControl('description')" nz-col [nzSpan]="18">
+                <nz-input formControlName="description" [nzRows]="4" [nzType]="'textarea'"
+                          [nzPlaceHolder]="'请输入Connector描述'">
+                </nz-input>
+
+                <div nz-form-explain *ngIf="getFormControl('description')?.dirty&&getFormControl('description')?.hasError('maxlength')">
+                  Connector描述不能超过150个字
+                </div>
+                <div nz-form-explain *ngIf="getFormControl('description')?.dirty&&getFormControl('description')?.hasError('required')">
+                  Connector描述不能为空
+                </div>
+              </div>
+              <div *ngIf="!edit"  nz-col [nzSpan]="18" class="lh32 wba ml10 f14">
+                {{getFormControl('description').value}}
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label>状态</label>
+              </div>
+              <div  nz-col [nzSpan]="18" class="lh32 ml10 f14"
+                   [innerHTML]="trusteeship.itemIsActive.state | settingConnectorState"></div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label>PublicKey</label>
+              </div>
+              <div nz-col [nzSpan]="18" class="lh32 wba ml10 f14">
+                {{trusteeship.itemIsActive.token}}
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label>IP地址</label>
+              </div>
+              <div  nz-col [nzSpan]="18" class="lh32 ml10 f14">
+                {{trusteeship.itemIsActive.ip}}
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label>端口号</label>
+              </div>
+              <div  nz-col [nzSpan]="18" class="lh32 ml10 f14">
+                {{trusteeship.itemIsActive.port}}
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label>连接目录</label>
+              </div>
+              <div nz-col [nzSpan]="18" class="max-h100i" appCustomScrollbar>
+                <nz-table #nzTableDir [nzBordered]="true" class="connector-table-dir"
+                          [nzDataSource]="dirList"
+                          [nzLoading]="dirLoading"
+                          [nzIsPagination]="false">
+                  <thead nz-thead>
+                    <tr>
+                      <th nz-th><span>AD/LDAP</span></th>
+                      <th nz-th><span>Base DN</span></th>
+                    </tr>
+                  </thead>
+                  <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTableDir.data; index as i;">
+                      <td nz-td>
+                        {{data.url}}
+                      </td>
+                      <td nz-td>
+                        {{data.baseDn}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </nz-table>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

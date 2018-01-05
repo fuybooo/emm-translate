@@ -1,0 +1,79 @@
+<!--经典品字结构-->
+<div class="content-wrap">
+  <div nz-row [nzGutter]="10" class="search-wrap common-box common-reset-margin">
+    <div nz-col [nzSpan]="11" class="w500i p0i">
+      <nz-radio-group [(ngModel)]="dateType" class="btn-group-bg">
+        <label nz-radio-button [nzValue]="1" (click)="changeDate(1)"><span>今天</span></label>
+        <label nz-radio-button [nzValue]="2" (click)="changeDate(2)"><span>近7天</span></label>
+        <label nz-radio-button [nzValue]="3" (click)="changeDate(3)"><span>近30天</span></label>
+      </nz-radio-group>
+      <nz-datepicker
+        class="ml7 w130"
+        (ngModelChange)="startDate=$event;startValueChange()"
+        [ngModel]="startDate"
+        [nzDisabledDate]="disabledStartDate"
+        [nzFormat]="'YYYY-MM-DD'"
+        [nzPlaceHolder]="'开始日期'"></nz-datepicker>
+      <nz-datepicker
+        class="ml7 w130"
+        (ngModelChange)="endDate=$event;endValueChange()"
+        [ngModel]="endDate"
+        [nzDisabledDate]="disabledEndDate"
+        [nzFormat]="'YYYY-MM-DD'"
+        [nzPlaceHolder]="'结束日期'"></nz-datepicker>
+    </div>
+    <div nz-col class="tar fli">
+      <button nz-button [nzType]="'default'" (click)="exportData()" appButtonClick>
+        <span><i class="icon-allicon-23 mr5"></i>导出日志</span>
+      </button>
+    </div>
+    <div nz-col [nzSpan]="6" class="search-col fri p0i">
+      <nz-input [nzPlaceHolder]="'search_placeholder' | translate" [nzSize]="'default'" [(ngModel)]="searchWord"
+                (keyup.enter)="doSearch()"
+                (ngModelChange)="changeSearchWord($event)">
+        <ng-template #addOnAfter><i class="anticon anticon-search" (click)="doSearch()"></i></ng-template>
+      </nz-input>
+      <i class="anticon anticon-close-circle clearSearch" (click)="searchWord='';doSearch()"
+         [class.dni]="searchWord===''"></i>
+    </div>
+    <!--<div nz-col [nzSpan]="2">-->
+    <!--<button nz-button [nzType]="'default'">-->
+    <!--<span>清空</span>-->
+    <!--</button>-->
+    <!--</div>-->
+  </div>
+  <div nz-row [nzGutter]="0" class="push-content-wrap">
+    <div nz-col [nzSpan]="4" class="content-sider list-wrap common-gray-bg">
+      <ul>
+        <li *ngFor="let item of typeList" (click)="changeType(item.name)"><a href="javascript:void(0);" [class.active]="type === item.name">{{item.label}}</a></li>
+      </ul>
+    </div>
+    <div nz-col [nzSpan]="20" class="dashboard-table-content common-border-left">
+      <div class="content-table-thead log-table-tr">
+        <div class="common-none-border-left ti12">管理员</div>
+        <div>时间</div>
+        <div>动作</div>
+        <div>动作接收者</div>
+        <div>IP地址</div>
+      </div>
+      <div class="cb"></div>
+      <div class="content-table-wrap table-td-height44" appCustomScrollbar [options]="options">
+        <nz-table class="content-table"
+                  #nzTable
+                  [nzAjaxData]="data"
+                  [nzIsPagination]="false"
+                  [nzLoading]="isLoading">
+          <tbody nz-tbody>
+          <tr nz-tbody-tr *ngFor="let data of nzTable.data" class="log-table-tr">
+            <td nz-td><a>{{data.adminName}}</a></td>
+            <td nz-td class="text-aux">{{data.date}}</td>
+            <td nz-td class="text-aux">{{data.action}}</td>
+            <td nz-td class="text-aux">{{data.receiver}}</td>
+            <td nz-td class="text-aux">{{data.ipAddr}}</td>
+          </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+  </div>
+</div>

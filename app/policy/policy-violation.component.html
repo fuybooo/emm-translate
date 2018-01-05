@@ -1,0 +1,61 @@
+<div class="content-wrap">
+  <div nz-row class="common-box ti12">
+    <div nz-col [nzSpan]="12">
+      违规策略
+    </div>
+    <div nz-col [nzSpan]="12" class="tar" *ngIf="!isView">
+      <button nz-button [nzType]="'default'" (click)="isView = !isView; onClickSave();" appPermission>
+        <span>保存</span>
+      </button>
+      <button nz-button [nzType]="'default'" (click)="onCancel()" appPermission>
+        <span>取消</span>
+      </button>
+    </div>
+    <div nz-col [nzSpan]="12" class="tar" *ngIf="isView">
+      <button nz-button [nzType]="'default'" (click)="isView = !isView" appPermission>
+        <span>编辑</span>
+      </button>
+    </div>
+  </div>
+  <div class="container-wrap p0i common-white-bg ti12">
+    <div nz-row>
+      <!--左侧列表-->
+      <div nz-col [nzSpan]="6">
+        <div class="content-box-wrap list-wrap common-gray-bg">
+          <ul>
+            <li *ngFor="let item of data" (click)="onClickViolationType(item)">
+              <a href="javascript:void(0);" [class.active]="item.isActive">{{item.label}}</a>
+            </li>
+          </ul>
+          <!--<nz-table class="content-table "-->
+                    <!--#nzTable-->
+                    <!--[nzAjaxData]="data"-->
+                    <!--[nzIsPagination]="false">-->
+            <!--<tbody nz-tbody>-->
+            <!--<tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"-->
+                <!--class="gray-table"-->
+                <!--(click)="onClickViolationType(data)">-->
+              <!--<td nz-td [class.active]="data.isActive">-->
+                <!--&lt;!&ndash;<label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="data.value">&ndash;&gt;-->
+                  <!--&lt;!&ndash;<span class="text-primary">{{data.label}}</span>&ndash;&gt;-->
+                <!--&lt;!&ndash;</label>&ndash;&gt;-->
+                <!--<span class="text-primary">{{data.label}}</span>-->
+              <!--</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+          <!--</nz-table>-->
+        </div>
+      </div>
+      <!--右侧内容-->
+      <ng-container *ngFor="let item of data">
+        <ng-container *ngIf="sourceData">
+          <app-policy-violation-content [hidden]="item.field !== currentViolation?.field"
+                                        [currentViolation]="item"
+                                        [isView]="isView"
+                                        [currentViolationContent]="sourceData[item.field]"
+          ></app-policy-violation-content>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="day-select-wrap">
+  <nz-input [nzPlaceHolder]="'请选择每月的日期'" [nzDisabled]="isDisabled" [(ngModel)]="selectedDay"
+            [nzReadonly]="true" (click)="onClickDaySelect();"></nz-input>
+  <div class="day-select-div" [hidden]="selectBoxHidden">
+    <ul class="day-select-ul">
+      <li class="day-select-li" *ngFor="let item of days" [class.active]="item.isChecked"
+        (click)="onClickDay(item)">{{item.day}}</li>
+    </ul>
+    <div class="day-select-btn-wrap">
+      <button nz-button [nzSize]="'small'" [nzType]="'primary'" (click)="selectBoxHidden = true;">确定</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,405 @@
+<nz-tabset [nzSelectedIndex]="nzSelectedIndexSystem" [nzAnimated]="false">
+  <nz-tab (nzSelect)="nzSelectSystem('android')">
+    <ng-template #nzTabHeading>
+      <i class="anticon anticon-android"></i>
+      Android应用
+    </ng-template>
+    <div class="content-wrap-wrapper common-gray-bg">
+      <div nz-row class="search-wrap common-box pl20i pri20i">
+        <div nz-col [nzSpan]="5" class="search-col">
+          <app-custom-search (searchChange)="searchChange($event)" (doSearch)="doSearch($event)"></app-custom-search>
+        </div>
+        <div nz-col [nzSpan]="13">
+          <button nz-button [nzType]="'default'" class="ml20" (click)="uploadApplication()" appPermission>
+            <span><i class="icon-allicon-55 f14 mr5"></i>上传应用</span>
+          </button>
+          <button nz-button [nzType]="'default'" (click)="positionAdjustment()" appPermission>
+            <span><i class="icon-allicon-75 f14 mr5"></i>位置调整</span>
+          </button>
+          <nz-dropdown class="ml7">
+            <button nz-button nz-dropdown appPermission><span><i class="icon-allicon-74 f14 mr5"></i>排序</span><i class="anticon anticon-down"></i></button>
+            <ul nz-menu>
+              <li nz-menu-item>
+                <a href="javascript:void(0);" (click)="applicationSort('name')">名称</a>
+              </li>
+              <li nz-menu-item>
+                <a href="javascript:void(0);" (click)="applicationSort('uploadTime')">上传时间</a>
+              </li>
+              <li nz-menu-item>
+                <a href="javascript:void(0);" (click)="applicationSort('downTime')">下载次数</a>
+              </li>
+            </ul>
+          </nz-dropdown>
+        </div>
+        <div nz-col class="tar" [nzSpan]="6">
+          <label>状态</label>
+          <nz-select class="w150 ml10"
+                     [nzPlaceHolder]="'全部'"
+                     [ngModel]="0"
+                     (ngModelChange)="applicationPushStateChange($event)">
+            <nz-option
+              [nzLabel]="'全部'"
+              [nzValue]="0">
+            </nz-option>
+            <nz-option
+              [nzLabel]="'上架'"
+              [nzValue]="1">
+            </nz-option>
+            <nz-option
+              [nzLabel]="'下架'"
+              [nzValue]="2">
+            </nz-option>
+            <!--<nz-option-->
+              <!--*ngFor="let option of brandOptions"-->
+              <!--[nzLabel]="option.brand"-->
+              <!--[nzValue]="option.value">-->
+            <!--</nz-option>-->
+          </nz-select>
+        </div>
+      </div>
+      <div nz-row class="application-content-wrap common-gray-bg">
+        <div nz-col [nzSpan]="5" class="application-classification">
+          <div class="head ml10">
+            <h2 class="dib">应用分类</h2>
+            <button class="nb fr" (click)="applicationClassAdd()" appPermission>
+               <i class="icon-allicon-20 dib f20 mr20" appPermission></i>
+            </button>
+          </div>
+          <div class="body ti8">
+            <div class="table-wrap" appCustomScrollbar>
+              <nz-table #nzTableApplicationClass
+                        [nzAjaxData]="applicationClassList.list"
+                        [nzLoading]="applicationClassList.isLoading"
+                        [nzIsPagination]="false">
+                <tbody nz-tbody>
+                <tr class="cp icon-hover-show mr20" nz-tbody-tr *ngFor="let data of nzTableApplicationClass.data"
+                    (click)="applicationClassList.active(data)"
+                    [class.active]="applicationClassList?.itemIsActive?.id === data.id">
+                  <td class="bbni" nz-td>
+                    <a href="javascript:void(0);" class="ml10 td-ellipsis w90" title="{{data.name}}">{{data.name}}</a>
+                    <button class="nb fr" (click)="deleteApplicationClass(data)" appPermission>
+                      <i class="icon-allicon-30 anticon-click w16 icon-hover delect-hover-red" title="删除分类" appPermission></i>
+                    </button>
+                    <button class="nb fr"  (click)="editApplicationClass(data)" appPermission>
+                      <i class="icon-allicon-18 anticon-click mr5 w16 icon-hover edit-hover-skyblue" title="编辑分类" appPermission></i>
+                    </button>
+                  </td>
+                  <td class="bbni tar pri20i" nz-td>
+                    {{data.size}}
+                  </td>
+                </tr>
+                <tr nz-tbody-tr *ngIf="applicationClassList.list.length <applicationClassList.param.total">
+                  <td nz-td [attr.colspan]="4">
+                    <nz-spin [nzTip]="'正在读取数据...'">
+                      <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                      </nz-alert>
+                    </nz-spin>
+                  </td>
+                </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+        </div>
+        <div nz-col [nzSpan]="19" class="application-show-wrap">
+          <div nz-row class="show-head">
+            <div nz-col [nzSpan]="12" class="cp" [class.active]="publicationType === 'normalRelease'"
+                 (click)="publicationTypeChange('normalRelease')">正常发布</div>
+            <div nz-col [nzSpan]="12" class="cp" [class.active]="publicationType === 'grayRelease'"
+                 (click)="publicationTypeChange('grayRelease')">灰度发布</div>
+          </div>
+          <!-- 正常发布 -->
+          <div *ngIf="publicationType === 'normalRelease'" class="show-body common-white-bg">
+            <div *ngIf="applicationList.isLoading" class="w tac pt_20">
+              <nz-spin [nzSize]="'large'"></nz-spin>
+            </div>
+            <div *ngIf="!applicationList.isLoading" class="h600" appCustomScrollbar
+                 [options]="applicationListScrollbarOptions">
+              <nz-card *ngFor="let item of applicationList.list"
+                       (click)="applicationList.active(item)"
+                       [class.active]="applicationList?.itemIsActive?.id === item.id">
+                <ng-template #body>
+                  <div class="custom-image">
+                    <img #img class="img" src="{{item?.iconUrl}}"
+                     (error)="img.src = ''">
+                    <nz-dropdown class="ml7 pa">
+                      <button nz-button nz-dropdown appPermission><i class="anticon anticon-down" appPermission></i></button>
+                      <ul nz-menu class="select-application">
+                        <li nz-menu-item>
+                          <a href="javascript:void(0);" (click)="editApp(item)"><i class="icon-allicon-18 mr5 f12 edit-hover-skyblue"></i>编辑</a>
+                        </li>
+                        <li nz-menu-item>
+                          <a href="javascript:void(0);" (click)="deleteApp(item)"><i class="icon-allicon-30 mr5 f12 delect-hover-red"></i>删除</a>
+                        </li>
+                      </ul>
+                    </nz-dropdown>
+                  </div>
+                  <div class="custom-card">
+                    <h3 title="{{item.name}}">
+                      <a href="javascript:void(0);" (click)="toDetail(item)">{{item.name}}</a>
+                    </h3>
+                    <p title="{{item.description}}">{{item.description}}</p>
+                    <div class="state f14">
+                      <span *ngIf="item.appUpOrDown === 0" class="down">下架</span>
+                      <span *ngIf="item.appUpOrDown === 1" class="up">上架</span>
+                      <button *ngIf="item.appUpOrDown === 1" class="ml10" nz-button (click)="appOnline('down', item)" appPermission>下架</button>
+                      <button *ngIf="item.appUpOrDown === 0" class="ml10" nz-button (click)="appOnline('up', item)" appPermission>上架</button>
+                    </div>
+                  </div>
+                </ng-template>
+              </nz-card>
+              <div *ngIf="applicationList.list.length < applicationList.param.total " class="w tac pt20">
+                <nz-spin [nzSize]="'large'"></nz-spin>
+              </div>
+            </div>
+          </div>
+          <!-- 灰度发布 -->
+          <div *ngIf="publicationType === 'grayRelease'" class="show-body common-white-bg">
+            <div *ngIf="applicationList.isLoading" class="w tac pt_20">
+              <nz-spin [nzSize]="'large'"></nz-spin>
+            </div>
+            <div *ngIf="!applicationList.isLoading" class="h600" appCustomScrollbar
+                 [options]="applicationListScrollbarOptions">
+              <nz-card *ngFor="let item of applicationList.list"
+                     (click)="applicationList.active(item)"
+                     [class.active]="applicationList?.itemIsActive?.id === item.id">
+              <ng-template #body>
+                <div class="custom-image">
+                  <img #img alt="example" width="100%" src="{{item?.iconUrl}}"
+                       (error)="img.src = ''"/>
+                  <nz-dropdown class="ml7 pa">
+                    <button nz-button nz-dropdown appPermission><i class="anticon anticon-down"></i></button>
+                    <ul nz-menu class="select-application">
+                      <li nz-menu-item>
+                        <a href="javascript:void(0);" (click)="editApp(item)"><i class="icon-allicon-18 mr5 f12 edit-hover-skyblue" appPermission></i>编辑</a>
+                      </li>
+                      <li nz-menu-item>
+                        <a href="javascript:void(0);" (click)="editAppPush(item)"><i class="icon-allicon-76 mr5 f12" appPermission></i>可见范围</a>
+                      </li>
+                      <li nz-menu-item>
+                        <a href="javascript:void(0);" (click)="deleteApp(item)"><i class="icon-allicon-30 mr5 f12 delect-hover-red" appPermission></i>删除</a>
+                      </li>
+                    </ul>
+                  </nz-dropdown>
+                </div>
+                <div class="custom-card">
+                  <h3 title="{{item.name}}">
+                    <a href="javascript:void(0);" (click)="toDetail(item)">{{item.name}}</a>
+                  </h3>
+                  <p title="{{item.description}}">{{item.description}}</p>
+                  <div class="state f14">
+                    <span *ngIf="item.appUpOrDown === 0" class="down">下架</span>
+                    <span *ngIf="item.appUpOrDown === 1" class="up">上架</span>
+                    <button *ngIf="item.appUpOrDown === 1" class="ml10" nz-button (click)="appOnline('down', item)" appPermission>下架</button>
+                    <button *ngIf="item.appUpOrDown === 0" class="ml10" nz-button (click)="appOnline('up', item)" appPermission>上架</button>
+                  </div>
+                </div>
+              </ng-template>
+            </nz-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nz-tab>
+  <!-- todo: date: 2017-12-15 此版本暂时影藏 -->
+  <nz-tab *ngIf="private_version!==1" (nzSelect)="nzSelectSystem('iOS')">
+    <ng-template #nzTabHeading>
+      <i class="anticon anticon-apple"></i>
+      iOS应用
+    </ng-template>
+    <div class="content-wrap-wrapper">
+      <div nz-row class="search-wrap common-box pl20i pri20i">
+        <div nz-col [nzSpan]="5" class="search-col">
+          <app-custom-search (searchChange)="searchChange($event)" (doSearch)="doSearch($event)"></app-custom-search>
+        </div>
+        <div nz-col [nzSpan]="13">
+          <button nz-button [nzType]="'default'" class="ml20" (click)="uploadApplication()" appPermission>
+            <span><i class="icon-allicon-55 f14 mr5" appPermission></i>上传应用</span>
+          </button>
+          <button nz-button [nzType]="'default'" (click)="positionAdjustment()" appPermission>
+            <span><i class="icon-allicon-75 f14 mr5" appPermission></i>位置调整</span>
+          </button>
+          <nz-dropdown class="ml7">
+            <button nz-button nz-dropdown appPermission><span><i class="icon-allicon-74 f14 mr5"></i>排序</span><i class="anticon anticon-down"></i></button>
+            <ul nz-menu>
+              <li nz-menu-item>
+                <a href="javascript:void(0);" (click)="applicationSort('name')">名称</a>
+              </li>
+              <li nz-menu-item>
+                <a href="javascript:void(0);" (click)="applicationSort('uploadTime')">上传时间</a>
+              </li>
+              <li nz-menu-item>
+                <a href="javascript:void(0);" (click)="applicationSort('downTime')">下载次数</a>
+              </li>
+            </ul>
+          </nz-dropdown>
+        </div>
+        <div nz-col class="tar" [nzSpan]="6">
+          <label>状态</label>
+          <nz-select class="w150 ml10"
+                     [nzPlaceHolder]="'全部'"
+                     [ngModel]="1"
+                     (ngModelChange)="applicationPushStateChange($event)">
+            <nz-option
+              [nzLabel]="'全部'"
+              [nzValue]="1">
+            </nz-option>
+            <nz-option
+              [nzLabel]="'已发布'"
+              [nzValue]="0">
+            </nz-option>
+            <!--<nz-option-->
+            <!--*ngFor="let option of brandOptions"-->
+            <!--[nzLabel]="option.brand"-->
+            <!--[nzValue]="option.value">-->
+            <!--</nz-option>-->
+          </nz-select>
+        </div>
+      </div>
+      <div nz-row class="application-content-wrap common-gray-bg">
+        <div nz-col [nzSpan]="5" class="application-classification">
+          <div class="head ml10">
+            <h2 class="dib">应用分类</h2>
+            <button class="nb fr" (click)="applicationClassAdd()" appPermission>
+                <i class="icon-allicon-20 dib f20 mr20" ></i>
+            </button>
+          </div>
+          <div class="body ti8">
+            <div class="table-wrap" appCustomScrollbar>
+              <nz-table #nzTableApplicationClass
+                        [nzAjaxData]="applicationClassList.list"
+                        [nzLoading]="applicationClassList.isLoading"
+                        [nzIsPagination]="false">
+                <tbody nz-tbody>
+                <tr class="cp icon-hover-show mr20" nz-tbody-tr *ngFor="let data of nzTableApplicationClass.data"
+                    (click)="applicationClassList.active(data)"
+                    [class.active]="applicationClassList?.itemIsActive?.id === data.id">
+                  <td class="bbni" nz-td>
+                    <a href="javascript:void(0);" class="ml10 td-ellipsis w90" title="{{data.name}}">{{data.name}}</a>
+                    <button class="nb fr" (click)="deleteApplicationClass(data)" appPermission>
+                      <i class="icon-allicon-30 anticon-click w16 icon-hover delect-hover-red" title="删除分类" appPermission></i>
+                    </button>
+                    <button class="nb fr"  (click)="editApplicationClass(data)" appPermission>
+                      <i class="icon-allicon-18 anticon-click mr5 w16 icon-hover edit-hover-skyblue" title="编辑分类" appPermission></i>
+                    </button>
+                  </td>
+                  <td class="bbni tar pri20i" nz-td>
+                    {{data.size}}
+                  </td>
+                </tr>
+                <tr nz-tbody-tr *ngIf="applicationClassList.list.length < applicationClassList.param.total">
+                  <td nz-td [attr.colspan]="4">
+                    <nz-spin [nzTip]="'正在读取数据...'">
+                      <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                      </nz-alert>
+                    </nz-spin>
+                  </td>
+                </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+        </div>
+        <div nz-col [nzSpan]="19" class="application-show-wrap common-white-bg">
+          <div nz-row class="show-head">
+            <div nz-col [nzSpan]="12" class="cp" [class.active]="publicationType === 'normalRelease'"
+                 (click)="publicationTypeChange('normalRelease')">正常发布</div>
+            <div nz-col [nzSpan]="12" class="cp" [class.active]="publicationType === 'grayRelease'"
+                 (click)="publicationTypeChange('grayRelease')">灰度发布</div>
+          </div>
+          <!-- 正常发布 -->
+          <div *ngIf="publicationType === 'normalRelease'" class="show-body">
+            <div *ngIf="applicationList.isLoading" class="w tac pt_20">
+              <nz-spin [nzSize]="'large'"></nz-spin>
+            </div>
+            <div *ngIf="!applicationList.isLoading" class="h600" appCustomScrollbar
+                 [options]="applicationListScrollbarOptions">
+              <nz-card *ngFor="let item of applicationList.list"
+                       (click)="applicationList.active(item)"
+                       [class.active]="applicationList?.itemIsActive?.id === item.id">
+                <ng-template #body>
+                  <div class="custom-image">
+                    <img #img alt=" " class="img" src="{{item?.iconUrl}}"
+                         (error)="img.src = ''">
+                    <nz-dropdown class="ml7 pa">
+                      <button nz-button nz-dropdown appPermission><i class="anticon anticon-down"></i></button>
+                      <ul nz-menu class="select-application">
+                        <li nz-menu-item>
+                          <a href="javascript:void(0);" (click)="editApp(item)"><i class="icon-allicon-18 mr5 f12 edit-hover-skyblue"></i>编辑</a>
+                        </li>
+                        <li nz-menu-item>
+                          <a href="javascript:void(0);" (click)="deleteApp(item)"><i class="icon-allicon-30 mr5 f12 delect-hover-red"></i>删除</a>
+                        </li>
+                      </ul>
+                    </nz-dropdown>
+                  </div>
+                  <div class="custom-card">
+                    <h3 title="{{item.name}}">
+                      <a href="javascript:void(0);" (click)="toDetail(item)">{{item.name}}</a>
+                    </h3>
+                    <p title="{{item.description}}">{{item.description}}</p>
+                    <div class="state f14">
+                      <span *ngIf="item.appUpOrDown === 0" class="down">下架</span>
+                      <span *ngIf="item.appUpOrDown === 1" class="up">上架</span>
+                      <button *ngIf="item.appUpOrDown === 1" class="ml10" nz-button (click)="appOnline('down', item)" appPermission>下架</button>
+                      <button *ngIf="item.appUpOrDown === 0" class="ml10" nz-button (click)="appOnline('up', item)" appPermission>上架</button>
+                    </div>
+                  </div>
+                </ng-template>
+              </nz-card>
+              <div *ngIf="applicationList.list.length < applicationList.param.total " class="w tac pt20">
+                <nz-spin [nzSize]="'large'"></nz-spin>
+              </div>
+            </div>
+          </div>
+          <!-- 灰度发布 -->
+          <div *ngIf="publicationType === 'grayRelease'" class="show-body">
+            <div *ngIf="applicationList.isLoading" class="w tac pt_20">
+              <nz-spin [nzSize]="'large'"></nz-spin>
+            </div>
+            <div *ngIf="!applicationList.isLoading" class="h600" appCustomScrollbar
+                 [options]="applicationListScrollbarOptions">
+              <nz-card *ngFor="let item of applicationList.list"
+                       (click)="applicationList.active(item)"
+                       [class.active]="applicationList?.itemIsActive?.id === item.id">
+                <ng-template #body>
+                  <div class="custom-image">
+                    <img #img alt="example" width="100%" src="{{item?.iconUrl}}"
+                         (error)="img.src = ''"/>
+                    <nz-dropdown class="ml7 pa">
+                      <button nz-button nz-dropdown appPermission><i class="anticon anticon-down"></i></button>
+                      <ul nz-menu class="select-application">
+                        <li nz-menu-item>
+                          <a href="javascript:void(0);" (click)="editApp(item)"><i class="icon-allicon-18 mr5 f12 edit-hover-skyblue"></i>编辑</a>
+                        </li>
+                        <li nz-menu-item>
+                          <a href="javascript:void(0);" (click)="editAppPush(item)"><i class="icon-allicon-76 mr5 f12"></i>可见范围</a>
+                        </li>
+                        <li nz-menu-item>
+                          <a href="javascript:void(0);" (click)="deleteApp(item)"><i class="icon-allicon-30 mr5 f12 delect-hover-red"></i>删除</a>
+                        </li>
+                      </ul>
+                    </nz-dropdown>
+                  </div>
+                  <div class="custom-card">
+                    <h3 title="{{item.name}}">
+                      <a href="javascript:void(0);" (click)="toDetail(item)">{{item.name}}</a>
+                    </h3>
+                    <p title="{{item.description}}">{{item.description}}</p>
+                    <div class="state f14">
+                      <span *ngIf="item.appUpOrDown === 0" class="down">下架</span>
+                      <span *ngIf="item.appUpOrDown === 1" class="up">上架</span>
+                      <button *ngIf="item.appUpOrDown === 1" class="ml10" nz-button (click)="appOnline('down', item)">下架</button>
+                      <button *ngIf="item.appUpOrDown === 0" class="ml10" nz-button (click)="appOnline('up', item)">上架</button>
+                    </div>
+                  </div>
+                </ng-template>
+              </nz-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nz-tab>
+</nz-tabset>

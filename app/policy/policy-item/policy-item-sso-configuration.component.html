@@ -1,0 +1,58 @@
+<div>
+  <div class="policy-version-box">
+    iOS5.0+
+  </div>
+  <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+    <div nz-form-item nz-row>
+      <div nz-form-label nz-col>
+        <label class="w320i" nz-form-item-required>帐户名称</label>
+        <p class="text-tip">用户可读的帐户名称</p>
+      </div>
+      <div nz-col nz-form-control [nzValidateStatus]="getFormControl('Name')">
+        <input class="w320i" formControlName="Name" nz-input placeholder="必填" [nzDisabled]="type === 'view'"
+               [nzSize]="'large'">
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-form-label nz-col>
+        <label class="w320i">Kerberos</label>
+      </div>
+      <div nz-form-label nz-col class="pl20 ">
+        <label class="w320i pl20 " >Kerberos主体名称</label>
+      </div>
+      <div class="pl20 mb20" nz-col nz-form-control [nzValidateStatus]="getFormControl('PrincipalName')">
+        <input class="w320i pl20" formControlName="PrincipalName" nz-input [nzDisabled]="type === 'view'"
+               [nzSize]="'large'">
+      </div>
+      <div nz-form-label nz-col class="pl20 ">
+        <label class="w320i pl20 ">身份证书有效负载的PayloadUUID</label>
+      </div>
+      <div class="pl20 mb20" nz-col nz-form-control [nzValidateStatus]="getFormControl('PayloadCertificateUUID')">
+        <input class="w320i pl20" formControlName="PayloadCertificateUUID" nz-input [nzDisabled]="type === 'view'"
+               [nzSize]="'large'">
+      </div>
+      <div nz-form-label nz-col class="pl20 ">
+        <label class="w320i pl20" nz-form-item-required>Kerberos领域名称</label>
+        <p class="text-tip">这个值应该适当地大写</p>
+      </div>
+      <div class="pl20 mb20" nz-col nz-form-control [nzValidateStatus]="getFormControl('Realm')">
+        <input class="w320i pl20" formControlName="Realm" nz-input [nzDisabled]="type === 'view'"
+               [nzSize]="'large'">
+      </div>
+      <div nz-form-label nz-col class="pl20 ">
+        <label class="w320i pl20" nz-form-item-required>URLPrefixMatches</label>
+      </div>
+      <div class="pl20 mb20" nz-col nz-form-control [nzValidateStatus]="getFormControl('URLPrefixMatches')">
+        <input class="w320i pl20" formControlName="URLPrefixMatches" nz-input [nzDisabled]="type === 'view'"
+               [nzSize]="'large'">
+      </div>
+      <div nz-form-label nz-col class="pl20 ">
+        <label class="w320i pl20 mb20" >AppldentifierMatches</label>
+      </div>
+      <div class="pl20" nz-col nz-form-control [nzValidateStatus]="getFormControl('AppIdentifierMatches')">
+        <input class="w320i pl20" formControlName="AppIdentifierMatches" nz-input [nzDisabled]="type === 'view'"
+               [nzSize]="'large'">
+      </div>
+    </div>
+  </form>
+</div>

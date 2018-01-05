@@ -1,0 +1,91 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+  </div>
+  <div>
+    <div>通知设置</div>
+    <p class="mt5 text-tip">配置每个应用的通知设置</p>
+  </div>
+  <app-application-list-widget
+    [type]="type"
+    [data]="appList"
+    (outData)="outDataChange($event)"
+  ></app-application-list-widget>
+  <div *ngIf="type !=='view'" class="mt10">
+    <button nz-button [nzType]="'dashed'" (click)="add(content, footer)">
+      <span>+</span>
+    </button>
+    <button nz-button [nzType]="'dashed'" (click)="del()">
+      <span>-</span>
+    </button>
+  </div>
+  <ng-template #content>
+    <div nz-row [nzGutter]="20">
+      <div nz-col [nzSpan]="6" class="tar">
+        应用名称
+      </div>
+      <div nz-col [nzSpan]="18">
+        <img [src]="selectedApp?.artworkUrl60" [alt]="selectedApp?.trackName" height="25" width="25" class="va-11 mr15">{{selectedApp?.trackName}}
+      </div>
+    </div>
+    <div nz-row [nzGutter]="20">
+      <div nz-col [nzSpan]="6" class="tar">
+        设置
+      </div>
+      <div nz-col [nzSpan]="18">
+        <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="NotificationsEnabled">
+          <span>允许通知</span>
+        </label>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzOffset]="7" [nzSpan]="17">
+        <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="ShowInNotificationCenter">
+          <span>在通知中心显示</span>
+        </label>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzOffset]="7" [nzSpan]="17">
+        <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="SoundsEnabled">
+          <span>声音</span>
+        </label>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzOffset]="7" [nzSpan]="17">
+        <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="BadgesEnabled">
+          <span>应用图标标记</span>
+        </label>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzOffset]="7" [nzSpan]="17">
+        <label nz-checkbox [nzDisabled]="type === 'view'" [(ngModel)]="ShowInLockScreen">
+          <span>在锁定屏幕中显示</span>
+        </label>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="20">
+      <div nz-col [nzSpan]="6" class="tar">
+        已解锁的提醒样式
+      </div>
+      <div nz-col [nzSpan]="18">
+        <nz-select *ngIf="type !== 'view'" class="w120" [(ngModel)]="AlertType">
+          <nz-option
+            *ngFor="let option of options"
+            [nzLabel]="option.label"
+            [nzValue]="option.value">
+          </nz-option>
+        </nz-select>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div>
+      <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk()">
+        保存
+      </button>
+    </div>
+  </ng-template>
+</div>

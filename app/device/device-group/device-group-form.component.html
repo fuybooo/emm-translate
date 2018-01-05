@@ -1,0 +1,76 @@
+<div [class.mt20]="type!=='add'">
+  <form nz-form [formGroup]="deviceGroupForm">
+    <div nz-form-item nz-row *ngIf="(type !== 'add' && (deviceGroup?.name !== deviceGroup?.fullName)) || (type === 'add' && parentGroup)">
+      <div nz-form-label nz-col [nzSpan]="6">
+        <label>上级设备分组</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('parentGroupName')">
+        <!--<nz-input formControlName="parentGroupName" [nzType]="'text'" [nzDisabled]="true" [nzSize]="'large'" *ngIf="type !== 'view'">-->
+        <!--</nz-input>-->
+        <!--显示parentName-->
+        <p *ngIf="type === 'view'">{{deviceGroup?._fullName}}</p>
+        <p *ngIf="type === 'add'">{{parentGroup?.fullName}}</p>
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-form-label nz-col [nzSpan]="6">
+        <label nz-form-item-required [class.view]="type==='view'">设备组名称</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('groupName')">
+        <nz-input formControlName="groupName" [nzType]="'text'" *ngIf="type !== 'view'"
+                  [nzPlaceHolder]="'请输入设备组名称，最多不超过30个字'" [nzSize]="'large'">
+        </nz-input>
+        <p *ngIf="type === 'view'">{{deviceGroup?.name}}</p>
+        <div *ngIf="type !== 'view'">
+          <div nz-form-explain
+               *ngIf="getFormControl('groupName').dirty&&getFormControl('groupName').hasError('required')">
+            请输入设备组名称！
+          </div>
+          <div nz-form-explain
+               *ngIf="getFormControl('groupName').dirty&&getFormControl('groupName').hasError('maxlength')">
+            设备组名称不能超过30个字！
+          </div>
+          <div nz-form-explain
+               *ngIf="getFormControl('groupName').dirty&&getFormControl('groupName').hasError('duplicated')">
+            设备组名称是重复的！
+          </div>
+          <div nz-form-explain
+               *ngIf="getFormControl('groupName').dirty&&getFormControl('groupName').hasError('specialCharacter')">
+            设备组名称不能包含英文逗号！
+          </div>
+          <div nz-form-explain *ngIf="getFormControl('groupName').dirty&&getFormControl('groupName').pending">
+            验证中...
+          </div>
+        </div>
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="6" nz-form-label>
+        <label>设备组描述</label>
+      </div>
+      <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('groupDesc')">
+        <nz-input formControlName="groupDesc" [nzRows]="3" [nzType]="'textarea'" (keyup.enter)="deviceGroupForm.valid?submit():1"
+                  [nzPlaceHolder]="'请输入设备组描述，最多不超过200个字'" [nzSize]="'large'" *ngIf="type !== 'view'">
+        </nz-input>
+        <p *ngIf="type === 'view'">{{deviceGroup?.desc}}</p>
+        <div *ngIf="type !== 'view'">
+        <div nz-form-explain
+             *ngIf="getFormControl('groupDesc').dirty&&getFormControl('groupDesc').hasError('maxlength')">
+          设备组描述不能超过200个字
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb0i" nz-form-item nz-row>
+      <div class="tar" [class.taci]="type==='edit'" nz-col [nzSpan]="24" nz-form-control *ngIf="type !== 'view'">
+        <button nz-button [nzType]="'primary'" [nzSize]="'large'" [disabled]="!deviceGroupForm.valid"
+                (click)="submit($event)" appPermission="1">保存
+        </button>
+        <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel($event)" appPermission="1">取消</button>
+      </div>
+      <div class="tac" nz-col [nzSpan]="24" nz-form-control *ngIf="type === 'view'">
+        <button class="ml20" nz-button [nzSize]="'large'" (click)="type='edit'" appPermission="1">编辑</button>
+      </div>
+    </div>
+  </form>
+</div>

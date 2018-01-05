@@ -1,0 +1,90 @@
+<div>
+  <div class="content-section-title" [hidden]="isPopupMove || isPopupSelect">
+    <label nz-checkbox [(ngModel)]="allGroupIsChecked" [nzIndeterminate]="indeterminate" (ngModelChange)="onClickChangeAllGroupChecked($event)">
+      <span>{{'device_group' | translate}}</span>
+    </label>
+  </div>
+  <div class="x-axis-scroll-table"
+       [class.table-wrap]="!isPopupSelect"
+       [class.custom-select-group]="isPopupSelect"
+       [style.height.px]="containerHeight"
+       [class.pop-table-wrap]="isPopupMove"
+       appCustomScrollbar [options]="options">
+    <nz-table class="content-table" #nzTable [nzAjaxData]="data" [nzIsPagination]="false"
+              [nzLoading]="isLoading">
+      <tbody nz-tbody>
+        <tr *ngIf="!isSearchMode && !isPopupMove && !isPopupSelect" [class.active]="clickedType == 1">
+          <td nz-td [nzCheckbox]="true" class="checkbox-td">
+            <label nz-checkbox [(ngModel)]="allIsChecked" (ngModelChange)="onClickChangeChecked()">
+            </label>
+          </td>
+          <td class="cp" nz-td (click)="clickedType = 1;onClickDeviceGroup()">
+            <i class="icon-allicon-43 mr5 ml28"></i><a href="javascript:void(0);" class="text-primary">所有设备</a></td>
+          <td nz-td colspan="3" class="tar pri20i">{{allNumber}}</td>
+        </tr>
+        <tr *ngIf="!isSearchMode && !isPopupMove && !isPopupSelect" [class.active]="clickedType == 2">
+          <td nz-td [nzCheckbox]="true" class="checkbox-td">
+            <label nz-checkbox [(ngModel)]="noneIsChecked" (ngModelChange)="onClickChangeChecked()">
+            </label>
+          </td>
+          <td class="cp" nz-td (click)="clickedType = 2;onClickDeviceGroup()">
+            <i class="icon-allicon-43 mr5 ml28"></i><a href="javascript:void(0);" class="text-primary">未分组</a></td>
+          <td nz-td colspan="3" class="tar pri20i">{{noneNumber}}</td>
+        </tr>
+        <tr *ngIf="isSearchMode && !isPopupMove && !isPopupSelect" [class.active]="clickedType == 3">
+          <td nz-td [nzCheckbox]="true" class="checkbox-td">
+            <label nz-checkbox [(ngModel)]="hitIsChecked" (ngModelChange)="onClickChangeChecked()">
+            </label>
+          </td>
+          <td class="cp" nz-td (click)="clickedType = 3;onClickDeviceGroup()"><i class="icon-allicon-43 mr5 ml28"></i><a href="javascript:void(0);" class="text-primary">命中设备</a></td>
+          <td nz-td colspan="3" class="tar pri20i">{{hitNumber}}</td>
+        </tr>
+        <ng-template ngFor let-data [ngForOf]="nzTable.data">
+          <ng-template ngFor let-item [ngForOf]="expandDataCache[data.id]">
+            <tr nz-tbody-tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)"
+                [class.active]="item.isActive"
+                (mouseenter)="item.isDeleteVisible=true;"
+                (mouseleave)="item.isDeleteVisible=false;">
+              <td nz-td [nzCheckbox]="true" [hidden]="isPopupMove" [class.checkbox-td]="!isPopupSelect">
+                <label nz-checkbox [(ngModel)]="item.isChecked" (ngModelChange)="onClickChangeChecked()">
+                </label>
+              </td>
+              <td nz-td class="cp" (click)="onClickDeviceGroup(item)">
+                <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
+                <nz-row-expand-icon [(nzExpand)]="item.expand"
+                                    (nzExpandChange)="collapse(expandDataCache[data.id],item,$event)"
+                                    [nzShowExpand]="!item.isLastNode"></nz-row-expand-icon>
+                <i class="icon-allicon-43 mr5"></i><a href="javascript:void(0);" class="text-primary text-overflow" title="{{item.name}}">{{item.name}}</a>
+              </td>
+              <td nz-td [hidden]="isPopupMove || isPopupSelect" width="33">
+                <button class="nb" appPermission="1" (click)="popupDeleteGroup(item);">
+                  <i class="anticon-click"
+                     (mouseenter)="item.isDeleteHighLight=true;"
+                     (mouseleave)="item.isDeleteHighLight=false;"
+                     title="删除"
+                     [class.vv]="item.isDeleteVisible"
+                     [class.vh]="!item.isDeleteVisible"
+                     [class.icon-allicon-30]="!item.isDeleteHighLight"
+                     [class.icon-allicon-29]="item.isDeleteHighLight" appPermission="1"></i>
+                </button>
+              </td>
+              <td nz-td [hidden]="isPopupMove || isPopupSelect" class="tar pri20i" width="55">{{item.deviceNumber}}</td>
+            </tr>
+          </ng-template>
+        </ng-template>
+        <tr *ngIf="!isSearchMode && !isPopupMove && !isPopupSelect" [class.active]="clickedType == 4">
+          <td nz-td [nzCheckbox]="true" class="checkbox-td">
+            <label nz-checkbox [(ngModel)]="revokeIsChecked" (ngModelChange)="onClickChangeChecked()">
+            </label>
+          </td>
+          <td class="cp" nz-td (click)="clickedType = 4;onClickDeviceGroup()">
+            <span class="icon-allicon-113 mr5 ml28">
+              <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span>
+            </span>
+            <a href="javascript:void(0);" class="text-primary">撤销设备</a></td>
+          <td nz-td colspan="3" class="tar pri20i">{{revokeNumber}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>

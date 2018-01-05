@@ -1,0 +1,38 @@
+<div class="w h">
+  <div id="map" class="w min-w1000 min-h530"></div>
+  <div class="map-search-wrap" nz-row [nzGutter]="8">
+    <div nz-col [nzSpan]="8">
+      <!--<nz-input id="map-search-input" [nzPlaceHolder]="'请输入关键字进行搜索...'">-->
+        <!--<ng-template #addOnAfter><i class="anticon anticon-search"></i></ng-template>-->
+      <!--</nz-input>-->
+      <input type="text" id="map-search-input" nz-input placeholder="请输入关键字进行搜索...">
+    </div>
+  </div>
+  <div nz-row class="h50 lh50">
+    <div nz-col [nzSpan]="3">
+      当前范围：
+    </div>
+    <div nz-col [nzSpan]="3">
+      围栏范围-经度：
+    </div>
+    <div nz-col [nzSpan]="3">
+      {{longitude}}
+    </div>
+    <div nz-col [nzSpan]="3">
+      围栏范围-纬度：
+    </div>
+    <div nz-col [nzSpan]="3">
+      {{latitude}}
+    </div>
+    <div nz-col [nzSpan]="3">
+      半径：
+    </div>
+    <div nz-col [nzSpan]="3">
+      {{radius}}
+    </div>
+    <div nz-col [nzSpan]="3">
+      <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="submit()">确定</button>
+      <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel()">取消</button>
+    </div>
+  </div>
+</div>

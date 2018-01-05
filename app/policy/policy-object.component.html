@@ -1,0 +1,17 @@
+<div class="policy-object-wrap" *ngIf="!isEmpty">
+  <ul *ngIf="policyObject?.userGroupObject?.length">
+    <li *ngFor="let item of policyObject?.userGroupObject">
+      <i class="icon-allicon-04 mr5"></i><a>{{item.name}}</a>
+    </li>
+  </ul>
+  <ul *ngIf="policyObject?.devGroupObject?.length">
+    <li *ngFor="let item of policyObject?.devGroupObject">
+      <i class="icon-allicon-43 mr5"></i><a>{{item.name}}</a>
+    </li>
+  </ul>
+  <ul *ngIf="policyObject?.departmentObject?.length">
+    <li *ngFor="let item of policyObject?.departmentObject">
+      <i class="icon-allicon-01 mr5"></i><a>{{item.name}}</a>
+    </li>
+  </ul>
+</div>

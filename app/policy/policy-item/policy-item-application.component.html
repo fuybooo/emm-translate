@@ -1,0 +1,149 @@
+<div class="policy-version-box">
+  <ng-container *ngIf="system === 'Android'">Android4.4+</ng-container>
+  <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+</div>
+<div>
+  <ng-container *ngIf="mode !== 2 || system !== 'iOS'">
+    <div *ngIf="mode === 2">
+      <nz-radio-group [(ngModel)]="blackWhiteRadio" (ngModelChange)="changeList($event)">
+        <label nz-radio [nzValue]="'white'" [nzDisabled]="type === 'view'">
+          <span>应用白名单</span>
+        </label>
+        <label nz-radio [nzValue]="'black'" [nzDisabled]="type === 'view'">
+          <span>应用黑名单</span>
+        </label>
+      </nz-radio-group>
+      <p class="mt10 mb10" [class.text-diseditable]="type === 'view'">
+        {{blackWhiteRadio === 'white' ? '应用白名单' : '应用黑名单'}}
+      </p>
+    </div>
+    <app-application-list-widget
+      [type]="type"
+      [data]="appList"
+      (outData)="outDataChange($event)"
+    ></app-application-list-widget>
+    <div *ngIf="type !=='view'" class="mt10">
+      <button nz-button [nzType]="'dashed'" (click)="add(title,content,footer)">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'dashed'" (click)="del()">
+        <span>-</span>
+      </button>
+    </div>
+    <p class="mt10" [class.text-diseditable]="type === 'view'">弹出提示时间</p>
+    <p class="mt5 text-tip">
+      {{mode === 1 ? (blackWhiteRadio === 'white' ?
+      '非定制设备弹出提示卸载白名单之外的应用的间隔时间'
+      :
+      '非定制设备弹出提示卸载黑名单应用的间隔时间'
+      ) :
+      '非定制设备弹出提示安装必装应用的间隔时间'
+      }}</p>
+    <nz-select *ngIf="type !== 'view'" class="w120" [(ngModel)]="value">
+      <nz-option
+        *ngFor="let option of options"
+        [nzLabel]="option.label"
+        [nzValue]="option.value">
+      </nz-option>
+    </nz-select>
+    <span *ngIf="type === 'view'" class="text-diseditable">
+    {{util.getLabelByValue(options, value)}}
+  </span>
+    <ng-template #title>
+      <span>
+        添加{{blackWhiteRadio === 'white' ?
+        '白名单'
+        :
+        '黑名单'
+        }}</span>
+    </ng-template>
+    <ng-template #content>
+      <div>
+        <form nz-form [formGroup]="appNameForm">
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label nz-form-item-required>应用名称或包名</label>
+            </div>
+            <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('newAppName')">
+              <input class="w" formControlName="newAppName" nz-input placeholder="请输入应用名称或包名，最多不超过100个字"
+                     [nzSize]="'large'" (keyup.enter)="handleOk()">
+              <div nz-form-explain
+                   *ngIf="getFormControl('newAppName').dirty&&getFormControl('newAppName').hasError('required')">
+                请输入应用名称或包名！
+              </div>
+              <div nz-form-explain
+                   *ngIf="getFormControl('newAppName').dirty&&getFormControl('newAppName').hasError('maxlength')">
+                应用名称或包名不能超过100个字！
+              </div>
+              <div nz-form-explain
+                   *ngIf="getFormControl('newAppName').dirty&&getFormControl('newAppName').hasError('duplicated')">
+                应用名称或包名是重复的！
+              </div>
+              <div nz-form-explain
+                   *ngIf="getFormControl('newAppName').dirty&&getFormControl('newAppName').hasError('specialCharacter')">
+                应用名称或包名只能包含数字，字母，-，_，@，#！
+              </div>
+              <div nz-form-explain *ngIf="getFormControl('newAppName').dirty&&getFormControl('newAppName').pending">
+                验证中...
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+    <ng-template #footer>
+      <div>
+        <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk()"
+                [disabled]="!appNameForm.valid">
+          保存
+        </button>
+      </div>
+    </ng-template>
+  </ng-container>
+  <div *ngIf="mode === 2 && system === 'iOS'">
+    <!--<div class="mb10" *ngFor="let item of data" [class.pl20]="item.level === 2">-->
+      <!--<nz-select [(ngModel)]="item.value" [nzDisabled]="type === 'view' || item.isDisabled" class="w120"-->
+                 <!--(ngModelChange)="changeSelect(item, $event)">-->
+        <!--<ng-container *ngIf="item.field !== 'safariAcceptCookies'">-->
+          <!--<nz-option-->
+            <!--*ngFor="let option of _commonSelect"-->
+            <!--[nzLabel]="option.label"-->
+            <!--[nzValue]="option.value">-->
+          <!--</nz-option>-->
+        <!--</ng-container>-->
+        <!--<ng-container *ngIf="item.field === 'safariAcceptCookies'">-->
+          <!--<nz-option-->
+            <!--*ngFor="let option of _options17"-->
+            <!--[nzLabel]="option.label"-->
+            <!--[nzValue]="option.value">-->
+          <!--</nz-option>-->
+        <!--</ng-container>-->
+      <!--</nz-select>-->
+      <!--<span [class.text-diseditable]="type === 'view'">{{item.label + (item.isSupervised ? supervisedDesc : '')}}</span>-->
+    <!--</div>-->
+    <div>
+      限制应用使用{{supervisedDesc}}
+      <nz-select [(ngModel)]="limitApp" [nzDisabled]="type === 'view'" class="w120">
+        <nz-option
+          *ngFor="let option of _options53"
+          [nzLabel]="option.label"
+          [nzValue]="option.value">
+        </nz-option>
+      </nz-select>
+    </div>
+    <app-application-list-widget
+      *ngIf="limitApp !== 1"
+      [type]="type"
+      [data]="appList"
+      (outData)="outDataChange($event)"
+    ></app-application-list-widget>
+    <div *ngIf="type !== 'view' && limitApp !== 1">
+      <button nz-button [nzType]="'default'" [disabled]="limitApp === 1" (click)="add()">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'default'" (click)="del()">
+        <span>-</span>
+      </button>
+    </div>
+  </div>
+</div>

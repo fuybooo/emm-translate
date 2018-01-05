@@ -1,0 +1,329 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container>iOS5.0+</ng-container>
+  </div>
+  <div *ngFor="let form of forms; let i = index;" class="policy-item-content-block">
+    <div class="policy-item-add-or-sub">
+      <button nz-button [nzType]="'default'" (click)="add()">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'default'" (click)="del(i)">
+        <span>-</span>
+      </button>
+    </div>
+    <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i" nz-form-item-required>帐户描述</label>
+          <p class="text-tip">帐户的显示名称（例如：“公司邮件帐户”）</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EmailAccountDescription')">
+          <input class="w320i" formControlName="EmailAccountDescription" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+          <div nz-form-explain
+               *ngIf="getFormControl(i, 'EmailAccountDescription').dirty&&getFormControl(i, 'EmailAccountDescription').hasError('required')">
+            必填项不能为空
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label >帐户类型</label>
+          <p class="text-tip">用于访问电子邮件帐户的协议</p>
+        </div>
+        <div class="w420i">
+          <div nz-form-control>
+            <div nz-col [nzSpan]="6">
+              <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EmailAccountType')" >
+                <nz-select [nzDisabled]="type === 'view'"  formControlName="EmailAccountType">
+                  <nz-option
+                    *ngFor="let option of _options33"
+                    [nzLabel]="option.label"
+                    [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+            <div nz-col [nzOffset]="2" [nzSpan]="16">
+              <div nz-form-item nz-row>
+                <div nz-form-label nz-col [nzSpan]="6">
+                  <label class="lh30">路径前缀:</label>
+                </div>
+                <div nz-form-control nz-col [nzOffset]="0" [nzSpan]="16" [nzValidateStatus]="getFormControl(i, 'IncomingMailServerIMAPPathPrefix')">
+                  <input formControlName="IncomingMailServerIMAPPathPrefix" nz-input placeholder="可选" [nzDisabled]="type === 'view'" [nzSize]="'large'">
+                  <div nz-form-explain
+                       *ngIf="getFormControl(i, 'IncomingMailServerIMAPPathPrefix').dirty && getFormControl(i, 'IncomingMailServerIMAPPathPrefix').hasError('required')">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i">用户的显示名称</label>
+          <p class="text-tip">用户的显示名称（例如：“John Appleseed”）</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EmailAccountName')">
+          <input class="w320i" formControlName="EmailAccountName" nz-input placeholder="可选" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w310i">电子邮件地址</label>
+          <p class="text-tip">帐户地址（例如：“John@example.com”）</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EmailAddress')">
+          <input  class="w320i" formControlName="EmailAddress" nz-input placeholder="在设备上设置" [nzDisabled]="type === 'view'"
+                  [nzSize]="'large'" (ngModelChange)="test(i, $event)">
+          <div nz-form-explain
+               *ngIf="getFormControl(i, 'EmailAddress').value !== '' && getFormControl(i, 'EmailAddress').dirty && getFormControl(i, 'EmailAddress').hasError('specialCharacter')">
+            电子邮件地址格式不对
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="PreventMove">
+            <span>允许用户从此帐户移动邮件</span>
+          </label>
+          <p class="text-tip">可以将邮件从这个帐户移动到其他账户</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="disableMailRecentsSyncing">
+            <span>允许同步最近使用的地址</span>
+          </label>
+          <p class="text-tip">同步最近使用的地址时包括此账户</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="allowMailDrop">
+            <span>允许使用 Mail Drop</span>
+          </label>
+          <p class="text-tip">允许此账户使用 Mail Drop</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="PreventAppSheet">
+            <span>仅在“邮件”中使用</span>
+          </label>
+          <p class="text-tip">只在“邮件”应用中从此账户发送邮件</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="SMIMESigningEnabled">
+            <span>启用 S/MIEI 信息签名</span>
+          </label>
+          <p class="text-tip">默认给此账户的信息签名</p>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="SMIMEEncryptionEnabled">
+            <span>启用 S/MIEI 信息加密</span>
+          </label>
+          <p class="text-tip">默认加密此账户的信息</p>
+        </div>
+      </div>
+      <div class="switch-group-wrap">
+        <div class="line"></div>
+        <div class="group">
+          <nz-radio-group formControlName="emailType" class="btn-group-bg">
+            <label nz-radio-button [nzValue]="1"><span>接收邮件</span></label>
+            <label nz-radio-button [nzValue]="2"><span>发送邮件</span></label>
+          </nz-radio-group>
+        </div>
+      </div>
+      <div [hidden]="getFormControl(i, 'emailType').value !== 1">
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label nz-form-item-required>邮件服务器和端口</label>
+            <p class="text-tip">接收邮件的主机或 IP 地址及端口号</p>
+          </div>
+          <div class="w320i">
+            <div nz-form-control>
+              <div nz-col [nzSpan]="17">
+                <div nz-form-item nz-row>
+                  <div>
+                    <div nz-form-control [nzValidateStatus]="getFormControl(i, 'IncomingMailServerHostName')">
+                      <input class="w" formControlName="IncomingMailServerHostName" nz-input placeholder="[必填]"
+                             [nzDisabled]="type === 'view'"
+                             [nzSize]="'large'">
+                      <div nz-form-explain
+                           *ngIf="getFormControl(i, 'IncomingMailServerHostName').dirty&&getFormControl(i, 'IncomingMailServerHostName').hasError('required')">
+                        必填项不能为空
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div nz-col [nzSpan]="1">
+                <p nz-form-split>：</p>
+              </div>
+              <div nz-col [nzSpan]="6">
+                <div nz-form-item nz-row>
+                  <div>
+                    <div nz-form-control [nzValidateStatus]="getFormControl(i, 'IncomingMailServerPortNumber')">
+                      <nz-input-number class="w" formControlName="IncomingMailServerPortNumber"
+                             [nzDisabled]="type === 'view'"
+                             [nzSize]="'large'" [nzMin]="0" [nzMax]="65535" [nzStep]="1"></nz-input-number>
+                      <div nz-form-explain
+                           *ngIf="getFormControl(i, 'IncomingMailServerPortNumber').dirty&&getFormControl(i, 'IncomingMailServerPortNumber').hasError('required')">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label class="w310i">用户名</label>
+            <p class="text-tip">用于连接收件服务器的用户名</p>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'IncomingMailServerUsername')">
+            <input class="w320i" formControlName="IncomingMailServerUsername" nz-input placeholder="[在设备上设置]"
+                   [nzDisabled]="type === 'view'"
+                   [nzSize]="'large'">
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label class="w240i">鉴定类型</label>
+            <p class="text-tip">收件服务器的鉴定方法</p>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'IncomingMailServerAuthentication')">
+            <nz-select [nzDisabled]="type === 'view'" class="w320i" formControlName="IncomingMailServerAuthentication">  <!-- IncomingMailServerAuthentication 原来填写的值-->
+              <nz-option
+                *ngFor="let option of _options34"
+                [nzLabel]="option.label"
+                [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label class="w310i">密码</label>
+            <p class="text-tip">收件服务器的密码</p>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'IncomingPassword')">
+            <input class="w320i" type="password" formControlName="IncomingPassword" nz-input [nzDisabled]="type === 'view'"
+                   [nzSize]="'large'">
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="IncomingMailServerUseSSL">
+              <span>使用SSL</span>
+            </label>
+            <p class="text-tip">通过安全套接字层获取传入的邮件</p>
+          </div>
+        </div>
+      </div>
+
+      <div [hidden]="getFormControl(i, 'emailType').value !== 2">
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label nz-form-item-required>邮件服务器和端口</label>
+            <p class="text-tip">发送邮件的主机或 IP 地址及端口号</p>
+          </div>
+          <div class="w320i">
+            <div nz-form-control>
+              <div nz-col [nzSpan]="17">
+                <div nz-form-item nz-row>
+                  <div>
+                    <div nz-form-control [nzValidateStatus]="getFormControl(i, 'OutgoingMailServerHostName')">
+                      <input class="w" formControlName="OutgoingMailServerHostName" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                             [nzSize]="'large'">
+                      <div nz-form-explain
+                           *ngIf="getFormControl(i, 'OutgoingMailServerHostName').dirty&&getFormControl(i, 'OutgoingMailServerHostName').hasError('required')">
+                        必填项不能为空
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div nz-col [nzSpan]="1">
+                <p>：</p>
+              </div>
+              <div nz-col [nzSpan]="6">
+                <div nz-form-item nz-row>
+                  <div>
+                    <div nz-form-control [nzValidateStatus]="getFormControl(i, 'OutgoingMailServerPortNumber')">
+                      <nz-input-number class="w" formControlName="OutgoingMailServerPortNumber" [nzDisabled]="type === 'view'"
+                                       [nzSize]="'large'" [nzMin]="0" [nzMax]="65535" [nzStep]="1"></nz-input-number>
+                      <div nz-form-explain
+                           *ngIf="getFormControl(i, 'OutgoingMailServerPortNumber').dirty&&getFormControl(i, 'OutgoingMailServerPortNumber').hasError('required')">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label class="w310i">用户名</label>
+            <p class="text-tip">用于连接发件服务器的用户名</p>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'OutgoingMailServerUsername')">
+            <input class="w320i" formControlName="OutgoingMailServerUsername" nz-input placeholder="[在设备上设置]" [nzDisabled]="type === 'view'"
+                   [nzSize]="'large'">
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label class="w240i">鉴定类型</label>
+            <p class="text-tip">发件服务器的鉴定方法</p>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'OutgoingMailServerAuthentication')">
+            <nz-select [nzDisabled]="type === 'view'" class="w320i" formControlName="OutgoingMailServerAuthentication">
+              <nz-option
+                *ngFor="let option of _options34"
+                [nzLabel]="option.label"
+                [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label class="w310i">密码</label>
+            <p class="text-tip">发件服务器的密码</p>
+          </div>
+          <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'OutgoingPassword')">
+            <input class="w320i" formControlName="OutgoingPassword" nz-input [nzDisabled]="type === 'view'"
+                   [nzSize]="'large'">
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OutgoingPasswordSameAsIncomingPassword">
+              <span>发邮件密码与收邮件密码相同</span>
+            </label>
+            <p class="text-tip">SMTP鉴定使用与POP/IMAP 相同的密码</p>
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col>
+            <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OutgoingMailServerUseSSL">
+              <span>使用SSL</span>
+            </label>
+            <p class="text-tip">通过安全套接字层获取传入的邮件</p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

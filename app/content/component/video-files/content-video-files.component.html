@@ -1,0 +1,34 @@
+<!-- top -->
+<div nz-row [nzGutter]="0" class="search-wrap content-search-wrap common-border-left">
+  <div *ngIf="!contentDistribute" nz-col [nzSpan]="16">
+    <button nz-button [nzType]="'default'" (click)="newFolder()" appPermission>
+      <span><i class="icon-allicon-20 mr5 f12"></i>新建文件夹</span>
+    </button>
+    <button nz-button [nzType]="'default'" (click)="uploadFile()" appPermission>
+      <span><i class="icon-allicon-55 mr5 f12"></i>上传</span>
+    </button>
+    <nz-button-group>
+      <button nz-button (click)="documentPermissions()"><i class="icon-allicon-50 mr5 f12" appPermission></i>文档权限</button>
+      <button nz-button (click)="deleteRemote()"><i class="icon-allicon-51 mr5 f12" appPermission></i>远程删除</button>
+      <button nz-button (click)="move()"><i class="icon-allicon-26 mr5 f12" appPermission></i>移动</button>
+      <button nz-button (click)="copy()"><i class="icon-allicon-52 mr5 f12" appPermission></i>复制</button>
+    </nz-button-group>
+  </div>
+  <div *ngIf="contentDistribute" nz-col [nzSpan]="16">
+    <button nz-button [nzType]="'default'" (click)="visibleRange()" appPermission>
+      <span>
+        <i class="anticon anticon-calculator mr5 f12"></i>
+        <!--<i class="icon-allicon-57 "></i>-->
+        文档可见范围
+      </span>
+    </button>
+    <button nz-button [nzType]="'default'" (click)="downloadPermissions()">
+      <span><i class="icon-allicon-59 mr5 f12" appPermission></i>下载权限</span>
+    </button>
+  </div>
+  <div nz-col [nzSpan]="8" class="search-col">
+    <app-custom-search (searchChange)="searchChange($event)" (doSearch)="doSearch($event)"></app-custom-search>
+  </div>
+</div>
+<!-- table -->
+<app-content-all-files-table (distribute)="distribute($event)"></app-content-all-files-table>

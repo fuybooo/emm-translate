@@ -1,0 +1,68 @@
+<div>
+  <div class="policy-version-box">
+    iOS5.0+
+  </div>
+  <div *ngFor="let form of forms; let i = index;" class="policy-item-content-block">
+    <div class="policy-item-add-or-sub">
+      <button nz-button [nzType]="'default'" (click)="add()">
+        <span>+</span>
+      </button>
+      <button nz-button [nzType]="'default'" (click)="del(i)">
+        <span>-</span>
+      </button>
+    </div>
+    <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">描述</label>
+          <p class="text-tip">日历订阅的描述</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SubCalAccountDescription')">
+          <input class="w320i" formControlName="SubCalAccountDescription" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i" nz-form-item-required>URL</label>
+          <p class="text-tip">日历文件的URL</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SubCalAccountHostName')">
+          <input class="w320i" formControlName="SubCalAccountHostName" nz-input placeholder="[必填]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+          <div nz-form-explain
+               *ngIf="getFormControl(i, 'SubCalAccountHostName').dirty&&getFormControl(i, 'SubCalAccountHostName').hasError('required')">
+            必填项不能为空
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">用户名</label>
+          <p class="text-tip">此订阅的用户名</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SubCalAccountUsername')">
+          <input class="w320i" formControlName="SubCalAccountUsername" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label class="w320i">密码</label>
+          <p class="text-tip">此订阅的密码</p>
+        </div>
+        <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SubCalAccountPassword')">
+          <input type="password" class="w320i" formControlName="SubCalAccountPassword" nz-input placeholder="[可选]" [nzDisabled]="type === 'view'"
+                 [nzSize]="'large'">
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col>
+          <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="SubCalAccountUseSSL">
+            <span>使用SSL</span>
+          </label>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

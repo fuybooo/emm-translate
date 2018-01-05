@@ -1,0 +1,172 @@
+<div class="content-wrap">
+  <div class="search-wrap p10 common-gray-bg">
+    <div nz-row>
+      <div nz-col [nzSpan]="6" class="search-col ml10">
+        <nz-input [nzPlaceHolder]="'search_placeholder' | translate" [nzSize]="'default'" [(ngModel)]="searchWord"
+                  (ngModelChange)="changeSearchWord()" (keyup.enter)="doSearch()">
+          <ng-template #addOnAfter><i class="anticon anticon-search" (click)="doSearch()"></i></ng-template>
+        </nz-input>
+        <i class="anticon anticon-close-circle clearSearch" title="取消搜索" (click)="searchWord='';doSearch()"
+           [class.dni]="searchWord==''"></i>
+      </div>
+      <div nz-col [nzSpan]="14">
+        <button nz-button [nzType]="'default'" class="ml20" (click)="add(title, content, footer)" appPermission>
+          <span><i class="icon-allicon-20 mr5"></i>添加
+            {{type === 'URL' ?
+            '违规网址'
+            :
+            '敏感词'
+            }}</span>
+        </button>
+        <button nz-button [nzType]="'default'" class="ml10" (click)="del()" appPermission>
+          <span><i class="icon-allicon-29 mr5"></i>批量删除</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="0" class="policy-url-content-wrap">
+    <div nz-col [nzSpan]="4" class="content-sider list-wrap">
+      <ul class="policy-sensitive-word-and-url">
+        <li (click)="changeType(0)"><a href="javascript:void(0);" [class.active]="level === 0">全部 <span class="policy-sensitive-span ">{{totals.total}}</span> </a> </li>
+        <li (click)="changeType(1)"><a href="javascript:void(0);" [class.active]="level === 1">一级 <span class="policy-sensitive-span ">{{totals.total1}}</span> </a> </li>
+        <li (click)="changeType(2)"><a href="javascript:void(0);" [class.active]="level === 2">二级 <span class="policy-sensitive-span ">{{totals.total2}}</span> </a></li>
+        <li (click)="changeType(3)"><a href="javascript:void(0);" [class.active]="level === 3">三级 <span class="policy-sensitive-span ">{{totals.total3}}</span> </a></li>
+      </ul>
+    </div>
+    <div nz-col [nzSpan]="20" class="policy-url-table-content">
+      <div class="content-table-thead policy-url-table-tr">
+        <div class="common-none-border-left ti6">
+          <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate"
+                 (ngModelChange)="onClickChangeAllChecked($event)">
+          </label>
+        </div>
+        <div>
+          <span class="pl20">{{type === 'URL' ?
+            '违规网址'
+            :
+            '敏感词'
+            }}</span>
+        </div>
+        <div>级别</div>
+      </div>
+      <!--词列表获取数据-->
+      <div class="cb"></div>
+      <div class="content-table-wrap table-td-height44" appCustomScrollbar>
+        <nz-table class="content-table"
+                  #nzTable
+                  [nzAjaxData]="data"
+                  [nzIsPagination]="false"
+                  [nzLoading]="isLoading">
+          <tbody nz-tbody>
+          <tr nz-tbody-tr *ngFor="let data of nzTable.data" class="policy-url-table-tr">
+            <td nz-td>
+              <label nz-checkbox [(ngModel)]="data.isChecked" (ngModelChange)="onClickChangeChecked($event)">
+              </label>
+            </td>
+            <td nz-td><a class="">{{data.content}}</a></td>
+            <td nz-td class="level-{{data.level}}">{{data.level == 1 ?
+              '一级'
+              : (data.level == 2 ?
+              '二级'
+              :
+              '三级'
+              )}}</td>
+          </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #title>
+  <span>添加{{type === 'URL' ?
+    '违规网址'
+    :
+    '敏感词'
+    }}</span>
+</ng-template>
+<ng-template #content>
+  <div class="form_sensitive">
+    <form nz-form [formGroup]="type === 'URL' ? urlForm : sensitiveWordForm">
+      <div class="policy-version-box">
+        Android5.0+
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label nz-form-item-required>{{type === 'URL' ?
+            '违规网址'
+            :
+            '敏感词'
+            }}</label>
+        </div>
+        <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('content')">
+          <input class="w" formControlName="content" type="text" nz-input
+                 [nzSize]="'large'" (keyup.enter)="handleOk()">
+          <div nz-form-explain *ngIf="getFormControl('content').dirty&&getFormControl('content').hasError('required')">
+            {{type === 'URL' ?
+            '违规网址'
+            :
+            '敏感词'
+            }}不能为空！
+          </div>
+          <div nz-form-explain
+               *ngIf="getFormControl('content').dirty&&getFormControl('content').errors&&getFormControl('content').errors.pattern">
+            网址格式不正确！
+          </div>
+          <div nz-form-explain
+               *ngIf="getFormControl('content').dirty&&getFormControl('content').hasError('duplicated')">
+            {{type === 'URL' ?
+            '违规网址'
+            :
+            '敏感词'
+            }}重复！
+          </div>
+          <div nz-form-explain *ngIf="getFormControl('content').dirty&&getFormControl('content').pending">
+            验证中...
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label nz-form-item-required>违规级别</label>
+        </div>
+        <div nz-col [nzSpan]="15" nz-form-control [nzValidateStatus]="getFormControl('level')">
+          <nz-select class="w120" formControlName="level">
+            <nz-option
+              *ngFor="let option of options"
+              [nzLabel]="option.label"
+              [nzValue]="option.value">
+            </nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-control nz-col [nzOffset]="6" [nzSpan]="15">
+              <span class="mr30">
+                <span class="badge-circle level-bg-1"></span>
+                一级
+              </span>
+          <span class="mr30">
+                <span class="badge-circle level-bg-2"></span>
+                二级
+              </span>
+          <span class="mr30">
+                <span class="badge-circle level-bg-3"></span>
+                三级
+              </span>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="modal-btn-box">
+    <button type="button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk()"
+            [disabled]="type === 'URL' ? !urlForm.valid : !sensitiveWordForm.valid">
+      保存
+    </button>
+    <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel($event)">取消</button>
+  </div>
+</ng-template>
+
+

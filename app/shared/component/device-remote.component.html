@@ -1,0 +1,52 @@
+<!--<iframe class="dn"  src="rtmp://192.168.7.108/live/100001-test"></iframe>-->
+<div nz-row [nzGutter]="30">
+  <div nz-col [nzSpan]="12" class="device-remote-wrap">
+    <div class="device-remote">
+      <video
+        class="pa"
+        id="device-remote-video"
+        class="device-remote-video"
+        data-setup='{"techOrder": ["flash","html5"]}'
+        muted="true"
+        preload="none"
+        webkit-playsinline>
+        <source [src]="rmtp" type="rtmp/flv"/>
+        <p>Your browser does not support HTML5 video.</p>
+      </video>
+    </div>
+    <div class="device-video-mask" id="device-video-mask"></div>
+    <!--<div class="device-remote">-->
+      <!--<video-->
+        <!--id="device-remote-video"-->
+        <!--class="video-js vjs-default-skin"-->
+        <!--data-setup='{-->
+						<!--"techOrder": ["flash","html5"]-->
+					<!--}'-->
+        <!--muted="true"-->
+        <!--preload="none"-->
+        <!--height="480px"-->
+        <!--width="270px"-->
+        <!--webkit-playsinline-->
+      <!--&gt;-->
+        <!--&lt;!&ndash;<source src="rtmp://192.168.7.108/live/da97ad2087e617aa670473bdc95ac8cb" type="rtmp/flv"/>&ndash;&gt;-->
+        <!--<source [src]="rmtp" type="rtmp/flv"/>-->
+        <!--<p class="warning">Your browser does not support HTML5 video.</p>-->
+      <!--</video>-->
+    <!--</div>-->
+  </div>
+  <div nz-col [nzSpan]="12" *ngIf="!isLoading">
+    <div class="device-remote-right">
+      <label class="text-tip">用鼠标直接点击左边的手机上的应用或滑动翻页</label>
+      <p class="mb30 text-tip">隐藏性功能请操作如下按钮！</p>
+      <ul>
+        <li *ngFor="let item of list" >
+          <button nz-button [nzType]="'default'" class="device-remote-bg" (click)="sendRpc(item.dir)">
+            <span><i class="{{ item.img }}"></i></span>
+          </button>
+          <p>{{item.name}}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+

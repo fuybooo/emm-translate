@@ -1,0 +1,56 @@
+<div nz-row class="mb10" *ngIf="showPlatform">
+  <div nz-col [nzSpan]="24">
+    应用系统
+    <nz-select class="w120 ml10" [(ngModel)]="value" (nzOpenChange)="changePlatform($event)">
+      <nz-option
+        *ngFor="let option of platformOptions"
+        [nzLabel]="option.label"
+        [nzValue]="option.value">
+      </nz-option>
+    </nz-select>
+  </div>
+</div>
+<div nz-row>
+  <div nz-col [nzSpan]="24" class="">
+    <div class="content-table-thead modal-application-table-tr">
+      <div class="common-none-border-left">应用名称</div>
+      <div>版本</div>
+    </div>
+    <div class="cb"></div>
+    <div class="content-table-wrap" appCustomScrollbar [options]="options">
+      <nz-table class="content-table"
+                #nzTable
+                [nzAjaxData]="applicationList?.list"
+                [nzIsPagination]="false"
+                [nzLoading]="applicationList?.isLoading">
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let data of nzTable.data" class="modal-application-table-tr">
+          <td nz-td>
+            <label nz-checkbox [(ngModel)]="data.isChecked" (ngModelChange)="applicationList?.checked($event,data)">
+            </label>
+          </td>
+          <td nz-td>
+            <img *ngIf="data.iconUrl" [src]="data.iconUrl" alt="" width="25" height="25" class="va-6 mr10"><span>{{data.name}}</span>
+          </td>
+          <td nz-td>{{data.versionName}}</td>
+        </tr>
+        <!--<tr nz-tbody-tr *ngIf="applicationList?.list.length < applicationList?.param.total">-->
+          <!--<td nz-td [attr.colspan]="2">-->
+            <!--<nz-spin [nzTip]="'正在读取数据...'">-->
+              <!--<nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">-->
+              <!--</nz-alert>-->
+            <!--</nz-spin>-->
+          <!--</td>-->
+        <!--</tr>-->
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</div>
+<div>
+  <div class="tar modal-btn-box">
+    <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="submit()">保存</button>
+    <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel()">取消</button>
+  </div>
+</div>
+

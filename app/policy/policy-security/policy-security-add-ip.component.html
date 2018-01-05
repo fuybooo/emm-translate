@@ -1,0 +1,51 @@
+<div>
+  <form nz-form>
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="24">
+        <p class="text-tip">请添加一个IP地址（段）</p>
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="24">
+        <nz-radio-group [(ngModel)]="radioValue" name="radioValue">
+          <label nz-radio [nzValue]="'simple'">
+            <span>IP地址</span>
+          </label>
+          <label nz-radio [nzValue]="'simpleSection'">
+            <span>IP地址段</span>
+          </label>
+          <label nz-radio [nzValue]="'complexSection'">
+            <span>子网掩码</span>
+          </label>
+        </nz-radio-group>
+      </div>
+    </div>
+    <div nz-form-item nz-row>
+      <div class="input-ip-wrap">
+        <nz-input-number [(ngModel)]="startIp1" name="startIp1" [nzMin]="0" [nzMax]="255" [nzStep]="1"></nz-input-number>.
+        <nz-input-number [(ngModel)]="startIp2" name="startIp2" [nzMin]="0" [nzMax]="255" [nzStep]="1"></nz-input-number>.
+        <nz-input-number [(ngModel)]="startIp3" name="startIp3" [nzMin]="0" [nzMax]="255" [nzStep]="1"></nz-input-number>.
+        <nz-input-number [(ngModel)]="startIp4" name="startIp4" [nzMin]="0" [nzMax]="255" [nzStep]="1"></nz-input-number>
+      </div>
+      <div class="fl p010 lh32" [hidden]="radioValue!=='complexSection'">/</div>
+      <div class="fl input-subnet-mask-wrap" [hidden]="radioValue!=='complexSection'">
+        <nz-input-number [(ngModel)]="subnetMask" name="subnetMask" [nzMin]="1" [nzMax]="65535" [nzStep]="1"></nz-input-number>
+      </div>
+      <div class="fl" [hidden]="radioValue!=='simpleSection'">
+        <div class="fl p010 lh32">-</div>
+        <div class="input-ip-wrap">
+          <nz-input-number [(ngModel)]="startIp5" name="startIp5" [nzMin]="0" [nzMax]="255" [nzStep]="1"></nz-input-number>.
+          <nz-input-number [(ngModel)]="startIp6" name="startIp6" [nzMin]="0" [nzMax]="255" [nzStep]="1"></nz-input-number>.
+          <nz-input-number [(ngModel)]="startIp7" name="startIp7" [nzMin]="0" [nzMax]="255" [nzStep]="1"></nz-input-number>.
+          <nz-input-number [(ngModel)]="startIp8" name="startIp8" [nzMin]="0" [nzMax]="255" [nzStep]="1"></nz-input-number>
+        </div>
+      </div>
+    </div>
+    <div class="mb0i tar" nz-form-item nz-row>
+        <button nz-button [nzType]="'primary'" [nzSize]="'large'"
+                (click)="submit()">保存
+        </button>
+        <button class="ml20" nz-button [nzSize]="'large'" (click)="handleCancel()">取消</button>
+    </div>
+  </form>
+</div>

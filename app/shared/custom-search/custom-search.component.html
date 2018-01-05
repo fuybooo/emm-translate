@@ -1,0 +1,13 @@
+<div class="search-wrap">
+  <div class="search-col">
+    <nz-input [nzPlaceHolder]="placeholder ? placeholder :
+    '输入想搜索的内容'
+" [nzSize]="'default'"
+              [(ngModel)]="searchWord" (keyup.enter)="doSearch_()"
+              (ngModelChange)="watchSearch($event)">
+      <ng-template #addOnAfter><i class="anticon anticon-search" (click)="doSearch_()"></i></ng-template>
+    </nz-input>
+    <i class="anticon anticon-close-circle clearSearch" (click)="searchWord='';doSearch_()"
+       [class.dni]="searchWord==''"></i>
+  </div>
+</div>

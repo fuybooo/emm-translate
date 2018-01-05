@@ -1,0 +1,77 @@
+<div class="self-help-wrap">
+<div class="self-help-top">
+  <div class="f24 pt10">
+    亲爱的{{currentUser?.userName}}，欢迎光临！
+  </div>
+  <div class="lh30">
+    登录名称：{{currentUser?.displayName}}
+  </div>
+  <div class="mb20">
+    IP地址：192.168.7.10
+  </div>
+</div>
+<nz-tabset>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      我的设备列表
+    </ng-template>
+    <div class="content-wrap-wrapper mb20">
+      <div nz-row class="common-box">
+        <div nz-col [nzSpan]="12">
+          <button nz-button [nzType]="'default'" (click)="popupDeviceTrail()" class="ml20">
+            <span><i class="icon-allicon-21 mr5 c-gray"></i>{{'device_place' | translate}}</span>
+          </button>
+        </div>
+        <div nz-col [nzSpan]="12" class="tar" *ngIf="isViewDevice">
+          <app-device-directive [selectedDeviceData]="selectedDeviceData"></app-device-directive>
+        </div>
+      </div>
+      <div class="container-wrap p0i">
+        <div nz-row class="list-content">
+          <div nz-col class="list-content-list" [nzSpan]="10">
+            <app-device-list (deviceDataEmitter)="onChangeDeviceCheckData($event)"></app-device-list>
+          </div>
+          <div nz-col class="list-content-detail" [nzSpan]="14">
+            <app-device-detail [isSelfHelp]="true"></app-device-detail>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nz-tab>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      我的账户
+    </ng-template>
+    <div class="content-wrap-wrapper mb20">
+      <div nz-row class="common-box">
+        <div nz-col [nzSpan]="12">
+        </div>
+        <div nz-col [nzSpan]="12" class="tar">
+          <div nz-row>
+            <div nz-col [nzSpan]="12" class="tar" *ngIf="!isViewUser">
+              <button nz-button [nzType]="'default'" (click)="isViewUser = !isViewUser; saveUserInfo();" appPermission>
+                <span>保存</span>
+              </button>
+              <button nz-button [nzType]="'default'" (click)="isViewUser = !isViewUser;userForm.readonly = false;" appPermission>
+                <span>取消</span>
+              </button>
+            </div>
+            <div nz-col [nzSpan]="12" class="tar" *ngIf="isViewUser">
+              <button nz-button [nzType]="'default'" (click)="isViewUser = !isViewUser;userForm.readonly = false;" appPermission>
+                <span>编辑</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-wrap">
+        <div nz-row>
+          <div nz-col [nzSpan]="24">
+            <app-custom-form [options]="userForm"></app-custom-form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nz-tab>
+</nz-tabset>
+</div>

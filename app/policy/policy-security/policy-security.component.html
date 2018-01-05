@@ -1,0 +1,333 @@
+<div>
+  <nz-tabset>
+    <nz-tab>
+      <ng-template #nzTabHeading>
+        通用
+      </ng-template>
+      <div class="content-wrap-wrapper">
+        <div nz-row class="common-box pl20i">
+          <div nz-col [nzSpan]="12">
+            通用
+          </div>
+          <div nz-col [nzSpan]="12" class="tar" *ngIf="!isViewCommon">
+            <button nz-button [nzType]="'default'" (click)="isViewCommon = !isViewCommon; saveCommon();" appPermission>
+              <span>保存</span>
+            </button>
+            <button nz-button [nzType]="'default'" (click)="isViewCommon = !isViewCommon" appPermission>
+              <span>取消</span>
+            </button>
+          </div>
+          <div nz-col [nzSpan]="12" class="tar pri10i" *ngIf="isViewCommon">
+            <button nz-button [nzType]="'default'" (click)="isViewCommon = !isViewCommon" appPermission>
+              <span>编辑</span>
+            </button>
+          </div>
+        </div>
+        <div class="container-wrap">
+          <div nz-row class="common-row">
+            <div nz-col [nzSpan]="3">
+              通用策略
+            </div>
+            <div nz-col [nzSpan]="3">
+              邮件激活时效
+            </div>
+            <div nz-col [nzSpan]="18">
+              <nz-select *ngIf="!isViewCommon" class="w120" [(ngModel)]="selectedEmailTime">
+                <nz-option
+                  *ngFor="let option of options1"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+              <span *ngIf="!isViewCommon">天</span>
+              <span *ngIf="isViewCommon" class="text-diseditable">{{selectedEmailTime}}
+                天</span>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzSpan]="3">
+              账户登录密码策略
+            </div>
+            <div nz-col [nzSpan]="3">
+              最小密码长度
+            </div>
+            <div nz-col [nzSpan]="18">
+              <nz-select *ngIf="!isViewCommon" class="w120" [(ngModel)]="selectedPwdLength">
+                <nz-option
+                  *ngFor="let option of options2"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+              <span *ngIf="!isViewCommon">位</span>
+              <span *ngIf="isViewCommon" class="text-diseditable">{{selectedPwdLength}}
+                位</span>
+              <span class="text-tip pl20">从LDAP同步过来的账户，密码策略不生效</span>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="6" [nzSpan]="18">
+              <label nz-checkbox [(ngModel)]="checkedP1" [nzDisabled]="isViewCommon">
+                <span>大写字母</span>
+              </label>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="6" [nzSpan]="18">
+              <label nz-checkbox [(ngModel)]="checkedP2" [nzDisabled]="isViewCommon">
+                <span>小写字母</span>
+              </label>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="6" [nzSpan]="18">
+              <label nz-checkbox [(ngModel)]="checkedP3" [nzDisabled]="isViewCommon">
+                <span>数字</span>
+              </label>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="6" [nzSpan]="18">
+              <label nz-checkbox [(ngModel)]="checkedP4" [nzDisabled]="isViewCommon">
+                <span>特殊字符</span>
+              </label>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="3" [nzSpan]="3">
+              密码有效期
+            </div>
+            <div nz-col [nzSpan]="18">
+              <nz-select *ngIf="!isViewCommon" class="w120" [(ngModel)]="selectedPwdDate">
+                <nz-option
+                  *ngFor="let option of options3"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+              <span *ngIf="isViewCommon" class="text-diseditable">{{selectedPwdDate == '-1' ?
+                '永久'
+                : (selectedPwdDate +
+                '个月'
+                )}}</span>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="3" [nzSpan]="3">
+              锁定帐号
+            </div>
+            <div nz-col [nzSpan]="3">
+              密码输入错误次数
+            </div>
+            <div nz-col [nzSpan]="15">
+              <!--<nz-input-number *ngIf="!isViewCommon" [(ngModel)]="selectedPwdMistakeTimes"-->
+                               <!--[nzMin]="6" [nzMax]="20" [nzStep]="1"-->
+                               <!--class="w120"></nz-input-number>-->
+              <nz-select *ngIf="!isViewCommon" class="w120" [(ngModel)]="selectedPwdMistakeTimes">
+                <nz-option
+                  *ngFor="let option of options4"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+              <span *ngIf="!isViewCommon">次</span>
+              <span *ngIf="isViewCommon" class="text-diseditable">{{selectedPwdMistakeTimes}}次</span>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="6" [nzSpan]="3">
+              <label nz-checkbox [(ngModel)]="enableAutoUnLock" [nzDisabled]="isViewCommon">
+                <span>自动解除锁定</span>
+              </label>
+            </div>
+            <div nz-col [nzSpan]="15" *ngIf="enableAutoUnLock">
+              <nz-select *ngIf="!isViewCommon" class="w120" [(ngModel)]="selectedPwdAutoUnlock">
+                <nz-option
+                  *ngFor="let option of options5"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+              <span *ngIf="!isViewCommon">分钟</span>
+              <span *ngIf="isViewCommon" class="text-diseditable">{{selectedPwdAutoUnlock}}分钟</span>
+            </div>
+          </div>
+          <div class="common-hr"></div>
+          <div nz-row class="common-row">
+            <div nz-col [nzSpan]="3">
+              移动策略
+            </div>
+            <div nz-col [nzSpan]="3">
+              快捷登录
+            </div>
+            <div nz-col [nzSpan]="18">
+              <label nz-checkbox [ngModel]="true" [nzDisabled]="true" class="checkbox-unchecked">
+                <span>密码</span>
+              </label>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="6" [nzSpan]="18">
+              <label nz-checkbox [(ngModel)]="pin" [nzDisabled]="isViewCommon">
+                <span>PIN码认证</span>
+              </label>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="6" [nzSpan]="18">
+              <label nz-checkbox [(ngModel)]="sign" [nzDisabled]="isViewCommon">
+                <span>手势认证</span>
+              </label>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="6" [nzSpan]="18">
+              <label nz-checkbox [(ngModel)]="fingerprint" [nzDisabled]="isViewCommon">
+                <span>指纹认证</span>
+              </label>
+            </div>
+          </div>
+          <div nz-row class="common-row" *ngIf="pin || sign || fingerprint">
+            <div nz-col [nzOffset]="3" [nzSpan]="3">
+              重新密码登录
+            </div>
+            <div nz-col [nzSpan]="18">
+              <!--<nz-input-number *ngIf="!isViewCommon" [(ngModel)]="selectedPwdAutoUnlock"-->
+                               <!--[nzMin]="1" [nzMax]="200" [nzStep]="1"-->
+                               <!--class="w120"></nz-input-number>分钟-->
+              快捷登录输入错误次数
+              <nz-select *ngIf="!isViewCommon" class="w120" [(ngModel)]="quickLoginErrorCount">
+                <nz-option
+                  *ngFor="let option of options4"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+              <span *ngIf="!isViewCommon">次</span>
+              <span *ngIf="isViewCommon" class="text-diseditable">{{quickLoginErrorCount}}
+                次</span>
+            </div>
+          </div>
+          <div nz-row class="common-row">
+            <div nz-col [nzOffset]="3" [nzSpan]="3">
+              快捷登录超时时间
+            </div>
+            <div nz-col [nzSpan]="18">
+              <!--<nz-input-number *ngIf="!isViewCommon" [(ngModel)]="selectedPwdAutoUnlock"-->
+                               <!--[nzMin]="1" [nzMax]="200" [nzStep]="1"-->
+                               <!--class="w120"></nz-input-number>分钟-->
+              <nz-select *ngIf="!isViewCommon" class="w120" [(ngModel)]="mobileDateTime">
+                <nz-option
+                  *ngFor="let option of options6"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+              <span *ngIf="!isViewCommon">分钟</span>
+              <span *ngIf="isViewCommon" class="text-diseditable">{{mobileDateTime}}
+                分钟</span>
+            </div>
+          </div>
+          <div class="common-hr"></div>
+          <div nz-row class="common-row">
+            <div nz-col [nzSpan]="3">
+              允许离线使用
+            </div>
+            <div nz-col [nzSpan]="3">
+              <label nz-checkbox [(ngModel)]="offline" [nzDisabled]="isViewCommon">
+                <span>启用</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-tab>
+    <!--此处如果使用ngif,则会导致该容器内的appCustomScroll指令无法出现滚动条-->
+    <!--<nz-tab *ngIf="private_version!==1">-->
+    <nz-tab [nzDisabled]="private_version===1">
+      <ng-template #nzTabHeading>
+        <ng-container *ngIf="private_version!==1">网络访问</ng-container>
+        <ng-container *ngIf="private_version===1"></ng-container>
+      </ng-template>
+      <div class="content-wrap-wrapper">
+        <div nz-row class="common-box">
+          <div nz-col [nzSpan]="12">
+            网络访问
+          </div>
+          <div nz-col [nzSpan]="12" class="tar" *ngIf="!isViewUrl">
+            <button nz-button [nzType]="'default'" (click)="isViewUrl = !isViewUrl;saveNetwork();" appPermission>
+              <span>保存</span>
+            </button>
+            <button nz-button [nzType]="'default'" (click)="isViewUrl = !isViewUrl" appPermission>
+              <span>取消</span>
+            </button>
+          </div>
+          <div nz-col [nzSpan]="12" class="tar" *ngIf="isViewUrl">
+            <button nz-button [nzType]="'default'" (click)="isViewUrl = !isViewUrl" appPermission>
+              <span>编辑</span>
+            </button>
+          </div>
+        </div>
+        <div class="container-wrap">
+          <div>
+            <div>
+              <div class="mb20">
+                <nz-radio-group *ngIf="!isViewUrl" [(ngModel)]="radioValue" name="radioValue" (ngModelChange)="switchBlackWhiteList($event)">
+                  <label nz-radio [nzValue]="1">
+                    <span>网络黑名单</span>
+                  </label>
+                  <label nz-radio [nzValue]="2">
+                    <span>网络白名单</span>
+                  </label>
+                </nz-radio-group>
+                {{isViewUrl ? (radioValue === 1 ?
+                '网络黑名单'
+                :
+                '网络白名单'
+                ) : ''}}
+              </div>
+              <div class="mb10" *ngIf="!isViewUrl">
+                <button nz-button [nzType]="'default'" (click)="addIp()" appPermission>
+                  <span><i class="icon-allicon-20 mr5"></i>增加IP地址段</span>
+                </button>
+                <button nz-button [nzType]="'default'" (click)="deleteIp()" appPermission>
+                  <span><i class="icon-allicon-29 mr5"></i>批量删除</span>
+                </button>
+              </div>
+            </div>
+            <div class="cb"></div>
+            <div class="content-table-thead policy-security-table-thead">
+              <div class="common-none-border-left">
+                <ng-container *ngIf="!isViewUrl">
+                  <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate" (ngModelChange)="checkAll($event)">IP地址</label>
+                </ng-container>
+                <ng-container *ngIf="isViewUrl">IP地址</ng-container>
+              </div>
+              <div class="h42">{{isViewUrl ? '' :
+                '操作'
+                }}</div>
+            </div>
+            <div class="cb"></div>
+            <!--<div class="content-table-wrap" appCustomScrollbar>-->
+            <div class="h400" appCustomScrollbar>
+              <nz-table class=""
+                        #nzTable
+                        [nzAjaxData]="data"
+                        [nzIsPagination]="false">
+                <tbody nz-tbody>
+                <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+                  <td nz-td width="90%">
+                    <label *ngIf="!isViewUrl" nz-checkbox [(ngModel)]="data.isChecked" (ngModelChange)="refreshStatus($event)"></label>
+                    {{data.config}}
+                  </td>
+                  <td nz-td width="10%" *ngIf="!isViewUrl"><a (click)="deleteIp(data)"><i class="icon-allicon-29 anticon-click"></i></a></td>
+                </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>

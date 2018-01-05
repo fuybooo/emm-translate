@@ -1,0 +1,858 @@
+<div>
+  <div class="policy-version-box">
+    <ng-container *ngIf="system === 'Android'">Android4.4+</ng-container>
+    <ng-container *ngIf="system === 'iOS'">iOS5.0+</ng-container>
+  </div>
+  <ng-container *ngIf="type !== 'view'">
+    <div *ngFor="let form of forms; let i = index;" class="policy-item-content-block">
+      <div class="policy-item-add-or-sub">
+        <button nz-button [nzType]="'default'" (click)="add()">
+          <span>+</span>
+        </button>
+        <button nz-button [nzType]="'default'" (click)="del(i)">
+          <span>-</span>
+        </button>
+      </div>
+      <!--<ng-container *ngIf="system === 'iOS'">-->
+        <!--<form nz-form [formGroup]="form" [nzLayout]="'vertical'">-->
+          <!--<div nz-form-item nz-row>-->
+            <!--<div nz-form-label nz-col>-->
+              <!--<label class="w320i">服务集标识符（SSID）</label>-->
+              <!--<p class="text-tip">要连接的无线网络的标识</p>-->
+            <!--</div>-->
+            <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SSID_STR')">-->
+              <!--<input class="w320i" formControlName="SSID_STR" nz-input placeholder=""-->
+                     <!--[nzSize]="'large'">-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div nz-form-item nz-row>-->
+            <!--<div nz-form-label nz-col>-->
+              <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="HIDDEN_NETWORK">-->
+                <!--<span>隐藏网络</span>-->
+              <!--</label>-->
+              <!--<p class="text-tip">目标网络非开放网络或未广播信号时，请启用此功能</p>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div nz-form-item nz-row>-->
+            <!--<div nz-form-label nz-col>-->
+              <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="AutoJoin">-->
+                <!--<span>自动加入</span>-->
+              <!--</label>-->
+              <!--<p class="text-tip">自动加入此无线网络</p>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div nz-form-item nz-row>-->
+            <!--<div nz-form-label nz-col>-->
+              <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="CaptiveBypass">-->
+                <!--<span>停用强制网络检测</span>-->
+              <!--</label>-->
+              <!--<p class="text-tip">不显示强制网络助理</p>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div nz-form-item nz-row>-->
+            <!--<div nz-form-label nz-col>-->
+              <!--<label class="w320i">代理设置</label>-->
+              <!--<p class="text-tip">配置用于此网络的代理</p>-->
+            <!--</div>-->
+            <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyType')">-->
+              <!--<nz-select *ngIf="type !== 'view'" class="w320i" formControlName="ProxyType">-->
+                <!--<nz-option-->
+                  <!--*ngFor="let option of _options36"-->
+                  <!--[nzLabel]="option.label"-->
+                  <!--[nzValue]="option.value">-->
+                <!--</nz-option>-->
+              <!--</nz-select>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<ng-container *ngIf="getFormControl(i, 'ProxyType').value === 2">-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label nz-form-item-required>服务器和端口</label>-->
+                <!--<p class="text-tip">代理服务器的主机名或IP及端口</p>-->
+              <!--</div>-->
+              <!--<div class="w320i">-->
+                <!--<div nz-form-control>-->
+                  <!--<div nz-col [nzSpan]="17">-->
+                    <!--<div nz-form-item nz-row>-->
+                      <!--<div>-->
+                        <!--<div nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyServer')">-->
+                          <!--<input class="w" formControlName="ProxyServer" nz-input-->
+                                 <!--[nzSize]="'large'">-->
+                          <!--<div nz-form-explain-->
+                               <!--*ngIf="getFormControl(i, 'ProxyServer').dirty&&getFormControl(i, 'ProxyServer').hasError('required')">-->
+                          <!--</div>-->
+                        <!--</div>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                  <!--<div nz-col [nzSpan]="1">-->
+                    <!--<p nz-form-split>：</p>-->
+                  <!--</div>-->
+                  <!--<div nz-col [nzSpan]="6">-->
+                    <!--<div nz-form-item nz-row>-->
+                      <!--<div>-->
+                        <!--<div nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyServerPort')">-->
+                          <!--<nz-input-number class="w pl1i policy-port" formControlName="ProxyServerPort" [nzSize]="'large'"-->
+                                           <!--[nzMin]="0" [nzMax]="65535" [nzStep]="1"></nz-input-number>-->
+                          <!--<div nz-form-explain-->
+                               <!--*ngIf="getFormControl(i, 'ProxyServerPort').dirty&&getFormControl(i, 'ProxyServerPort').hasError('required')">-->
+                          <!--</div>-->
+                        <!--</div>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">用户名</label>-->
+                <!--<p class="text-tip">用于连接到代理的用户名</p>-->
+              <!--</div>-->
+              <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyUsername')">-->
+                <!--<input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[在设备上设置]"-->
+                       <!--[nzSize]="'large'">-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">密码</label>-->
+                <!--<p class="text-tip">用于鉴定代理的密码</p>-->
+              <!--</div>-->
+              <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">-->
+                <!--<input type="password" class="w320i" formControlName="ProxyPassword" nz-input-->
+                       <!--[nzSize]="'large'">-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</ng-container>-->
+          <!--<ng-container *ngIf="getFormControl(i, 'ProxyType').value === 3">-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">代理服务器URL</label>-->
+                <!--<p class="text-tip">用于取回代理设置的URL</p>-->
+              <!--</div>-->
+              <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPACURL')">-->
+                <!--<input class="w320i" formControlName="ProxyPACURL" nz-input-->
+                       <!--[nzSize]="'large'">-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="ProxyPACFallbackAllowed">-->
+                  <!--<span>如果PAC无法连通，则允许直接连接</span>-->
+                <!--</label>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</ng-container>-->
+          <!--<div nz-form-item nz-row>-->
+            <!--<div nz-form-label nz-col>-->
+              <!--<label class="w320i">安全性类型</label>-->
+              <!--<p class="text-tip">连接时使用的无线网络加密类型</p>-->
+            <!--</div>-->
+            <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EncryptionType')">-->
+              <!--<nz-select *ngIf="type !== 'view'" class="w320i" formControlName="EncryptionType"-->
+                         <!--(ngModelChange)="changeEncryptionType(i)">-->
+                <!--<nz-option-->
+                  <!--*ngFor="let option of _options37"-->
+                  <!--[nzLabel]="option.label"-->
+                  <!--[nzValue]="option.value">-->
+                <!--</nz-option>-->
+              <!--</nz-select>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<ng-container-->
+            <!--*ngIf="getFormControl(i, 'EncryptionType').value >= 2 && getFormControl(i, 'EncryptionType').value <= 5">-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">密码</label>-->
+                <!--<p class="text-tip">无线网络的密码</p>-->
+              <!--</div>-->
+              <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">-->
+                <!--<input class="w320i" formControlName="ProxyPassword" nz-input-->
+                       <!--[nzSize]="'large'">-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</ng-container>-->
+          <!--<ng-container-->
+            <!--*ngIf="getFormControl(i, 'EncryptionType').value >= 6 && getFormControl(i, 'EncryptionType').value <= 9">-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">企业设置</label>-->
+                <!--<p class="text-tip">协议、鉴定和信任配置</p>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--<div class="switch-group-wrap">-->
+                  <!--<div class="line"></div>-->
+                  <!--<div class="group">-->
+                    <!--<nz-radio-group formControlName="protocolTrust" class="btn-group-bg">-->
+                      <!--<label nz-radio-button [nzValue]="1"><span>协议</span></label>-->
+                      <!--<label nz-radio-button [nzValue]="2"><span>信任</span></label>-->
+                    <!--</nz-radio-group>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<ng-container *ngIf="getFormControl(i, 'protocolTrust').value === 1">-->
+              <!--<div>-->
+                <!--<label class="w320i">接受的EAP类型</label>-->
+                <!--<p class="text-tip">目标网络所支持的鉴定协议</p>-->
+              <!--</div>-->
+              <!--<div nz-row nz-col>-->
+                <!--<label nz-col [nzSpan]="4" nz-checkbox [nzDisabled]="type === 'view'" formControlName="TLS">-->
+                  <!--<span>TLS</span>-->
+                <!--</label>-->
+                <!--<label nz-col [nzSpan]="4" nz-checkbox [nzDisabled]="type === 'view'" formControlName="LEAP">-->
+                  <!--<span>LEAP</span>-->
+                <!--</label>-->
+                <!--<label nz-col [nzSpan]="4" nz-checkbox [nzDisabled]="type === 'view'" formControlName="EAP_FAST">-->
+                  <!--<span>EAP-FAST</span>-->
+                <!--</label>-->
+                <!--<label nz-col [nzSpan]="4" nz-checkbox [nzDisabled]="type === 'view'" formControlName="EAP_AKA">-->
+                  <!--<span>EAP-AKA</span>-->
+                <!--</label>-->
+              <!--</div>-->
+              <!--<div class="mb20" nz-row>-->
+                <!--<label nz-col [nzSpan]="4" nz-checkbox [nzDisabled]="type === 'view'" formControlName="TTLS">-->
+                  <!--<span>TTLS</span>-->
+                <!--</label>-->
+                <!--<label nz-col [nzSpan]="4" nz-checkbox [nzDisabled]="type === 'view'" formControlName="PEAP">-->
+                  <!--<span>PEAP</span>-->
+                <!--</label>-->
+                <!--<label nz-col [nzSpan]="4" nz-checkbox [nzDisabled]="type === 'view'" formControlName="EAP_SIM">-->
+                  <!--<span>EAP-SIM</span>-->
+                <!--</label>-->
+                <!--<label nz-col [nzSpan]="4"></label>-->
+              <!--</div>-->
+            <!--</ng-container>-->
+            <!--<ng-container *ngIf="getFormControl(i, 'protocolTrust').value === 2">-->
+              <!--<div>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i ">可信的证书</label>-->
+                  <!--<p class="text-tip">证书获得信任/通过鉴证</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">-->
+                  <!--<input class="w320i" formControlName="UserName" nz-input placeholder="[没有可用的证书&#45;&#45;使用“证书”标签来添加]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="AutoJoin">-->
+                    <!--<span>可信的服务器证书的名称</span>-->
+                  <!--</label>-->
+                  <!--<p class="text-tip">证书名称应来自鉴定服务器</p>-->
+                <!--</div>-->
+                <!--&lt;!&ndash;可信的服务器证书的名称的table&ndash;&gt;-->
+
+
+              <!--</div>-->
+            <!--</ng-container>-->
+            <!--&lt;!&ndash;TLS页面&ndash;&gt;-->
+            <!--<ng-container *ngIf="getFormControl(i, 'TLS').value === true">-->
+              <!--<div>-->
+                <!--<div nz-form-item nz-row>-->
+                  <!--<div nz-form-label nz-col>-->
+                    <!--<label class="w320i">用户名</label>-->
+                    <!--<p class="text-tip">用于连接到无线网络的用户名</p>-->
+                  <!--</div>-->
+                  <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, ' ProxyUsername')">-->
+                    <!--<input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[在设备上设置]"-->
+                           <!--[nzSize]="'large'">-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<div nz-form-item nz-row>-->
+                  <!--<div nz-form-label nz-col>-->
+                    <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OneTimeUserPassword" [nzDisabled]="true">-->
+                      <!--<span>使用单次连接密码</span>-->
+                    <!--</label>-->
+                    <!--<p class="text-tip">每次连接时均要求输入密码，并在鉴定时发送</p>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<div nz-form-item nz-row>-->
+                  <!--<div nz-form-label nz-col>-->
+                    <!--<label class="w320i">密码</label>-->
+                    <!--<p class="text-tip">给定用户名所使用的密码</p>-->
+                  <!--</div>-->
+                  <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">-->
+                    <!--<input class="w320i" formControlName="ProxyPassword" nz-input placeholder="[在设备上设置]"-->
+                           <!--[nzSize]="'large'">-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="AutoJoin">-->
+                    <!--<span>身份证书</span>-->
+                  <!--</label>-->
+                  <!--<p class="text-tip">用于连接无线网络的凭证</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">-->
+                  <!--&lt;!&ndash;<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"&ndash;&gt;-->
+                  <!--&lt;!&ndash;[nzSize]="'large'">&ndash;&gt;-->
+                  <!--<nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">-->
+                    <!--<nz-option-->
+                      <!--*ngFor="let option of _options45"-->
+                      <!--[nzLabel]="option.label"-->
+                      <!--[nzValue]="option.value">-->
+                    <!--</nz-option>-->
+                  <!--</nz-select>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</ng-container>-->
+
+            <!--&lt;!&ndash;LEAP页面&ndash;&gt;-->
+            <!--<ng-container *ngIf="getFormControl(i, 'LEAP').value === true">-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">用户名</label>-->
+                  <!--<p class="text-tip">用于连接到无线网络的用户名</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyUsername')">-->
+                  <!--<input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OneTimeUserPassword">-->
+                    <!--<span>使用单次连接密码</span>-->
+                  <!--</label>-->
+                  <!--<p class="text-tip">每次连接时均要求输入密码，并在鉴定时发送</p>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">密码</label>-->
+                  <!--<p class="text-tip">给定用户名所使用的密码</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">-->
+                  <!--<input class="w320i" formControlName="ProxyPassword" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</ng-container>-->
+
+            <!--&lt;!&ndash;EAP-FAST页面&ndash;&gt;-->
+            <!--<ng-container *ngIf="getFormControl(i, 'EAP_FAST').value === true">-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">EAP-FAST</label>-->
+                  <!--<p class="text-tip">保护性访问凭证(PAC)配置</p>-->
+                <!--</div>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<div>-->
+                    <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="PEAP">-->
+                      <!--<span>使用PAC</span>-->
+                    <!--</label>-->
+                  <!--</div>-->
+                  <!--<div>-->
+                    <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="PEAP">-->
+                      <!--<span>预置 PAC</span>-->
+                    <!--</label>-->
+                  <!--</div>-->
+                  <!--<div>-->
+                    <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="PEAP">-->
+                      <!--<span>匿名预置 PAC</span>-->
+                    <!--</label>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">用户名</label>-->
+                  <!--<p class="text-tip">用于连接到无线网络的用户名</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyUsername')">-->
+                  <!--<input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OneTimeUserPassword">-->
+                    <!--<span>使用单次连接密码</span>-->
+                  <!--</label>-->
+                  <!--<p class="text-tip">每次连接时均要求输入密码，并在鉴定时发送</p>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">密码</label>-->
+                  <!--<p class="text-tip">给定用户名所使用的密码</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">-->
+                  <!--<input class="w320i" formControlName="ProxyPassword" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">身份证书</label>-->
+                  <!--<p class="text-tip">用于连接无线网络的凭证</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'ProxyUsername')">-->
+                  <!--&lt;!&ndash;<input class="w320i" formControlName="ProxyUsername" nz-input placeholder="未设置适用的证书有效负载"&ndash;&gt;-->
+                  <!--&lt;!&ndash;[nzSize]="'large'">&ndash;&gt;-->
+                  <!--<nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">-->
+                    <!--<nz-option-->
+                      <!--*ngFor="let option of _options45"-->
+                      <!--[nzLabel]="option.label"-->
+                      <!--[nzValue]="option.value">-->
+                    <!--</nz-option>-->
+                  <!--</nz-select>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">外部身份</label>-->
+                  <!--<p class="text-tip">外部公开身份(适用于TTLS、PEAP和EAP-FAST)</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'OuterIdentity')">-->
+                  <!--<input class="w320i" formControlName="OuterIdentity" nz-input-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</ng-container>-->
+
+            <!--&lt;!&ndash;EAP-AKA页面&ndash;&gt;-->
+            <!--<ng-container *ngIf="getFormControl(i, 'EAP_AKA').value === true">-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">用户名</label>-->
+                  <!--<p class="text-tip">用于连接到无线网络的用户名</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyUsername')">-->
+                  <!--<input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OneTimeUserPassword">-->
+                    <!--<span>使用单次连接密码</span>-->
+                  <!--</label>-->
+                  <!--<p class="text-tip">每次连接时均要求输入密码，并在鉴定时发送</p>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">密码</label>-->
+                  <!--<p class="text-tip">给定用户名所使用的密码</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">-->
+                  <!--<input class="w320i" formControlName="ProxyPassword" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</ng-container>-->
+
+            <!--&lt;!&ndash;TTLS页面&ndash;&gt;-->
+            <!--<ng-container *ngIf="getFormControl(i, 'TTLS').value === true">-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">用户名</label>-->
+                  <!--<p class="text-tip">用于连接到无线网络的用户名</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyUsername')">-->
+                  <!--<input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OneTimeUserPassword">-->
+                    <!--<span>使用单次连接密码</span>-->
+                  <!--</label>-->
+                  <!--<p class="text-tip">每次连接时均要求输入密码，并在鉴定时发送</p>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">密码</label>-->
+                  <!--<p class="text-tip">给定用户名所使用的密码</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">-->
+                  <!--<input class="w320i" formControlName="ProxyPassword" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">身份证书</label>-->
+                  <!--<p class="text-tip">用于连接无线网络的凭证</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">-->
+                  <!--&lt;!&ndash;<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"&ndash;&gt;-->
+                  <!--&lt;!&ndash;[nzSize]="'large'">&ndash;&gt;-->
+                  <!--<nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">-->
+                    <!--<nz-option-->
+                      <!--*ngFor="let option of _options45"-->
+                      <!--[nzLabel]="option.label"-->
+                      <!--[nzValue]="option.value">-->
+                    <!--</nz-option>-->
+                  <!--</nz-select>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">内部鉴定</label>-->
+                  <!--<p class="text-tip">鉴定协议 (仅用于TTLS)</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'IsHotspot')">-->
+                  <!--<nz-select *ngIf="type !== 'view'" class="w320i" formControlName="IsHotspot">-->
+                    <!--<nz-option-->
+                      <!--*ngFor="let option of _options44"-->
+                      <!--[nzLabel]="option.label"-->
+                      <!--[nzValue]="option.value">-->
+                    <!--</nz-option>-->
+                  <!--</nz-select>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">外部身份</label>-->
+                  <!--<p class="text-tip">外部公开身份(适用于TTLS、PEAP和EAP-FAST)</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'OuterIdentity')">-->
+                  <!--<input class="w320i" formControlName="OuterIdentity" nz-input-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</ng-container>-->
+
+            <!--&lt;!&ndash;PEAP页面&ndash;&gt;-->
+            <!--<ng-container *ngIf="getFormControl(i, 'PEAP').value === true">-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">用户名</label>-->
+                  <!--<p class="text-tip">用于连接到无线网络的用户名</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyUsername')">-->
+                  <!--<input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OneTimeUserPassword">-->
+                    <!--<span>使用单次连接密码</span>-->
+                  <!--</label>-->
+                  <!--<p class="text-tip">每次连接时均要求输入密码，并在鉴定时发送</p>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">密码</label>-->
+                  <!--<p class="text-tip">给定用户名所使用的密码</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">-->
+                  <!--<input class="w320i" formControlName="ProxyPassword" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">身份证书</label>-->
+                  <!--<p class="text-tip">用于连接无线网络的凭证</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control class="mb20" [nzValidateStatus]="getFormControl(i, 'UserName')">-->
+                  <!--&lt;!&ndash;<input class="w320i" formControlName="UserName" nz-input placeholder="未设置适用的证书有效负载"&ndash;&gt;-->
+                  <!--&lt;!&ndash;[nzSize]="'large'">&ndash;&gt;-->
+                  <!--<nz-select *ngIf="type !== 'view'" class="w320i" formControlName="_id_" [nzDisabled]="true">-->
+                    <!--<nz-option-->
+                      <!--*ngFor="let option of _options45"-->
+                      <!--[nzLabel]="option.label"-->
+                      <!--[nzValue]="option.value">-->
+                    <!--</nz-option>-->
+                  <!--</nz-select>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">外部身份</label>-->
+                  <!--<p class="text-tip">外部公开身份(适用于TTLS、PEAP和EAP-FAST)</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'OuterIdentity')">-->
+                  <!--<input class="w320i" formControlName="OuterIdentity" nz-input-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</ng-container>-->
+
+            <!--&lt;!&ndash;EAP-SIM页面&ndash;&gt;-->
+            <!--<ng-container *ngIf="getFormControl(i, 'EAP_SIM').value === true">-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">用户名</label>-->
+                  <!--<p class="text-tip">用于连接到无线网络的用户名</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyUsername')">-->
+                  <!--<input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="OneTimeUserPassword">-->
+                    <!--<span>使用单次连接密码</span>-->
+                  <!--</label>-->
+                  <!--<p class="text-tip">每次连接时均要求输入密码，并在鉴定时发送</p>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label class="w320i">密码</label>-->
+                  <!--<p class="text-tip">给定用户名所使用的密码</p>-->
+                <!--</div>-->
+                <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">-->
+                  <!--<input class="w320i" formControlName="ProxyPassword" nz-input placeholder="[在设备上设置]"-->
+                         <!--[nzSize]="'large'">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div nz-form-item nz-row>-->
+                <!--<div>-->
+                  <!--<label class="w320i">EAP-SAM</label>-->
+                <!--</div>-->
+                <!--<div nz-form-label nz-col>-->
+                  <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="AutoJoin">-->
+                    <!--<span>允许两个RADN值</span>-->
+                  <!--</label>-->
+                  <!--<p class="text-tip">允许对仅提供两个RAND 值的服务器进行鉴定</p>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</ng-container>-->
+          <!--</ng-container>-->
+
+          <!--<div nz-form-item nz-row>-->
+            <!--<div nz-form-label nz-col>-->
+              <!--<label class="w320i">网络类型</label>-->
+              <!--<p class="text-tip">配置网络使其显示为旧热点或Passpoint热点</p>-->
+            <!--</div>-->
+            <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'IsHotspot')">-->
+              <!--<nz-select *ngIf="type !== 'view'" class="w320i" formControlName="IsHotspot">-->
+                <!--<nz-option-->
+                  <!--*ngFor="let option of _options38"-->
+                  <!--[nzLabel]="option.label"-->
+                  <!--[nzValue]="option.value">-->
+                <!--</nz-option>-->
+              <!--</nz-select>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--&lt;!&ndash;网络类型  Passpoint &ndash;&gt;-->
+          <!--<ng-container *ngIf="getFormControl(i, 'IsHotspot').value === 3">-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">服务商显示名称</label>-->
+                <!--<p class="text-tip">Passpoint服务商的显示名称</p>-->
+              <!--</div>-->
+              <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'DisplayedOperatorName')">-->
+                <!--<input class="w320i" formControlName="DisplayedOperatorName" nz-input placeholder="[必填]"-->
+                       <!--[nzSize]="'large'">-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">域名</label>-->
+                <!--<p class="text-tip">Passpoint服务商的域名</p>-->
+              <!--</div>-->
+              <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'DomainName')">-->
+                <!--<input class="w320i" formControlName="DomainName" nz-input placeholder="[必填]"-->
+                       <!--[nzSize]="'large'">-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">漫游联盟 OI</label>-->
+                <!--<p class="text-tip">漫游联盟组织标识符</p>-->
+              <!--</div>-->
+              <!--&lt;!&ndash;此处是漫游联盟的表格&ndash;&gt;-->
+
+
+            <!--</div>-->
+
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">NAI领域名称</label>-->
+                <!--<p class="text-tip">网络访问标识符领域名称</p>-->
+              <!--</div>-->
+              <!--&lt;!&ndash;此处是NAI领域名称表格&ndash;&gt;-->
+
+
+            <!--</div>-->
+
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label class="w320i">MCC/MNC</label>-->
+                <!--<p class="text-tip">移动设备国家/地区代码和移动设备网络设备</p>-->
+              <!--</div>-->
+              <!--&lt;!&ndash;此处是MCC/MNC表格&ndash;&gt;-->
+
+
+            <!--</div>-->
+
+            <!--<div nz-form-item nz-row>-->
+              <!--<div nz-form-label nz-col>-->
+                <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="ServiceProviderRoamingEnabled">-->
+                  <!--<span>连接到漫游方网络</span>-->
+                <!--</label>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</ng-container>-->
+          <!--<div nz-form-item nz-row>-->
+            <!--<div nz-form-label nz-col>-->
+              <!--<label class="w320i">Fast Lane QoS标记</label>-->
+            <!--</div>-->
+            <!--<div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'isQoS')">-->
+              <!--<nz-select *ngIf="type !== 'view'" class="w320i" formControlName="isQoS">-->
+                <!--<nz-option-->
+                  <!--*ngFor="let option of _options39"-->
+                  <!--[nzLabel]="option.label"-->
+                  <!--[nzValue]="option.value">-->
+                <!--</nz-option>-->
+              <!--</nz-select>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<ng-container *ngIf="getFormControl(i, 'isQoS').value === 2">-->
+            <!--&lt;!&ndash;操作日志&ndash;&gt;-->
+            <!--<div class="mb10">-->
+              <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="TLS">-->
+                <!--<span>启用SoQ标记</span>-->
+              <!--</label>-->
+            <!--</div>-->
+            <!--<div class="mb10">-->
+              <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="TLS">-->
+                <!--<span>将Apple音频/视频呼叫加入白名单</span>-->
+              <!--</label>-->
+            <!--</div>-->
+            <!--<div class="mb10">-->
+              <!--<label nz-checkbox [nzDisabled]="type === 'view'" formControlName="TLS">-->
+                <!--<span>将特定应用加入白名单</span>-->
+              <!--</label>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;将特定应用加入白名单表格&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="list-widget">&ndash;&gt;-->
+            <!--&lt;!&ndash;<nz-table #nzTable&ndash;&gt;-->
+            <!--&lt;!&ndash;[nzAjaxData]="data"&ndash;&gt;-->
+            <!--&lt;!&ndash;[nzIsPagination]="false">&ndash;&gt;-->
+            <!--&lt;!&ndash;<tbody nz-tbody>&ndash;&gt;-->
+            <!--&lt;!&ndash;<tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"&ndash;&gt;-->
+            <!--&lt;!&ndash;class="stripe-table"&ndash;&gt;-->
+            <!--&lt;!&ndash;[class.application-item]="data.IPAddress"&ndash;&gt;-->
+            <!--&lt;!&ndash;[class.view]="type === 'view'"&ndash;&gt;-->
+            <!--&lt;!&ndash;(click)="changeActive(data);">&ndash;&gt;-->
+            <!--&lt;!&ndash;<td nz-td width="60%"><span>{{data}}</span></td>&ndash;&gt;-->
+            <!--&lt;!&ndash;<td nz-td><span>{{data}}</span></td>&ndash;&gt;-->
+            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+            <!--&lt;!&ndash;</tbody>&ndash;&gt;-->
+            <!--&lt;!&ndash;</nz-table>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div *ngIf="type !=='view'" class="mt10">&ndash;&gt;-->
+            <!--&lt;!&ndash;<button nz-button [nzType]="'dashed'" (click)="add(title,content,footer)">&ndash;&gt;-->
+            <!--&lt;!&ndash;<span>+</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;</button>&ndash;&gt;-->
+            <!--&lt;!&ndash;<button nz-button [nzType]="'dashed'" (click)="del()">&ndash;&gt;-->
+            <!--&lt;!&ndash;<span>-</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;</button>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+          <!--</ng-container>-->
+
+        <!--</form>-->
+      <!--</ng-container>-->
+      <!--<ng-container *ngIf="system === 'Android'">-->
+      <ng-container>
+        <form nz-form [formGroup]="form" [nzLayout]="'vertical'">
+          <input class="dn" type="text" name="fakeUsername"/>
+          <input class="dn" type="password" name="fakePassword"/>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-form-item-required class="w320i">服务集标识符（SSID）</label>
+              <p class="text-tip">要连接的无线网络的标识</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'SSID_STR')">
+              <input class="w320i" formControlName="SSID_STR" nz-input placeholder="[必填]"
+                     [nzSize]="'large'">
+              <div nz-form-explain
+                   *ngIf="getFormControl(i, 'SSID_STR').dirty && getFormControl(i, 'SSID_STR').hasError('required')">
+                必填项不能为空
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="HIDDEN_NETWORK">
+                <span>隐藏网络</span>
+              </label>
+              <p class="text-tip">目标网络非开放网络或未广播信号时，请启用此功能</p>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label nz-checkbox [nzDisabled]="type === 'view'" formControlName="AutoJoin">
+                <span>自动加入</span>
+              </label>
+              <p class="text-tip">自动加入此无线网络</p>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col>
+              <label class="w320i">安全性类型</label>
+              <p class="text-tip">连接时使用的无线网络加密类型</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'EncryptionType')">
+              <nz-select *ngIf="type !== 'view'" class="w320i" formControlName="EncryptionType">
+                <nz-option
+                  *ngFor="let option of _options"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div nz-form-item nz-row *ngIf="getFormControl(i, 'EncryptionType').value === 2 || getFormControl(i, 'EncryptionType').value === 3">
+            <div nz-form-label nz-col>
+              <label class="w320i">用户名</label>
+              <p class="text-tip">用于连接到代理的用户名</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyUsername')">
+              <input class="w320i" formControlName="ProxyUsername" nz-input placeholder="[在设备上设置]"
+                     [nzSize]="'large'">
+            </div>
+          </div>
+          <div nz-form-item nz-row *ngIf="getFormControl(i, 'EncryptionType').value !== 2">
+            <div nz-form-label nz-col>
+              <label class="w320i">密码</label>
+              <p class="text-tip">用于鉴定代理的密码</p>
+            </div>
+            <div nz-col nz-form-control [nzValidateStatus]="getFormControl(i, 'ProxyPassword')">
+              <input type="password" class="w320i" formControlName="ProxyPassword" nz-input
+                     [nzSize]="'large'" *ngIf="!showPassword">
+              <input type="text" class="w320i" formControlName="ProxyPassword" nz-input
+                     [nzSize]="'large'" *ngIf="showPassword">
+              <i class="cp" [class.icon-allicon-89]="!showPassword"
+                 [class.icon-allicon-88]="showPassword" (mousedown)="showPassword = true;" (mouseup)="showPassword=false;"></i>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="type === 'view'">
+    <div class="policy-simple-list" appCustomScrollbar>
+      <nz-table #nzTable
+                [nzAjaxData]="data"
+                [nzIsPagination]="false">
+        <tbody nz-tbody>
+        <tr class="thead">
+          <td width="80%">SSID</td>
+          <td>安全类型</td>
+        </tr>
+        <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index;"
+            [class.view]="type === 'view'">
+          <td nz-td>
+            {{data.SSID_STR}}
+          </td>
+          <td nz-td>
+            {{util.getLabelByValue(_options, data.EncryptionType)}}
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </ng-container>
+</div>

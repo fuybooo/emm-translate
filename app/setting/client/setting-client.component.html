@@ -1,0 +1,195 @@
+<div class="common-border">
+    <div nz-row [nzGutter]="0" class="search-wrap common-box">
+      EMM客户端版本管理
+    </div>
+    <div nz-row [nzGutter]="0" class="search-wrap common-box">
+      <div nz-col [nzSpan]="12">
+        <nz-radio-group [(ngModel)]="systemType" class="btn-group-bg">
+          <label nz-radio-button [nzValue]="'Android'" (click)="systemTypeChange('Android')"><span>Android</span></label>
+          <!-- todo: date: 2017-12-15 此版本暂时影藏 -->
+          <label *ngIf="private_version!==1" nz-radio-button [nzValue]="'iOS'" (click)="systemTypeChange('iOS')"><span>iOS</span></label>
+        </nz-radio-group>
+        <button nz-button [nzType]="'default'" class="ml10" (click)="upLoadEMM()" appPermission="1">
+          <span><i class="icon-allicon-55 mr5 f12"></i>上传新版本</span>
+        </button>
+        <button *ngIf="systemType === 'Android'" nz-button [nzType]="'default'" (click)="defaultForEMM()" appPermission="1">
+          <span>设为默认</span>
+        </button>
+        <button nz-button [nzType]="'default'" class="ml10" (click)="deleteEMM(null)" appPermission="1">
+          <span><i class="icon-allicon-29 mr5 f12"></i>删除</span>
+        </button>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="0" class="push-content-wrap">
+      <div nz-col [nzSpan]="systemType === 'Android' ? 11 : 24" class="push-table-content setting-trusteeship-table">
+        <div class="content-table-thead setting-trusteeship-table-tr">
+          <div class="tac">
+            <!--<label nz-checkbox [(ngModel)]="allIsChecked" (ngModelChange)="refreshStatus($event)"></label>-->
+            <label class=" ml10" nz-checkbox [(ngModel)]="clientEMMList.allChecked" (ngModelChange)="clientEMMList.checkedAll($event)"
+                   [nzIndeterminate]="clientEMMList.indeterminate"></label>
+          </div>
+          <div>版本</div>
+          <div>上传时间</div>
+        </div>
+        <div class="cb"></div>
+        <div class="h400" appCustomScrollbar [options]="ScrollbarOptionsEMM">
+          <nz-table class="content-table"
+                    #nzTableClientEMMList
+                    [nzAjaxData]="clientEMMList.list"
+                    [nzLoading]="clientEMMList.isLoading"
+                    [nzIsPagination]="false">
+            <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of nzTableClientEMMList.data"
+                (click)="clientEMMList.active(data)"
+                [class.active]="clientEMMList?.itemIsActive?.id === data.id"
+                class="setting-trusteeship-table-tr cp">
+              <td nz-td [nzCheckbox]="true" class="pl20i">
+                <label nz-checkbox [(ngModel)]="data.checked"
+                (ngModelChange)="clientEMMList.checked($event,data)">
+                </label>
+              </td>
+              <td nz-td>
+                {{data.versionName}}<span *ngIf="data.isDefault === 1" class="text-aux">(默认版本)</span>
+              </td>
+              <td nz-td>
+                {{data.updatetime | date:'yyyy-MM-dd HH:mm:ss'}}
+              </td>
+            </tr>
+            <!--loading-->
+            <tr nz-tbody-tr *ngIf="clientEMMList.list.length < clientEMMList.param.total">
+              <td nz-td [attr.colspan]="6">
+                <nz-spin [nzTip]="'正在读取数据...'">
+                  <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                  </nz-alert>
+                </nz-spin>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+      <div *ngIf="systemType === 'Android'" nz-col [nzSpan]="13">
+        <div class="content-table-thead push-table-thead">
+          <div class="lh28 pl20i">{{clientEMMList.itemIsActive ? clientEMMList.itemIsActive.versionName : '详情'}}</div>
+          <div class="h49 tar">
+            <!--<i class="icon-allicon-18 anticon-click mr5 f16 fr pri10"></i>-->
+            <button class="mr10" *ngIf="clientEMMList.itemIsActive && clientEMMList.itemIsActive.id > 0" nz-button [nzType]="'default'" (click)="editEMM()" appPermission="1">
+              <span >编辑</span>
+            </button>
+          </div>
+        </div>
+        <div class="cb"></div>
+        <div class="p20" *ngIf="clientEMMList.list.indexOf(clientEMMList.itemIsActive)>-1">
+          <div nz-row [nzGutter]="30" class="min-h50">
+            <div nz-col [nzSpan]="4" class="lh32 tar">
+              <label>上传时间</label>
+            </div>
+            <div nz-col [nzSpan]="18" class="lh32 f16">
+              {{clientEMMList?.itemIsActive?.updatetime | date:'yyyy-MM-dd HH:mm:ss'}}
+            </div>
+          </div>
+          <div *ngIf="clientEMMList.itemIsActive?.isDefault !== 1" nz-row [nzGutter]="30" class="min-h50">
+            <div nz-col [nzSpan]="4" class="lh32 tar">
+              <label>分配设备型号</label>
+            </div>
+            <div nz-col [nzSpan]="18" class="lh32 f16" [innerHTML]="clientEMMList?.itemIsActive?.deviceModels | settingEMMModel">
+            </div>
+          </div>
+          <div *ngIf="clientEMMList.itemIsActive?.isDefault !== 1" nz-row [nzGutter]="30" class="min-h50">
+            <div nz-col [nzSpan]="4" class="lh32 tar">
+              <label>分配对象</label>
+            </div>
+            <div nz-col [nzSpan]="18" class="lh32 f16">
+              <div class="">
+                <div nz-row>
+                  <div nz-col [nzSpan]="22">
+                    <div class="policy-object-wrap">
+                      <ul *ngIf="users.length > 0">
+                        <li *ngFor="let item of users">
+                          <i class="icon-allicon-04 mr5"></i><a>{{item.name}}</a>
+                        </li>
+                      </ul>
+                      <ul *ngIf="groups.length > 0">
+                        <li *ngFor="let item of groups">
+                          <i class="icon-allicon-43 mr5"></i><a>{{item.name}}</a>
+                        </li>
+                      </ul>
+                      <ul *ngIf="depts.length > 0">
+                        <li *ngFor="let item of depts">
+                          <i class="icon-allicon-01 mr5"></i><a>{{item.name}}</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 安全桌面 -->
+<div class="common-border mt20">
+    <div nz-row [nzGutter]="0" class="search-wrap common-box">
+      安全桌面版本管理
+    </div>
+    <div nz-row [nzGutter]="0" class="search-wrap common-box">
+      <div nz-col [nzSpan]="12">
+        <button nz-button [nzType]="'default'" (click)="upLoadSecurityDesktop()" appPermission="1">
+          <span><i class="icon-allicon-55 mr5 f12"></i>上传新版本</span>
+        </button>
+        <button nz-button [nzType]="'default'" class="ml10" (click)="deleteS(null)" appPermission="1">
+          <span><i class="icon-allicon-29 mr5 f12"></i>删除</span>
+        </button>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="0" class="push-content-wrap">
+      <div nz-col [nzSpan]="24" class="push-table-content common-border-left setting-trusteeship-table">
+        <div class="content-table-thead setting-content-table-thead">
+          <div class="pl20i">
+            <!--<label nz-checkbox [(ngModel)]="allIsChecked" (ngModelChange)="refreshStatus($event)"></label>-->
+            <label class="mr10" nz-checkbox [(ngModel)]="clientSecurityDesktopList.allChecked" (ngModelChange)="clientSecurityDesktopList.checkedAll($event)"
+                    [nzIndeterminate]="clientSecurityDesktopList.indeterminate"></label>版本
+          </div>
+          <div>上传时间</div>
+        </div>
+        <div class="cb"></div>
+        <div class="h400" appCustomScrollbar [options]="ScrollbarOptionsSecurityDesktop">
+          <nz-table class="content-table"
+                    #nzTable
+                    [nzAjaxData]="clientSecurityDesktopList.list"
+                    [nzLoading]="clientSecurityDesktopList.isLoading"
+                    [nzIsPagination]="false">
+            <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of nzTable.data"
+                (click)="clientSecurityDesktopList.active(data)"
+                [class.active]="clientSecurityDesktopList?.itemIsActive?.id === data.id">
+              <td nz-td [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="data.checked" class="pl10"
+                (ngModelChange)="clientSecurityDesktopList.checked($event,data)">
+                </label>
+              </td>
+              <td nz-td>
+                {{data.versionName}}
+              </td>
+              <td nz-td>
+                {{data.updatetime | date:'yyyy-MM-dd HH:mm:ss'}}
+              </td>
+            </tr>
+            <!--loading-->
+            <tr nz-tbody-tr *ngIf="clientSecurityDesktopList.list.length < clientSecurityDesktopList.param.total">
+              <td nz-td [attr.colspan]="6">
+                <nz-spin [nzTip]="'正在读取数据...'">
+                  <nz-alert [nzType]="'info'" [nzMessage]="''" [nzDescription]="''">
+                  </nz-alert>
+                </nz-spin>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </div>
+</div>
+
